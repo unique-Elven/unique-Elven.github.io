@@ -6,7 +6,7 @@
   <link href="https://unique-yyds.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://unique-yyds.gitee.io/"/>
-  <updated>2022-05-26T02:22:20.928Z</updated>
+  <updated>2022-05-26T08:34:17.727Z</updated>
   <id>https://unique-yyds.gitee.io/</id>
   
   <author>
@@ -21,17 +21,10 @@
     <link href="https://unique-yyds.gitee.io/2022/05/21/kaisa/"/>
     <id>https://unique-yyds.gitee.io/2022/05/21/kaisa/</id>
     <published>2022-05-21T05:38:23.362Z</published>
-    <updated>2022-05-26T02:22:20.928Z</updated>
+    <updated>2022-05-26T08:34:17.727Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;点击文章标题进入阅读模式！&lt;/p&gt;
-&lt;p&gt;尊重知识产权，引用注明出处！谢谢合作！&lt;br&gt;有问题请在B站私信！&lt;br&gt;链接&lt;span class=&quot;exturl&quot;&gt;&lt;a class=&quot;exturl__link&quot;</summary>
-        
-      
+    <summary type="html">这里我们主要讨论的还是如何使用C语言，和Python语言实现恺撒密码的算法！在密码学中，恺撒密码（英语：Caesar cipher），或称恺撒加密、恺撒变换、变换加密，是一种最简单且最广为人知的加密技术。它是一种替换加密的技术，明文中的所有字母都在字母表上向后（或向前）按照一个固定数目进行偏移后被替换成密文。例如，当偏移量是3的时候，所有的字母A将被替换成D，B变成E，以此类推。这个加密方法是以罗马共和时期恺撒的名字命名的，当年恺撒曾用此方法与其将军们进行联系。</summary>
     
     
     
@@ -51,17 +44,10 @@
     <link href="https://unique-yyds.gitee.io/2022/05/20/ketu/"/>
     <id>https://unique-yyds.gitee.io/2022/05/20/ketu/</id>
     <published>2022-05-20T12:43:03.778Z</published>
-    <updated>2022-05-25T08:24:42.045Z</updated>
+    <updated>2022-05-26T08:39:02.865Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;点击文章标题进入阅读模式！&lt;/p&gt;
-&lt;p&gt;尊重知识产权，引用注明出处！谢谢合作！&lt;br&gt;有问题请在B站私信！&lt;br&gt;链接&lt;span class=&quot;exturl&quot;&gt;&lt;a class=&quot;exturl__link&quot;</summary>
-        
-      
+    <summary type="html">壳是最早出现的专用加密软件技术！程序的壳可以是开发者未来保护自己的代码不被借鉴、破解、逆向；也可用来病毒、木马、蠕虫隐藏恶意代码，不被杀毒如软件查杀！所以我们每次逆向破解的时候遇到带壳程序会非常头疼，这篇文章主要是有关程序脱壳的技术的讲解，内容详细，深入学习者一定不能错过，带你深入研究程序脱壳技术，一定有所收获！</summary>
     
     
     
@@ -81,18 +67,10 @@
     <link href="https://unique-yyds.gitee.io/2022/02/10/boke/"/>
     <id>https://unique-yyds.gitee.io/2022/02/10/boke/</id>
     <published>2022-02-10T05:20:51.000Z</published>
-    <updated>2022-05-25T08:24:53.856Z</updated>
+    <updated>2022-05-26T12:25:47.647Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;点击文章标题进入阅读模式！&lt;/p&gt;
-&lt;p&gt;前言：&lt;br&gt;很荣幸这是我的第一篇私人博客，所以在我想些要准备用博客来干些什么，写些什么的时候，我决定先和大家分享一下我的私人博客是如何建立的，这也算个不错的优良记录和备份的习惯。&lt;/p&gt;
-&lt;p&gt;大家如果有任何觉得我写的的不好的地方</summary>
-        
-      
+    <summary type="html">我的私人博客是如何建立的呢？为了让你们也可以搭建出与我一样的个人博客网站，我特此总结了以下基础搭建教程，包括思维导图。</summary>
     
     
     
@@ -112,16 +90,10 @@
     <link href="https://unique-yyds.gitee.io/2022/02/08/hello-world/"/>
     <id>https://unique-yyds.gitee.io/2022/02/08/hello-world/</id>
     <published>2022-02-08T06:54:41.338Z</published>
-    <updated>2022-05-25T08:24:49.380Z</updated>
+    <updated>2022-05-26T08:40:14.399Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;Welcome to &lt;span class=&quot;exturl&quot;&gt;&lt;a class=&quot;exturl__link&quot; href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;&lt;span class=&quot;exturl__icon&quot;&gt;&lt;i class=&quot;fas</summary>
-        
-      
+    <summary type="html">博客的搭建相关网站和指令。</summary>
     
     
     
