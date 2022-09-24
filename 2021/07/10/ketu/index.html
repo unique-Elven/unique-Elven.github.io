@@ -1,137 +1,137 @@
 <!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/tb.jpg?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/tb.jpg?v=2.6.2" type="image/png" sizes="32x32"><link rel="apple-touch-icon" href="/images/tb.jpg?v=2.6.2" sizes="180x180"><meta name="description" content="壳是最早出现的专用加密软件技术！程序的壳可以是开发者未来保护自己的代码不被借鉴、破解、逆向；也可用来病毒、木马、蠕虫隐藏恶意代码，不被杀毒如软件查杀！所以我们每次逆向破解的时候遇到带壳程序会非常头疼，这篇文章主要是有关程序脱壳的技术的讲解，内容详细，深入学习者一定不能错过，带你深入研究程序脱壳技术，一定有所收获！">
 <meta property="og:type" content="article">
 <meta property="og:title" content="程序脱壳篇">
-<meta property="og:url" content="https://unique-elven.github.io/2022/05/20/ketu/index.html">
+<meta property="og:url" content="https://unique-elven.github.io/2021/07/10/ketu/index.html">
 <meta property="og:site_name" content="乙太">
 <meta property="og:description" content="壳是最早出现的专用加密软件技术！程序的壳可以是开发者未来保护自己的代码不被借鉴、破解、逆向；也可用来病毒、木马、蠕虫隐藏恶意代码，不被杀毒如软件查杀！所以我们每次逆向破解的时候遇到带壳程序会非常头疼，这篇文章主要是有关程序脱壳的技术的讲解，内容详细，深入学习者一定不能错过，带你深入研究程序脱壳技术，一定有所收获！">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p1.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p2.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p3.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p4.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p5.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p6.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p7.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p8.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p9.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p10.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p11.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p12.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p13.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p14.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p15.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p16.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p17.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p18.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p19.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p20.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p21.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p22.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p23.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p24.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p25.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p26.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p27.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p28.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p29.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p30.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p31.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p32.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p33.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p34.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p35.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p36.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p37.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p38.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p39.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p40.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p41.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p42.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p43.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p44.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p45.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p46.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p47.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p48.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p49.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p50.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p51.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p52.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p53.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p54.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p55.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p56.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p57.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p58.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p59.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p60.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p61.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p62.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/%E5%9B%BE%E7%89%87p120.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p63.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p64.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p65.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p66.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p67.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p68.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p69.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p70.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p71.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p72.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p73.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p74.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p75.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p76.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p77.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p78.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p79.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p80.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p81.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p82.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p83.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p84.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p85.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p86.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p87.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p88.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p89.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p90.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p91.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p92.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p93.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p94.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p95.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p96.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p97.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/98.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p99.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p100.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p101.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p102.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p103.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p104.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p105.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p106.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p107.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p108.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p109.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p110.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p111.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p112.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p113.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p114.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p115.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p116.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p117.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p118.png">
-<meta property="og:image" content="https://unique-elven.github.io/2022/05/20/ketu/p119.png">
-<meta property="article:published_time" content="2022-05-20T12:43:03.778Z">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p1.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p2.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p3.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p4.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p5.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p6.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p7.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p8.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p9.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p10.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p11.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p12.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p13.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p14.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p15.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p16.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p17.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p18.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p19.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p20.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p21.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p22.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p23.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p24.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p25.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p26.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p27.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p28.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p29.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p30.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p31.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p32.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p33.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p34.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p35.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p36.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p37.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p38.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p39.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p40.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p41.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p42.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p43.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p44.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p45.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p46.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p47.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p48.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p49.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p50.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p51.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p52.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p53.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p54.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p55.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p56.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p57.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p58.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p59.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p60.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p61.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p62.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/%E5%9B%BE%E7%89%87p120.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p63.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p64.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p65.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p66.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p67.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p68.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p69.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p70.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p71.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p72.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p73.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p74.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p75.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p76.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p77.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p78.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p79.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p80.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p81.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p82.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p83.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p84.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p85.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p86.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p87.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p88.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p89.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p90.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p91.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p92.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p93.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p94.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p95.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p96.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p97.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/98.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p99.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p100.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p101.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p102.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p103.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p104.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p105.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p106.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p107.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p108.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p109.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p110.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p111.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p112.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p113.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p114.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p115.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p116.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p117.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p118.png">
+<meta property="og:image" content="https://unique-elven.github.io/2021/07/10/ketu/p119.png">
+<meta property="article:published_time" content="2021-07-10T10:52:55.760Z">
 <meta property="article:modified_time" content="2022-05-27T01:03:11.442Z">
 <meta property="article:author" content="乙太">
 <meta property="article:tag" content="程序壳">
 <meta property="article:tag" content="程序脱壳篇">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://unique-elven.github.io/2022/05/20/ketu/p1.png"><title>程序脱壳篇 | 乙太</title><link ref="canonical" href="https://unique-elven.github.io/2022/05/20/ketu/"><link rel="alternate" href="/atom.xml" type="application/atom+xml"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><link rel="dns-prefetch" href="https://hm.baidu.com"><script src="/live2d-widget/autoload.js"></script><script>var _hmt = _hmt || [];
+<meta name="twitter:image" content="https://unique-elven.github.io/2021/07/10/ketu/p1.png"><title>程序脱壳篇 | 乙太</title><link ref="canonical" href="https://unique-elven.github.io/2021/07/10/ketu/"><link rel="alternate" href="/atom.xml" type="application/atom+xml"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><link rel="dns-prefetch" href="https://hm.baidu.com"><script src="/live2d-widget/autoload.js"></script><script>var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement('script');
   hm.src = 'https://hm.baidu.com/hm.js?f044c58249290639d0e8a63276ebca36';
@@ -166,7 +166,7 @@ var CONFIG = {
   sourcePath: {"js":"js","css":"css","images":"images"},
 };
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">乙太</div><div class="header-banner-info__subtitle">乙太</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">程序脱壳篇</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2022-05-20</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-05-27</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><p>点击文章标题进入阅读模式！</p>
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">乙太</div><div class="header-banner-info__subtitle">乙太</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">程序脱壳篇</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-07-10</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-05-27</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><p>点击文章标题进入阅读模式！</p>
 <p>尊重知识产权，引用注明出处！谢谢合作！<br>有问题请在B站私信！<br>链接<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://space.bilibili.com/2098810443">欢迎大家关注我的Bilibli</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>感谢一键三连哦~</p>
 
         <h1 id="一·-什么是壳？">
@@ -251,61 +251,61 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></he
 
         <h1 id="二·-实践是检验真理的唯一标准">
           <a href="#二·-实践是检验真理的唯一标准" class="heading-link"><i class="fas fa-link"></i></a><a href="#二·-实践是检验真理的唯一标准" class="headerlink" title="二· 实践是检验真理的唯一标准"></a>二· 实践是检验真理的唯一标准</h1>
-      <p>接下来我们尝试破解这样一个老程序壳：<img src="/2022/05/20/ketu/p1.png" alt="image"></p>
+      <p>接下来我们尝试破解这样一个老程序壳：<img src="/2021/07/10/ketu/p1.png" alt="image"></p>
 
         <h2 id="1-查看壳">
           <a href="#1-查看壳" class="heading-link"><i class="fas fa-link"></i></a><a href="#1-查看壳" class="headerlink" title="1 . 查看壳"></a>1 . 查看壳</h2>
       
         <h3 id="1·PEiD查看">
           <a href="#1·PEiD查看" class="heading-link"><i class="fas fa-link"></i></a><a href="#1·PEiD查看" class="headerlink" title="1·PEiD查看"></a>1·PEiD查看</h3>
-      <p><img src="/2022/05/20/ketu/p2.png" alt="image-20220413"></p>
+      <p><img src="/2021/07/10/ketu/p2.png" alt="image-20220413"></p>
 
         <h3 id="2·Exeinfo-PE查看">
           <a href="#2·Exeinfo-PE查看" class="heading-link"><i class="fas fa-link"></i></a><a href="#2·Exeinfo-PE查看" class="headerlink" title="2·Exeinfo PE查看"></a>2·Exeinfo PE查看</h3>
-      <p><img src="/2022/05/20/ketu/p3.png" alt="image-20220413"></p>
+      <p><img src="/2021/07/10/ketu/p3.png" alt="image-20220413"></p>
 <p>咳咳咳，咋就是说，这找不到这个程序壳的特征码，咋们看不出什么来，试试别的，是个老古董壳！</p>
 
         <h3 id="3·脱壳后的程序查看">
           <a href="#3·脱壳后的程序查看" class="heading-link"><i class="fas fa-link"></i></a><a href="#3·脱壳后的程序查看" class="headerlink" title="3·脱壳后的程序查看"></a>3·脱壳后的程序查看</h3>
-      <p><img src="/2022/05/20/ketu/p4.png" alt="image"></p>
+      <p><img src="/2021/07/10/ketu/p4.png" alt="image"></p>
 <p>可见它是由VC5.0编译的程序！</p>
-<p><img src="/2022/05/20/ketu/p5.png" alt="image-20220413"></p>
+<p><img src="/2021/07/10/ketu/p5.png" alt="image-20220413"></p>
 <p>可见无壳！</p>
 
         <h2 id="2-OD脱壳">
           <a href="#2-OD脱壳" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-OD脱壳" class="headerlink" title="2 . OD脱壳"></a>2 . OD脱壳</h2>
       <p>用od把程序打开，刚进来情况是这样的：</p>
-<p><img src="/2022/05/20/ketu/p6.png" alt="image-20220413"></p>
+<p><img src="/2021/07/10/ketu/p6.png" alt="image-20220413"></p>
 <p>刚进来的时候是要提示是壳的EP，如果不是，要在选项&#x2F;调制选项&#x2F;事件中设置第一次暂停于主模块入口：</p>
-<p><img src="/2022/05/20/ketu/p7.png" alt="image-20220413"></p>
+<p><img src="/2021/07/10/ketu/p7.png" alt="image-20220413"></p>
 <p>点击OD里面的M查看进程内存：</p>
-<p><img src="/2022/05/20/ketu/p8.png" alt="image-20220413"></p>
+<p><img src="/2021/07/10/ketu/p8.png" alt="image-20220413"></p>
 <p>试着分析对比，可见代码的入口地址是0x00401000，按C回到查看汇编代码，我们现在的入口地址是0x46B6DE，可见它在包含SFX的地址0x46B00000中。这壳有这三个区块（资源、SFX、重定向）。.text段就是程序的代码段块！</p>
 <p>接下来单步执行F8，到jmp的时候跳转到地址0x004271B0:</p>
-<p><img src="/2022/05/20/ketu/p9.png" alt="image"></p>
+<p><img src="/2021/07/10/ketu/p9.png" alt="image"></p>
 <p>来到这大概这个样子，右键分析&#x2F;分分析代码：</p>
-<p><img src="/2022/05/20/ketu/p10.png" alt="image"></p>
+<p><img src="/2021/07/10/ketu/p10.png" alt="image"></p>
 <p>再看进程内存，可知0x004271B0是在包含代码地址0x00401000中，所以它开头是55&#x2F;8BEC，我们就找到了OEP</p>
 <p>在OD的plugin文件夹中加入插件重新打开：</p>
-<p><img src="/2022/05/20/ketu/p11.png" alt="image"></p>
+<p><img src="/2021/07/10/ketu/p11.png" alt="image"></p>
 <p>右键选择插件dump debugged process把程序dump出来</p>
 <p>如下设置：</p>
-<p><img src="/2022/05/20/ketu/p12.png" alt="image"></p>
+<p><img src="/2021/07/10/ketu/p12.png" alt="image"></p>
 <p>确保勾选Fix Raw Size是修复壳进行的数据偏移，不勾选Rebuil lmport输入表不进行重定位！</p>
 <p>点击dump，保存文件命名dumo1，回到上面脱壳后的查看！</p>
 
         <h2 id="3-删除壳，减小程序大小">
           <a href="#3-删除壳，减小程序大小" class="heading-link"><i class="fas fa-link"></i></a><a href="#3-删除壳，减小程序大小" class="headerlink" title="3 . 删除壳，减小程序大小"></a>3 . 删除壳，减小程序大小</h2>
       <p>目前查看dump1.exe文件属性&#x2F;大小：</p>
-<p><img src="/2022/05/20/ketu/p13.png" alt="image"></p>
+<p><img src="/2021/07/10/ketu/p13.png" alt="image"></p>
 <p>打开软件lordPE，然后点击PE Editor按钮，选择dump1，对照弹出窗口里面显示的出数据和OD里的进程内存对比，然后点击Sections按钮，发现多余的壳区块，通通右键选择wipe section header, 如果是灰色的，那么请确保程序先不处于运行状态。后点击Save按钮保存OK。</p>
-<p><img src="/2022/05/20/ketu/p14.png" alt="image-20220413224740751"></p>
+<p><img src="/2021/07/10/ketu/p14.png" alt="image-20220413224740751"></p>
 <p>最后点击Rebuild PE再选择dump1打开：</p>
-<p><img src="/2022/05/20/ketu/p15.png" alt="image-20220413224850649"></p>
+<p><img src="/2021/07/10/ketu/p15.png" alt="image-20220413224850649"></p>
 <p>咋就知道，程序大小最后变成了原本91%！</p>
-<p><img src="/2022/05/20/ketu/p16.png" alt="image-20220413225205230"></p>
+<p><img src="/2021/07/10/ketu/p16.png" alt="image-20220413225205230"></p>
 <p>此时再用OD打开就发现壳已经无了：</p>
-<p><img src="/2022/05/20/ketu/p17.png" alt="image-20220413225131666"></p>
+<p><img src="/2021/07/10/ketu/p17.png" alt="image-20220413225131666"></p>
 
         <h2 id="4-根据堆栈平衡原理寻找OEP">
           <a href="#4-根据堆栈平衡原理寻找OEP" class="heading-link"><i class="fas fa-link"></i></a><a href="#4-根据堆栈平衡原理寻找OEP" class="headerlink" title="4 . 根据堆栈平衡原理寻找OEP"></a>4 . 根据堆栈平衡原理寻找OEP</h2>
@@ -313,35 +313,35 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></he
         <h3 id="1·示例：zip压缩壳">
           <a href="#1·示例：zip压缩壳" class="heading-link"><i class="fas fa-link"></i></a><a href="#1·示例：zip压缩壳" class="headerlink" title="1·示例：zip压缩壳"></a>1·示例：zip压缩壳</h3>
       <p>实例：看文件名可猜测这是一个压缩壳</p>
-<p><img src="/2022/05/20/ketu/p18.png" alt="image-20220414144957058"></p>
+<p><img src="/2021/07/10/ketu/p18.png" alt="image-20220414144957058"></p>
 <p>用OD打开，发现刚进来第一句就是一堆跳转之中的一个jmp:</p>
-<p><img src="/2022/05/20/ketu/p19.png" alt="image-20220414145244971"></p>
+<p><img src="/2021/07/10/ketu/p19.png" alt="image-20220414145244971"></p>
 <p>这里就是壳的模块入口了，F8执行，可见这格式像是VC程序的入口点：</p>
-<p><img src="/2022/05/20/ketu/p20.png" alt="image-20220414182834762"></p>
+<p><img src="/2021/07/10/ketu/p20.png" alt="image-20220414182834762"></p>
 <p>可是这并不是OEP，这是为什么呢？原因我们来到进程内存来看：</p>
-<p><img src="/2022/05/20/ketu/p21.png" alt="image-20220414183146139"></p>
+<p><img src="/2021/07/10/ketu/p21.png" alt="image-20220414183146139"></p>
 <p>程序目前运行地址在0x004682BC，这大概在进程内存的0x00465000到0x0046A000之间，并不是我们所想的在0x401000里面，所以它其实是一个伪造程序区块OEP的壳！</p>
 <p>现在我们重新打开，从最开始就要注意观察ESP寄存器的变化：</p>
-<p>刚开始是0012FFC4，当运行到<img src="/2022/05/20/ketu/p22.png" alt="image-20220414191517674"></p>
+<p>刚开始是0012FFC4，当运行到<img src="/2021/07/10/ketu/p22.png" alt="image-20220414191517674"></p>
 <p>时ESP发生第一次变化，变成0012FFC0，我们要把鼠标放在ESP显示的数据上右键选择数据窗口中跟随：</p>
-<p><img src="/2022/05/20/ketu/p23.png" alt="image-20220414212857900"></p>
+<p><img src="/2021/07/10/ketu/p23.png" alt="image-20220414212857900"></p>
 <p>然后就可以在数窗口看到0012FFC0，这是ESP所在的内存的位置，在该位置右键&#x2F;断点&#x2F;硬件访问&#x2F;word都可以：</p>
-<p><img src="/2022/05/20/ketu/p24.png" alt="image-20220414213357003"></p>
+<p><img src="/2021/07/10/ketu/p24.png" alt="image-20220414213357003"></p>
 <p>此时就设置好了硬件断点，此断点不一般，只能在&#x2F;调试&#x2F;硬件断点&#x2F;查看到哦，也可在此修改，也可以看到一般它只有四个硬件断点，使用的CPU特殊寄存器下断：</p>
-<p><img src="/2022/05/20/ketu/p25.png" alt="image-20220414213713220"></p>
-<p>F9直接运行到断点的位置<img src="/2022/05/20/ketu/p26.png" alt="image-20220415101819043"></p>
+<p><img src="/2021/07/10/ketu/p25.png" alt="image-20220414213713220"></p>
+<p>F9直接运行到断点的位置<img src="/2021/07/10/ketu/p26.png" alt="image-20220415101819043"></p>
 <p>此时ESP的值是0012FFC4，刚好是刚才断点的位置！</p>
 <p>这里可以记录一下，一般大部分的壳出现jmp eax都是跳转到OEP，但是这会出现一个明显的分界点，所以现在一些的强壳不会这样做！</p>
 <p>可以看到EAX的值是004271B0，我们继续看到进程内存，它在0x00401000到0x0044B000之间的代码区块！</p>
-<p>然后F8就进到了OEP:<img src="/2022/05/20/ketu/p27.png" alt="image-20220415112909192"></p>
+<p>然后F8就进到了OEP:<img src="/2021/07/10/ketu/p27.png" alt="image-20220415112909192"></p>
 <p>此时就可以删除硬件断点，并进行dump操作！</p>
 <p>也是先不勾选重定向，然后保存dump2!</p>
 <p>此时打开lordPE，点击PE Editor按钮，选择dump2打开：</p>
-<p><img src="/2022/05/20/ketu/p28.png" alt="image-20220415185618813"></p>
-<p>先点击Sections按钮把壳的区块删除。然后可以看到ImageBase:00040000正确。但是代码段的偏移Base0fCode:00065000指向的还是伪装壳的代码段，所以我们要把他修改偏移成1000，Base0fData:改成4B000。，Save，OK保存！<img src="/2022/05/20/ketu/p29.png" alt="image-20220415201035557"></p>
+<p><img src="/2021/07/10/ketu/p28.png" alt="image-20220415185618813"></p>
+<p>先点击Sections按钮把壳的区块删除。然后可以看到ImageBase:00040000正确。但是代码段的偏移Base0fCode:00065000指向的还是伪装壳的代码段，所以我们要把他修改偏移成1000，Base0fData:改成4B000。，Save，OK保存！<img src="/2021/07/10/ketu/p29.png" alt="image-20220415201035557"></p>
 <p>会发现它脱完壳之后竟然变大了原来的85%，因为这是压缩壳！</p>
-<p>接下来就可以根据retn所指向链接的黑线找到该区块的入口：<img src="/2022/05/20/ketu/p30.png" alt="image-20220415223054110"></p>
-<p>根据这个内存地址和连接指向的红线我们可以再往上寻找，发现就是回到了我们刚进来的一堆jmp的地方：<img src="/2022/05/20/ketu/p31.png" alt="image-20220415223502317"></p>
+<p>接下来就可以根据retn所指向链接的黑线找到该区块的入口：<img src="/2021/07/10/ketu/p30.png" alt="image-20220415223054110"></p>
+<p>根据这个内存地址和连接指向的红线我们可以再往上寻找，发现就是回到了我们刚进来的一堆jmp的地方：<img src="/2021/07/10/ketu/p31.png" alt="image-20220415223502317"></p>
 <p>也就是这样通过一连串的代码块的跳转对文件不同区块的压缩和加密！</p>
 
         <h3 id="2·作业">
@@ -349,59 +349,59 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></he
       
         <h4 id="1-eXPressor壳">
           <a href="#1-eXPressor壳" class="heading-link"><i class="fas fa-link"></i></a><a href="#1-eXPressor壳" class="headerlink" title="1.eXPressor壳"></a>1.eXPressor壳</h4>
-      <p>程序：<img src="/2022/05/20/ketu/p32.png" alt="image-20220416103816878"></p>
-<p>查看PEiD:<img src="/2022/05/20/ketu/p33.png" alt="image-20220416103859136"></p>
+      <p>程序：<img src="/2021/07/10/ketu/p32.png" alt="image-20220416103816878"></p>
+<p>查看PEiD:<img src="/2021/07/10/ketu/p33.png" alt="image-20220416103859136"></p>
 <p>可见这是一个exPressor的壳！</p>
-<p>OD打开程序，刚进来就在这个地址：<img src="/2022/05/20/ketu/p34.png" alt="image-20220416104054028"></p>
-<p>点击M查看进程内存：<img src="/2022/05/20/ketu/p35.png" alt="image-20220416104212052"></p>
+<p>OD打开程序，刚进来就在这个地址：<img src="/2021/07/10/ketu/p34.png" alt="image-20220416104054028"></p>
+<p>点击M查看进程内存：<img src="/2021/07/10/ketu/p35.png" alt="image-20220416104212052"></p>
 <p>根据经验，程序本来的.text代码块被壳包含在了0x0046B000开始的区段，达到了“壳里有肉，肉里有壳”的效果！</p>
-<p>根据堆栈平衡原理(80%有效)找到OEP，这次进行dump操作的时候，一点要勾选上重定向输入表！<img src="/2022/05/20/ketu/p36.png" alt="image-20220416104837596"></p>
+<p>根据堆栈平衡原理(80%有效)找到OEP，这次进行dump操作的时候，一点要勾选上重定向输入表！<img src="/2021/07/10/ketu/p36.png" alt="image-20220416104837596"></p>
 <p>这样插件就会搜索重建输入表，搜索里面的jmp跳转到一些API，然后再把这些API依次组成一个输入表！保存为dump3</p>
 <p>再用PEiD查看dump3.exe的时候，就原型毕露了，知道它是VC++5.0写的一个程序！</p>
 <p>再用OD打开dump3.exe点击M查看进程内存：</p>
-<p><img src="/2022/05/20/ketu/p37.png" alt="image-20220416105442548"></p>
+<p><img src="/2021/07/10/ketu/p37.png" alt="image-20220416105442548"></p>
 <p>发现它多了一个输入表！</p>
-<p>我们在进行LordPE的时候修改偏移Base0fcode的时候，首先要看到dump3程序入口点地址：<img src="/2022/05/20/ketu/p38.png" alt="image-20220416105855396"></p>
+<p>我们在进行LordPE的时候修改偏移Base0fcode的时候，首先要看到dump3程序入口点地址：<img src="/2021/07/10/ketu/p38.png" alt="image-20220416105855396"></p>
 <p>对比上面的进程内存，可见他在0x401000开始的区段，所以Base0fcode要修改成1000！Save</p>
-<p>在删除多余的区块的时候，备份一份，尝试后发现，只有.ex_cod可以wipe掉！<img src="/2022/05/20/ketu/p39.png" alt="image-20220416110735593"></p>
-<p>最后Rebuild PE选择dump3!<img src="/2022/05/20/ketu/p40.png" alt="image-20220416111201710"></p>
+<p>在删除多余的区块的时候，备份一份，尝试后发现，只有.ex_cod可以wipe掉！<img src="/2021/07/10/ketu/p39.png" alt="image-20220416110735593"></p>
+<p>最后Rebuild PE选择dump3!<img src="/2021/07/10/ketu/p40.png" alt="image-20220416111201710"></p>
 <p>完成！</p>
 
         <h4 id="2-MEW压缩壳">
           <a href="#2-MEW压缩壳" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-MEW压缩壳" class="headerlink" title="2.MEW压缩壳"></a>2.MEW压缩壳</h4>
-      <p>程序：<img src="/2022/05/20/ketu/p41.png" alt="image-20220416111513837"></p>
-<p>查看壳：<img src="/2022/05/20/ketu/p42.png" alt="image-20220416111616682"></p>
+      <p>程序：<img src="/2021/07/10/ketu/p41.png" alt="image-20220416111513837"></p>
+<p>查看壳：<img src="/2021/07/10/ketu/p42.png" alt="image-20220416111616682"></p>
 <p>这题只需要注意一点，像MEW系列壳除了可以使用堆栈平衡原理寻找OEP，记得分析代码；还可以在第一个区段网下滑找到retn加断点，F9运行到这F8,就到了OEP。应为这种壳，就是有个大区段，对软件进行解压缩，没有对它进行什么防护措施！</p>
 <p>其他的都很简单，直接ReBulid PE就行，不用删除什么区块！</p>
 
         <h2 id="5-text区块加断点寻找OEP">
           <a href="#5-text区块加断点寻找OEP" class="heading-link"><i class="fas fa-link"></i></a><a href="#5-text区块加断点寻找OEP" class="headerlink" title="5 . .text区块加断点寻找OEP"></a>5 . .text区块加断点寻找OEP</h2>
-      <p>程序：<img src="/2022/05/20/ketu/p43.png" alt="image-20220417165724224"></p>
-<p>查看壳：<img src="/2022/05/20/ketu/p44.png" alt="image-20220417165927233"></p>
+      <p>程序：<img src="/2021/07/10/ketu/p43.png" alt="image-20220417165724224"></p>
+<p>查看壳：<img src="/2021/07/10/ketu/p44.png" alt="image-20220417165927233"></p>
 <p>该程序直接点击运行是没有任何问题的，但是一用OD运行就只能运行出一个空窗口，而且这时使用堆栈平衡法寻找OEP也是不管用，所以这个程序是具有反调试系统的，所以我们之能先一步一步走，看能不能找到关于OD的API函数，直到运行到：</p>
-<p><img src="/2022/05/20/ketu/p45.png" alt="image-20220417171333489"></p>
-<p><img src="/2022/05/20/ketu/p46.png" alt="image-20220417171627417"></p>
+<p><img src="/2021/07/10/ketu/p45.png" alt="image-20220417171333489"></p>
+<p><img src="/2021/07/10/ketu/p46.png" alt="image-20220417171627417"></p>
 <p>IsDebuggerPresent是windows提供的对调试器判断的一个API</p>
-<p>还有一种更快捷的办法，右键&#x2F;查找&#x2F;所有模块中的名称&#x2F;往下滑就能看到IsDebuggerPresent：<img src="/2022/05/20/ketu/p47.png" alt="image-20220417174617927"></p>
-<p>双击就进了它的动态链接库：<img src="/2022/05/20/ketu/p48.png" alt="image-20220417175339918"></p>
-<p>在这里我们加断点，运行到这，然后按Alt+F9也可以来到差不多我们刚才单步走到的位置！<img src="/2022/05/20/ketu/p49.png" alt="image-20220417180734491"></p>
+<p>还有一种更快捷的办法，右键&#x2F;查找&#x2F;所有模块中的名称&#x2F;往下滑就能看到IsDebuggerPresent：<img src="/2021/07/10/ketu/p47.png" alt="image-20220417174617927"></p>
+<p>双击就进了它的动态链接库：<img src="/2021/07/10/ketu/p48.png" alt="image-20220417175339918"></p>
+<p>在这里我们加断点，运行到这，然后按Alt+F9也可以来到差不多我们刚才单步走到的位置！<img src="/2021/07/10/ketu/p49.png" alt="image-20220417180734491"></p>
 <p>注意寄存器EAX，当能探测到调试器的时候eax&#x3D;1，反之不能探测到则为eax&#x3D;0</p>
-<p>因此可见，该程序跳转就不能是实现了：<img src="/2022/05/20/ketu/p50.png" alt="image-20220417181116429"></p>
-<p><img src="/2022/05/20/ketu/p51.png" alt="image-20220417181138685"></p>
+<p>因此可见，该程序跳转就不能是实现了：<img src="/2021/07/10/ketu/p50.png" alt="image-20220417181116429"></p>
+<p><img src="/2021/07/10/ketu/p51.png" alt="image-20220417181138685"></p>
 <p>所以我们可以先修改，标准寄存器ZF位的值吧，也可以把它改为jmp，让其实现跳转，此时再按F9运行可见程序就能正常执行了！</p>
 <p>此时就是去掉他的反调试功能了，在修改jmp的位置此时右键&#x2F;复制到可执行文件&#x2F;选择，然后保存文件，命名2。</p>
-<p>继续用OD打开去掉反调试后的该文件2：<img src="/2022/05/20/ketu/p52.png" alt="image-20220417220910299"></p>
-<p>查看进程内存：<img src="/2022/05/20/ketu/p53.png" alt="image-20220417221014633"></p>
-<p>但是！后面发现，用堆栈平衡方式寻找OEP并没有用，甚至停不下！所以这里我们要用另外一种方法就是在.text区块加断点！因为壳不论怎么运行终究还是要回到源程序的代码段的，所以我们就直接在原程序代码段加断点：<img src="/2022/05/20/ketu/p54.png" alt="image-20220417221621685"></p>
-<p>00401000右键&#x2F;在访问上设置中断，运行：<img src="/2022/05/20/ketu/p55.png" alt="image-20220417221947771"><img src="/2022/05/20/ketu/p56.png" alt="image-20220417222117355"></p>
-<p>但是这并不是我们想要的地址，那由于运行过了，断点取消了，那我们再继续断继续走，多次后发现并不可以，但是我们看到了loopd:<img src="/2022/05/20/ketu/p57.png" alt="image-20220417222350059"></p>
-<p>可以看到这里灰线的箭头其实是多次循环回去了，所以我们先直接先让它跳出循环再说，在循环外的下一个地址加断&#x2F;运行&#x2F;取段，就来到了这：<img src="/2022/05/20/ketu/p58.png" alt="image-20220417222642877"></p>
-<p>此时再次00401000下断点&#x2F;运行的时候，又是多次来到了这里：<img src="/2022/05/20/ketu/p59.png" alt="image-20220417222921036"></p>
-<p>可见这是又有一个循环的，那总是进去很多个循环怎么办，一个一个像上面那样吗？不！我们重新开始，可以Ctrl+F8，或者长按F8，先观察循环都在哪里，再直接找到循环的末端，通过上面的方式下断：<img src="/2022/05/20/ketu/p60.png" alt="image-20220417225402388"></p>
-<p>看就是这个灰色循环，目前我们已经断在外了，取断后，断00401000执行，然后我们就来到真实的OEP啦，右键&#x2F;分析&#x2F;分析代码：<img src="/2022/05/20/ketu/p61.png" alt="image-20220417225655198"></p>
-<p>然后我们就把它dump5吧：<img src="/2022/05/20/ketu/p62.png" alt="image-20220417225834904"></p>
+<p>继续用OD打开去掉反调试后的该文件2：<img src="/2021/07/10/ketu/p52.png" alt="image-20220417220910299"></p>
+<p>查看进程内存：<img src="/2021/07/10/ketu/p53.png" alt="image-20220417221014633"></p>
+<p>但是！后面发现，用堆栈平衡方式寻找OEP并没有用，甚至停不下！所以这里我们要用另外一种方法就是在.text区块加断点！因为壳不论怎么运行终究还是要回到源程序的代码段的，所以我们就直接在原程序代码段加断点：<img src="/2021/07/10/ketu/p54.png" alt="image-20220417221621685"></p>
+<p>00401000右键&#x2F;在访问上设置中断，运行：<img src="/2021/07/10/ketu/p55.png" alt="image-20220417221947771"><img src="/2021/07/10/ketu/p56.png" alt="image-20220417222117355"></p>
+<p>但是这并不是我们想要的地址，那由于运行过了，断点取消了，那我们再继续断继续走，多次后发现并不可以，但是我们看到了loopd:<img src="/2021/07/10/ketu/p57.png" alt="image-20220417222350059"></p>
+<p>可以看到这里灰线的箭头其实是多次循环回去了，所以我们先直接先让它跳出循环再说，在循环外的下一个地址加断&#x2F;运行&#x2F;取段，就来到了这：<img src="/2021/07/10/ketu/p58.png" alt="image-20220417222642877"></p>
+<p>此时再次00401000下断点&#x2F;运行的时候，又是多次来到了这里：<img src="/2021/07/10/ketu/p59.png" alt="image-20220417222921036"></p>
+<p>可见这是又有一个循环的，那总是进去很多个循环怎么办，一个一个像上面那样吗？不！我们重新开始，可以Ctrl+F8，或者长按F8，先观察循环都在哪里，再直接找到循环的末端，通过上面的方式下断：<img src="/2021/07/10/ketu/p60.png" alt="image-20220417225402388"></p>
+<p>看就是这个灰色循环，目前我们已经断在外了，取断后，断00401000执行，然后我们就来到真实的OEP啦，右键&#x2F;分析&#x2F;分析代码：<img src="/2021/07/10/ketu/p61.png" alt="image-20220417225655198"></p>
+<p>然后我们就把它dump5吧：<img src="/2021/07/10/ketu/p62.png" alt="image-20220417225834904"></p>
 <p>接下来备份dump5就可以开始老的方法wipe去除多余的区块.Prt啦！<br>图片 p120.png:</p>
-<p><img src="/2022/05/20/ketu/%E5%9B%BE%E7%89%87p120.png" alt="image-20220417230154503"></p>
+<p><img src="/2021/07/10/ketu/%E5%9B%BE%E7%89%87p120.png" alt="image-20220417230154503"></p>
 <p>成功啦！</p>
 <hr>
 
@@ -418,30 +418,30 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></he
 
 <figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PIMAGE_IMPORT_BY_NAME是一个非常简单的结构，就两个成员。</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IMAGE_IMPORT_BY_NAME</span> &#123;</span></span><br><span class="line">     WORD Hint;            <span class="comment">// 该函数的导出序数</span></span><br><span class="line">     BYTE Name[<span class="number">1</span>];      <span class="comment">// 该函数的名字</span></span><br><span class="line">&#125; IMAGE_IMPORT_BY_NAME, *PIMAGE_IMPORT_BY_NAME;</span><br></pre></td></tr></table></div></figure>
 
-<p><img src="/2022/05/20/ketu/p63.png" alt="image-20220418162411370"></p>
+<p><img src="/2021/07/10/ketu/p63.png" alt="image-20220418162411370"></p>
 
         <h2 id="2-OD跟踪输入表">
           <a href="#2-OD跟踪输入表" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-OD跟踪输入表" class="headerlink" title="2 . OD跟踪输入表"></a>2 . OD跟踪输入表</h2>
-      <p>例程序：<img src="/2022/05/20/ketu/p64.png" alt="image-20220418163214018"></p>
-<p>这是个简单的MessgeBoxA对话框程序，用OD打开：<img src="/2022/05/20/ketu/p65.png" alt="image-20220418163346289"></p>
+      <p>例程序：<img src="/2021/07/10/ketu/p64.png" alt="image-20220418163214018"></p>
+<p>这是个简单的MessgeBoxA对话框程序，用OD打开：<img src="/2021/07/10/ketu/p65.png" alt="image-20220418163346289"></p>
 <p>虽然OD注释可以识别到这是MessgeBox，但点开这条指令是call 004011EA，那为什么它知道内存地址0x004011EA地址是一个MessgeBoxA的API函数呢？</p>
-<p>那我们就在这行按下回车Enter键：<img src="/2022/05/20/ketu/p66.png" alt="image-20220418164053565"></p>
-<p>可以看到这是个跳转，其实周围还很多都是跳转，查看下面按是跳转到哪里：<img src="/2022/05/20/ketu/p67.png" alt="image-20220418164207582"></p>
-<p>上面显示的是取[00402048]内存地址里面的值&#x3D;77D507EA跳转，为了验证一下，我们在内存窗口Ctrl+G输入00402048，就来到了这个地址：<img src="/2022/05/20/ketu/p68.png" alt="image-20220418164606243"></p>
+<p>那我们就在这行按下回车Enter键：<img src="/2021/07/10/ketu/p66.png" alt="image-20220418164053565"></p>
+<p>可以看到这是个跳转，其实周围还很多都是跳转，查看下面按是跳转到哪里：<img src="/2021/07/10/ketu/p67.png" alt="image-20220418164207582"></p>
+<p>上面显示的是取[00402048]内存地址里面的值&#x3D;77D507EA跳转，为了验证一下，我们在内存窗口Ctrl+G输入00402048，就来到了这个地址：<img src="/2021/07/10/ketu/p68.png" alt="image-20220418164606243"></p>
 <p>根据小端存储，从右往左读，发现正是77D507EA!</p>
-<p>所以我们可以知道在这整个程序无论到在个位置调用MessgeBoxA，它都相当于call 004011EA，在这里集中跳转到MessgeBoxA的动态链接库！<img src="/2022/05/20/ketu/p69.png" alt="image-20220418170825475"></p>
+<p>所以我们可以知道在这整个程序无论到在个位置调用MessgeBoxA，它都相当于call 004011EA，在这里集中跳转到MessgeBoxA的动态链接库！<img src="/2021/07/10/ketu/p69.png" alt="image-20220418170825475"></p>
 <p>可以看到上面这些都是OD分析给我的，但是OD为什么会知道呢，其实就是根据IAT得出的！</p>
 <p>接下来我们继续跟踪输入表，Alt+M到内存双击PE文件头，也就是00400000区块：</p>
-<p>然后我们就可以看到标准PE头文件格式：<img src="/2022/05/20/ketu/p70.png" alt="image-20220418173633788">标志：<img src="/2022/05/20/ketu/p71.png" alt="image-20220418173706834">Image Base：<img src="/2022/05/20/ketu/p72.png" alt="image-20220418173758790">偏移地址，这是输入表的地址Import Table address：<img src="/2022/05/20/ketu/p73.png" alt="image-20220418173909910"></p>
-<p>回到内存窗口，其实输入表所在地差不多就在这个位置：<img src="/2022/05/20/ketu/p74.png" alt="image-20220418174153805"></p>
-<p>接下来我们在代码窗口Ctrl+G搜索00402050，我们就来到了这里，但是发现没办法分析，因为它认为我们这不是在代码段：<img src="/2022/05/20/ketu/p75.png" alt="image-20220418174515314"></p>
-<p>所以我们要像之前一样安装一个新的插件：<img src="/2022/05/20/ketu/p76.png" alt="image-20220418174706485"></p>
-<p>安装好插件后重新打开，就可以点击Analyze This!<img src="/2022/05/20/ketu/p77.png" alt="image-20220418175424943"></p>
-<p>可见左边黑色数据是小端存储，右边绿色是OD简化成了我们方便阅读的字节形式，都是相对400000的偏移地址，可见总共有两个IMAGE_IMPORT_DESCRIPTOR，最后一个全是0是作为结束的标识。我们先尝试Ctrl+G搜第一个参数OriginalFilrstThunk地址00402098：<img src="/2022/05/20/ketu/p78.png" alt="image-20220418180222534"></p>
-<p>然后就走到了INT的第一个参数IMACE_THUNK_DATA又是一个偏移地址00402122，继续搜：<img src="/2022/05/20/ketu/p79.png" alt="image-20220418180509903"></p>
+<p>然后我们就可以看到标准PE头文件格式：<img src="/2021/07/10/ketu/p70.png" alt="image-20220418173633788">标志：<img src="/2021/07/10/ketu/p71.png" alt="image-20220418173706834">Image Base：<img src="/2021/07/10/ketu/p72.png" alt="image-20220418173758790">偏移地址，这是输入表的地址Import Table address：<img src="/2021/07/10/ketu/p73.png" alt="image-20220418173909910"></p>
+<p>回到内存窗口，其实输入表所在地差不多就在这个位置：<img src="/2021/07/10/ketu/p74.png" alt="image-20220418174153805"></p>
+<p>接下来我们在代码窗口Ctrl+G搜索00402050，我们就来到了这里，但是发现没办法分析，因为它认为我们这不是在代码段：<img src="/2021/07/10/ketu/p75.png" alt="image-20220418174515314"></p>
+<p>所以我们要像之前一样安装一个新的插件：<img src="/2021/07/10/ketu/p76.png" alt="image-20220418174706485"></p>
+<p>安装好插件后重新打开，就可以点击Analyze This!<img src="/2021/07/10/ketu/p77.png" alt="image-20220418175424943"></p>
+<p>可见左边黑色数据是小端存储，右边绿色是OD简化成了我们方便阅读的字节形式，都是相对400000的偏移地址，可见总共有两个IMAGE_IMPORT_DESCRIPTOR，最后一个全是0是作为结束的标识。我们先尝试Ctrl+G搜第一个参数OriginalFilrstThunk地址00402098：<img src="/2021/07/10/ketu/p78.png" alt="image-20220418180222534"></p>
+<p>然后就走到了INT的第一个参数IMACE_THUNK_DATA又是一个偏移地址00402122，继续搜：<img src="/2021/07/10/ketu/p79.png" alt="image-20220418180509903"></p>
 <p>可见我们就来到了IMAGE_IMPORT_BY_NAME内，可找到函数的名字（都是由ASCII码转换翻译的）！</p>
-<p>然后看到IMAGE_IMPORT_DESCRIPTOR第五个参数FirstThunk，这才是真正指向IAT的偏移地址：<img src="/2022/05/20/ketu/p80.png" alt="image-20220418181002394"></p>
-<p>搜索到：<img src="/2022/05/20/ketu/p81.png" alt="image-20220418181113132"></p>
+<p>然后看到IMAGE_IMPORT_DESCRIPTOR第五个参数FirstThunk，这才是真正指向IAT的偏移地址：<img src="/2021/07/10/ketu/p80.png" alt="image-20220418181002394"></p>
+<p>搜索到：<img src="/2021/07/10/ketu/p81.png" alt="image-20220418181113132"></p>
 <p>可见其实这就是IAT输入表！</p>
 
         <h2 id="3-HOOK-API">
@@ -452,33 +452,33 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></he
 
         <h1 id="四·-FSG压缩壳和ImportREC的使用">
           <a href="#四·-FSG压缩壳和ImportREC的使用" class="heading-link"><i class="fas fa-link"></i></a><a href="#四·-FSG压缩壳和ImportREC的使用" class="headerlink" title="四· FSG压缩壳和ImportREC的使用"></a>四· FSG压缩壳和ImportREC的使用</h1>
-      <p>程序可以正常运行：<img src="/2022/05/20/ketu/p82.png" alt="image-20220418184914873"></p>
-<p>查看壳：<img src="/2022/05/20/ketu/p83.png" alt="image-20220418184815948"></p>
+      <p>程序可以正常运行：<img src="/2021/07/10/ketu/p82.png" alt="image-20220418184914873"></p>
+<p>查看壳：<img src="/2021/07/10/ketu/p83.png" alt="image-20220418184815948"></p>
 <p>可见这是用Delphi7.0写的程序，API比较多，所以IAT修复比较麻烦！</p>
-<p>安装壳程序，点击install.exe,或者自行解压fsg.rar：<img src="/2022/05/20/ketu/p84.png" alt="image-20220418185939919"></p>
-<p>给程序FishC加壳，拖拽即可！这是一个压缩壳，压缩44%<img src="/2022/05/20/ketu/p85.png" alt="image-20220418202739825">加壳后程序也可正常运行！</p>
-<p>现在查看壳就可看到壳了：<img src="/2022/05/20/ketu/p86.png" alt="image-20220418203113866"></p>
-<p>把加FSG壳后的程序用OD打开:<img src="/2022/05/20/ketu/p87.png" alt="image-20220418203704260"></p>
+<p>安装壳程序，点击install.exe,或者自行解压fsg.rar：<img src="/2021/07/10/ketu/p84.png" alt="image-20220418185939919"></p>
+<p>给程序FishC加壳，拖拽即可！这是一个压缩壳，压缩44%<img src="/2021/07/10/ketu/p85.png" alt="image-20220418202739825">加壳后程序也可正常运行！</p>
+<p>现在查看壳就可看到壳了：<img src="/2021/07/10/ketu/p86.png" alt="image-20220418203113866"></p>
+<p>把加FSG壳后的程序用OD打开:<img src="/2021/07/10/ketu/p87.png" alt="image-20220418203704260"></p>
 <p>此时用老方法较为复杂，目前使用一种新方法，步骤如上图1234，选项&#x2F;调试选项&#x2F;SFX&#x2F;字节方式跟踪真正入口处&#x2F;重新运行！</p>
-<p>在这之后，还是回到了原来的地方，然后再带点击选项&#x2F;调试选项&#x2F;SFX&#x2F;停在自解压器的入口&#x2F;重新运行&#x2F;，就可以看见左下角在疯狂的运行，这是在模拟程序的运行，自解压：<img src="/2022/05/20/ketu/p88.png" alt="image-20220418204434819"></p>
-<p>然后就来到了OEP，接下来就是右键&#x2F;分析&#x2F;从模块中删除分析：<img src="/2022/05/20/ketu/p89.png" alt="image-20220418204709439"></p>
+<p>在这之后，还是回到了原来的地方，然后再带点击选项&#x2F;调试选项&#x2F;SFX&#x2F;停在自解压器的入口&#x2F;重新运行&#x2F;，就可以看见左下角在疯狂的运行，这是在模拟程序的运行，自解压：<img src="/2021/07/10/ketu/p88.png" alt="image-20220418204434819"></p>
+<p>然后就来到了OEP，接下来就是右键&#x2F;分析&#x2F;从模块中删除分析：<img src="/2021/07/10/ketu/p89.png" alt="image-20220418204709439"></p>
 <p>接下来就可以dump操作了。由于SFG壳破坏了IAT，所以不要勾选重建输入表，因为勾选了也没用！我们接下来还要借助ImpREC.exe神奇工具修复IAT!</p>
-<p><img src="/2022/05/20/ketu/p90.png" alt="image-20220418214958019"></p>
-<p>如图，要确保要修改的程序被OD打开中或者与运行中，ImpREC才能检测到，然后根据我们刚才跟踪到了SFX代码真正入口点的地址，提取偏移地址，修改上面红色框起来的OEP，然后点击IAT AutoSearch就弹出一个提示框：<img src="/2022/05/20/ketu/p91.png" alt="image-20220418215506236"></p>
+<p><img src="/2021/07/10/ketu/p90.png" alt="image-20220418214958019"></p>
+<p>如图，要确保要修改的程序被OD打开中或者与运行中，ImpREC才能检测到，然后根据我们刚才跟踪到了SFX代码真正入口点的地址，提取偏移地址，修改上面红色框起来的OEP，然后点击IAT AutoSearch就弹出一个提示框：<img src="/2021/07/10/ketu/p91.png" alt="image-20220418215506236"></p>
 <p>ImportREC会自动搜索所有的IAT!</p>
 <p>翻译：好像找到了一些东西，但也有可能不不正确，如果不正确，建议把RAV改成：00001000 Size改成：00094000</p>
-<p>接下俩我们就来验证一下，在内存搜索RAV地址，看它是不是IAT的入口点：<img src="/2022/05/20/ketu/p92.png" alt="image-20220418220105690"></p>
-<p>就看到这里：<img src="/2022/05/20/ketu/p93.png" alt="image-20220418220743104"></p>
-<p>继续往下滑就可以看见熟悉的API函数：<img src="/2022/05/20/ketu/p94.png" alt="image-20220418220842333"></p>
+<p>接下俩我们就来验证一下，在内存搜索RAV地址，看它是不是IAT的入口点：<img src="/2021/07/10/ketu/p92.png" alt="image-20220418220105690"></p>
+<p>就看到这里：<img src="/2021/07/10/ketu/p93.png" alt="image-20220418220743104"></p>
+<p>继续往下滑就可以看见熟悉的API函数：<img src="/2021/07/10/ketu/p94.png" alt="image-20220418220842333"></p>
 <p>可见00461BEC上面还包含一些数据其实也是，所以我们还要是要把RVA改成：0046B12C，把这些数据包含进去，这才能确保我们的IAT修复的是完整的，才能正常打开程序！</p>
-<p>可见IAT最后到了这里：<img src="/2022/05/20/ketu/p95.png" alt="image-20220418221448148"></p>
-<p>所以Size也要修改，范围大了可以，范围小了就不可以，只要把全部IAT包含到了就可以！我们修改成大概10000吧：<img src="/2022/05/20/ketu/p96.png" alt="image-20220418221928933"></p>
+<p>可见IAT最后到了这里：<img src="/2021/07/10/ketu/p95.png" alt="image-20220418221448148"></p>
+<p>所以Size也要修改，范围大了可以，范围小了就不可以，只要把全部IAT包含到了就可以！我们修改成大概10000吧：<img src="/2021/07/10/ketu/p96.png" alt="image-20220418221928933"></p>
 <p>然后我们就可以点击Get Imports按钮了！</p>
-<p>加载一会儿，可以看到很多的valid:NO这些就都是不合法的，总共有6642条都是不合法：<img src="/2022/05/20/ketu/p97.png" alt="image-20220418222316652"></p>
-<p>所以我们点击Show Invalid按钮把不合法的都展示出来，可见这些不合法的数据穿插在各个IAT里面，只要程序加载到这里的时候，加载不到，就会报错！所以我们右键&#x2F;Cut thunk(s)，把这些不合法的东西全部都给砍掉！<img src="/2022/05/20/ketu/98.png" alt="image-20220418222733408"></p>
-<p>然后就可见我们见到的都是valid:YES的了，然后我们就点击Fix Dump按钮，选择覆盖刚才OD的dump文件：<img src="/2022/05/20/ketu/p99.png" alt="image-20220418222951970"></p>
+<p>加载一会儿，可以看到很多的valid:NO这些就都是不合法的，总共有6642条都是不合法：<img src="/2021/07/10/ketu/p97.png" alt="image-20220418222316652"></p>
+<p>所以我们点击Show Invalid按钮把不合法的都展示出来，可见这些不合法的数据穿插在各个IAT里面，只要程序加载到这里的时候，加载不到，就会报错！所以我们右键&#x2F;Cut thunk(s)，把这些不合法的东西全部都给砍掉！<img src="/2021/07/10/ketu/98.png" alt="image-20220418222733408"></p>
+<p>然后就可见我们见到的都是valid:YES的了，然后我们就点击Fix Dump按钮，选择覆盖刚才OD的dump文件：<img src="/2021/07/10/ketu/p99.png" alt="image-20220418222951970"></p>
 <p>然后它就帮我们多生成了一个文件dump_可以正常运行！</p>
-<p>然后再用PEiD查看壳，如果有时候查看不出来<img src="/2022/05/20/ketu/p100.png" alt="image-20220418223541715">可以选择选项&#x2F;深度扫描：<img src="/2022/05/20/ketu/p101.png" alt="image-20220418223618570"></p>
+<p>然后再用PEiD查看壳，如果有时候查看不出来<img src="/2021/07/10/ketu/p100.png" alt="image-20220418223541715">可以选择选项&#x2F;深度扫描：<img src="/2021/07/10/ketu/p101.png" alt="image-20220418223618570"></p>
 <p>就出来了！也可以观察到，脱壳后的文件变大了！</p>
 <hr>
 
@@ -489,53 +489,53 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></he
 
         <h2 id="1-upx309w命令行加-脱壳">
           <a href="#1-upx309w命令行加-脱壳" class="heading-link"><i class="fas fa-link"></i></a><a href="#1-upx309w命令行加-脱壳" class="headerlink" title="1 . upx309w命令行加\脱壳"></a>1 . upx309w命令行加\脱壳</h2>
-      <p><img src="/2022/05/20/ketu/p102.png" alt="image-20220419090226751"></p>
+      <p><img src="/2021/07/10/ketu/p102.png" alt="image-20220419090226751"></p>
 <p>win+R打开控制台，cd到壳程序目录下，upx.exe加壳，后面的才参数是我们待加壳地程序，加壳后可以看到，压缩到了原来的51.93%，大小从582656变成了302592字节！</p>
 <p>其实也可以不用命令行，直接拖拽到upx.exe加壳！</p>
-<p>然后我们就能查到壳：<img src="/2022/05/20/ketu/p103.png" alt="image-20220419090621346"></p>
-<p>然后查阅文档可知，命令加上-d参数，即可脱壳：<img src="/2022/05/20/ketu/p104.png" alt="image-20220419091006607"></p>
-<p>如下：<img src="/2022/05/20/ketu/p105.png" alt="image-20220419091127168"></p>
+<p>然后我们就能查到壳：<img src="/2021/07/10/ketu/p103.png" alt="image-20220419090621346"></p>
+<p>然后查阅文档可知，命令加上-d参数，即可脱壳：<img src="/2021/07/10/ketu/p104.png" alt="image-20220419091006607"></p>
+<p>如下：<img src="/2021/07/10/ketu/p105.png" alt="image-20220419091127168"></p>
 
         <h2 id="2-Free-UPX">
           <a href="#2-Free-UPX" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-Free-UPX" class="headerlink" title="2 . Free UPX"></a>2 . Free UPX</h2>
-      <p><img src="/2022/05/20/ketu/p106.png" alt="image-20220419104644009"></p>
+      <p><img src="/2021/07/10/ketu/p106.png" alt="image-20220419104644009"></p>
 <p>点击Add files按钮选择程序，COMPRESS是加壳，DECOMPRESS脱壳，下面的Backup file可以选择create可以创建一个副本，备份原程序！</p>
 
         <h2 id="3-OD脱UPX壳">
           <a href="#3-OD脱UPX壳" class="heading-link"><i class="fas fa-link"></i></a><a href="#3-OD脱UPX壳" class="headerlink" title="3 . OD脱UPX壳"></a>3 . OD脱UPX壳</h2>
-      <p>OD打开加UPX壳后的fishc程序:<img src="/2022/05/20/ketu/p107.png" alt="image-20220419111142757"></p>
-<p>通过堆栈平衡原理寻找OEP过程中，硬件断点来到这里:<img src="/2022/05/20/ketu/p108.png" alt="image-20220419111400944"></p>
-<p>由于这是3.09的版本壳，在之前的版本有可能是jmp，但这里jmp在下面，所以我们先取消硬件断点，然后在下面的jmp加断点&#x2F;运行至此&#x2F;去掉断点&#x2F;F8&#x2F;分析&#x2F;分析代码，就来到了OEP:<img src="/2022/05/20/ketu/p109.png" alt="image-20220419111758641"><img src="/2022/05/20/ketu/p110.png" alt="image-20220419111850970"></p>
+      <p>OD打开加UPX壳后的fishc程序:<img src="/2021/07/10/ketu/p107.png" alt="image-20220419111142757"></p>
+<p>通过堆栈平衡原理寻找OEP过程中，硬件断点来到这里:<img src="/2021/07/10/ketu/p108.png" alt="image-20220419111400944"></p>
+<p>由于这是3.09的版本壳，在之前的版本有可能是jmp，但这里jmp在下面，所以我们先取消硬件断点，然后在下面的jmp加断点&#x2F;运行至此&#x2F;去掉断点&#x2F;F8&#x2F;分析&#x2F;分析代码，就来到了OEP:<img src="/2021/07/10/ketu/p109.png" alt="image-20220419111758641"><img src="/2021/07/10/ketu/p110.png" alt="image-20220419111850970"></p>
 <p>然后dump操作，注意不要勾选重建输入表，接下来我们要用ImportRE恢复！</p>
 
         <h2 id="5-使用ImportREC修复IAT">
           <a href="#5-使用ImportREC修复IAT" class="heading-link"><i class="fas fa-link"></i></a><a href="#5-使用ImportREC修复IAT" class="headerlink" title="5 . 使用ImportREC修复IAT"></a>5 . 使用ImportREC修复IAT</h2>
-      <p><img src="/2022/05/20/ketu/p111.png" alt="image-20220419114356233"></p>
+      <p><img src="/2021/07/10/ketu/p111.png" alt="image-20220419114356233"></p>
 <ol>
 <li>先点击小三角选择用OD正在运行的原程序文件</li>
 <li>更具OD找到的OEP，修改ImportREC的OEP里面的偏移地址</li>
 <li>点击IAT AutoSearch按钮确定</li>
-<li>根据给出的RAV偏移地址去OD内存搜索验证，保证输入表没被修改，如果被修改了，就要把RAV的偏移地址调整过来，把IAT包含进去！这里可见上滑上面没有了，是可以的准确的，下面的Size也把IAT包含了，OK<img src="/2022/05/20/ketu/p112.png" alt="image-20220419115822595"></li>
-<li>点击Get Imports按钮，点击Show Invalid按钮，可见没有错误的IAT<img src="/2022/05/20/ketu/p113.png" alt="image-20220419120253262"></li>
+<li>根据给出的RAV偏移地址去OD内存搜索验证，保证输入表没被修改，如果被修改了，就要把RAV的偏移地址调整过来，把IAT包含进去！这里可见上滑上面没有了，是可以的准确的，下面的Size也把IAT包含了，OK<img src="/2021/07/10/ketu/p112.png" alt="image-20220419115822595"></li>
+<li>点击Get Imports按钮，点击Show Invalid按钮，可见没有错误的IAT<img src="/2021/07/10/ketu/p113.png" alt="image-20220419120253262"></li>
 <li>就可以直接Fix Dump选择刚才OD的dumpupx文件了！</li>
 </ol>
 
         <h2 id="6-WinUpacx壳">
           <a href="#6-WinUpacx壳" class="heading-link"><i class="fas fa-link"></i></a><a href="#6-WinUpacx壳" class="headerlink" title="6 . WinUpacx壳"></a>6 . WinUpacx壳</h2>
       <p>该壳压缩效率更高，但已不更新！</p>
-<p><img src="/2022/05/20/ketu/p114.png" alt="image-20220419123029712"></p>
+<p><img src="/2021/07/10/ketu/p114.png" alt="image-20220419123029712"></p>
 <p>界面中文，比较友好！建议勾选3.清除导出表&#x2F;4.清除重定位表</p>
-<p>然后压缩之后会出现一个文件：<img src="/2022/05/20/ketu/p115.png" alt="image-20220419123200002">这个文件去掉.bak后缀之后就是我们的原程序备份！</p>
-<p>然后OD打开：<img src="/2022/05/20/ketu/p116.png" alt="image-20220419124124354"></p>
-<p>入过一开始不是这里，那也可以Alt+M，双击fishc在数据窗口找到偏移地址，即可搜索：<img src="/2022/05/20/ketu/p117.png" alt="image-20220419124349123"></p>
-<p>接下来就是根据堆栈平衡寻找OEP:<img src="/2022/05/20/ketu/p118.png" alt="image-20220419124602886"></p>
+<p>然后压缩之后会出现一个文件：<img src="/2021/07/10/ketu/p115.png" alt="image-20220419123200002">这个文件去掉.bak后缀之后就是我们的原程序备份！</p>
+<p>然后OD打开：<img src="/2021/07/10/ketu/p116.png" alt="image-20220419124124354"></p>
+<p>入过一开始不是这里，那也可以Alt+M，双击fishc在数据窗口找到偏移地址，即可搜索：<img src="/2021/07/10/ketu/p117.png" alt="image-20220419124349123"></p>
+<p>接下来就是根据堆栈平衡寻找OEP:<img src="/2021/07/10/ketu/p118.png" alt="image-20220419124602886"></p>
 <p>就可进行dump操作，由于输入表已被破坏所以记得不用勾选重建，重建也是错误的!</p>
 <p>然后其实和上一个程序一样操作ImportREC，不多赘述！</p>
-<p>然后如果还不满意可以再进行LordPE操作：<img src="/2022/05/20/ketu/p119.png" alt="image-20220419125328317"></p>
+<p>然后如果还不满意可以再进行LordPE操作：<img src="/2021/07/10/ketu/p119.png" alt="image-20220419125328317"></p>
 <p>最后这就就完美啦！恭喜结业！！！芜湖！！！</p>
 <p>链接<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://space.bilibili.com/2098810443">欢迎大家关注我的Bilibli</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>感谢一键三连哦~</p>
 <hr>
-</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="https://unique-elven.github.io">乙太</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="https://unique-elven.github.io/2022/05/20/ketu/">https://unique-elven.github.io/2022/05/20/ketu/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://unique-elven.github.io/tags/%E7%A8%8B%E5%BA%8F%E5%A3%B3/">程序壳</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://unique-elven.github.io/tags/%E7%A8%8B%E5%BA%8F%E8%84%B1%E5%A3%B3%E7%AF%87/">程序脱壳篇</a></span></div><div class="post-reward reward"><div class="reward-button">请我喝杯咖啡~</div><div class="reward-qrcode"><span class="reward-qrcode-alipay"><img class="reward-qrcode-alipay__img" src="/images/zhifubao.jpg"><div class="reward-qrcode-alipay__text">支付宝打赏</div></span><span class="reward-qrcode-wechat"><img class="reward-qrcode-wechat__img" src="/images/wechat.jpg"><div class="reward-qrcode-wechat__text">微信打赏</div></span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2022/05/21/kaisa/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">恺撒密码</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2022/02/10/boke/"><span class="paginator-prev__text">博客的搭建教程</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div><div class="comments" id="comments"><div id="lv-container" data-id="city" data-uid="MTAyMC81NjQ3My8zMjkzNg"></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%C2%B7-%E4%BB%80%E4%B9%88%E6%98%AF%E5%A3%B3%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="https://unique-elven.github.io">乙太</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="https://unique-elven.github.io/2021/07/10/ketu/">https://unique-elven.github.io/2021/07/10/ketu/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://unique-elven.github.io/tags/%E7%A8%8B%E5%BA%8F%E5%A3%B3/">程序壳</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://unique-elven.github.io/tags/%E7%A8%8B%E5%BA%8F%E8%84%B1%E5%A3%B3%E7%AF%87/">程序脱壳篇</a></span></div><div class="post-reward reward"><div class="reward-button">请我喝杯咖啡~</div><div class="reward-qrcode"><span class="reward-qrcode-alipay"><img class="reward-qrcode-alipay__img" src="/images/zhifubao.jpg"><div class="reward-qrcode-alipay__text">支付宝打赏</div></span><span class="reward-qrcode-wechat"><img class="reward-qrcode-wechat__img" src="/images/wechat.jpg"><div class="reward-qrcode-wechat__text">微信打赏</div></span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/07/10/kaisa/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">恺撒密码</span></a></div></nav></footer></div></div><div class="comments" id="comments"><div id="lv-container" data-id="city" data-uid="MTAyMC81NjQ3My8zMjkzNg"></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%C2%B7-%E4%BB%80%E4%B9%88%E6%98%AF%E5%A3%B3%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">
           一· 什么是壳？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%88%9D%E6%AD%A5%E8%AE%A4%E8%AF%86%E5%A3%B3"><span class="toc-number">1.1.</span> <span class="toc-text">
           1 . 初步认识壳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%A3%B3%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">
           2 . 壳的执行过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-OEP-Original-Entry-Point"><span class="toc-number">1.3.</span> <span class="toc-text">
