@@ -6,7 +6,7 @@
   <link href="https://unique-yyds.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://unique-yyds.gitee.io/"/>
-  <updated>2022-05-27T01:05:00.429Z</updated>
+  <updated>2022-09-24T05:51:12.720Z</updated>
   <id>https://unique-yyds.gitee.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>PWN基础知识</title>
+    <link href="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/"/>
+    <id>https://unique-yyds.gitee.io/2022/09/24/pwn%2001/</id>
+    <published>2022-09-24T05:41:16.871Z</published>
+    <updated>2022-09-24T05:51:12.720Z</updated>
+    
+    
+    <summary type="html">“pwn&quot;是一个黑客语法的俚语词，是指攻破设备或者系统。发音类似“砰”，对于黑客而言，这就是成功实施黑客攻击的声音----砰的一声，被“黑”的电脑或手机就被操控。</summary>
+    
+    
+    
+    <category term="PWN" scheme="https://unique-yyds.gitee.io/categories/categories-PWN/"/>
+    
+    <category term="01 PWN基础知识" scheme="https://unique-yyds.gitee.io/categories/categories-PWN/01-PWN%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+    
+    <category term="PWN" scheme="https://unique-yyds.gitee.io/tags/PWN/"/>
+    
+    <category term="01 PWN基础知识" scheme="https://unique-yyds.gitee.io/tags/01-PWN%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+  </entry>
   
   <entry>
     <title>博客的搭建教程</title>
@@ -90,7 +113,7 @@
     <link href="https://unique-yyds.gitee.io/2021/07/10/ketu/"/>
     <id>https://unique-yyds.gitee.io/2021/07/10/ketu/</id>
     <published>2021-07-10T10:52:55.760Z</published>
-    <updated>2022-05-27T01:03:11.442Z</updated>
+    <updated>2022-10-10T02:02:14.196Z</updated>
     
     
     <summary type="html">壳是最早出现的专用加密软件技术！程序的壳可以是开发者未来保护自己的代码不被借鉴、破解、逆向；也可用来病毒、木马、蠕虫隐藏恶意代码，不被杀毒如软件查杀！所以我们每次逆向破解的时候遇到带壳程序会非常头疼，这篇文章主要是有关程序脱壳的技术的讲解，内容详细，深入学习者一定不能错过，带你深入研究程序脱壳技术，一定有所收获！</summary>
