@@ -5,12 +5,32 @@
 <meta property="og:site_name" content="乙太">
 <meta property="og:description" content="“pwn&quot;是一个黑客语法的俚语词，是指攻破设备或者系统。发音类似“砰”，对于黑客而言，这就是成功实施黑客攻击的声音----砰的一声，被“黑”的电脑或手机就被操控。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn1.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn2.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn3.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn4.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn5.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn6.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn7.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn8.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn9.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn10.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn11.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn12.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn13.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn14.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn15.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn16.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn17.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn18.png">
+<meta property="og:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn19.png">
 <meta property="article:published_time" content="2022-09-24T05:41:16.871Z">
-<meta property="article:modified_time" content="2022-09-24T05:51:12.720Z">
+<meta property="article:modified_time" content="2022-10-25T14:26:32.944Z">
 <meta property="article:author" content="乙太">
 <meta property="article:tag" content="PWN">
 <meta property="article:tag" content="01 PWN基础知识">
-<meta name="twitter:card" content="summary"><title>PWN基础知识 | 乙太</title><link ref="canonical" href="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/"><link rel="alternate" href="/atom.xml" type="application/atom+xml"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><link rel="dns-prefetch" href="https://hm.baidu.com"><script src="/live2d-widget/autoload.js"></script><script>var _hmt = _hmt || [];
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/pwn1.png"><title>PWN基础知识 | 乙太</title><link ref="canonical" href="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/"><link rel="alternate" href="/atom.xml" type="application/atom+xml"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><link rel="dns-prefetch" href="https://hm.baidu.com"><script src="/live2d-widget/autoload.js"></script><script>var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement('script');
   hm.src = 'https://hm.baidu.com/hm.js?f044c58249290639d0e8a63276ebca36';
@@ -45,15 +65,15 @@ var CONFIG = {
   sourcePath: {"js":"js","css":"css","images":"images"},
 };
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">乙太</div><div class="header-banner-info__subtitle">乙太</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">PWN基础知识</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2022-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-09-24</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">乙太</div><div class="header-banner-info__subtitle">乙太</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">PWN基础知识</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2022-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-10-25</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
         <h1 id="一-什么是溢出？">
           <a href="#一-什么是溢出？" class="heading-link"><i class="fas fa-link"></i></a><a href="#一-什么是溢出？" class="headerlink" title="一.什么是溢出？"></a>一.什么是溢出？</h1>
       <p>1.概念：在计算机中，当要表示的数据超出计算机所使用的数据的表示范围时，则产生数据溢出</p>
-<p>2.产生的原因：<br> 使用非安全类型（non -type-safe)的语言如C&#x2F;C++等<br>以不可靠的方式存取或者复制内存缓冲区<br>编译器设置的内存缓冲区太靠近关键数据结构；”<em>”</em>***</p>
+<p>2.产生的原因：<br>  *使用非安全类型（non -type-safe)的语言如C&#x2F;C++等<br>  *以不可靠的方式存取或者复制内存缓冲区<br>  *编译器设置的内存缓冲区太靠近关键数据结构；</p>
 
         <h1 id="二-什么是PWN？">
           <a href="#二-什么是PWN？" class="heading-link"><i class="fas fa-link"></i></a><a href="#二-什么是PWN？" class="headerlink" title="二.什么是PWN？"></a>二.什么是PWN？</h1>
-      <p>概念：<br>          在计算机中，当要表示的数据超出计算机所使用的数据表示范围时，则产生数据的溢出。<br>“pwn”是一个黑客语法的俚语词，是指攻破设备或者系统。发音类似“砰”，对于黑客而言，这就是成功实施黑客攻击的声音—-砰的一声，被“黑”的电脑或手机就被操控。</p>
+      <p>概念：<br>          在计算机中，当要表示的数据超出计算机所使用的数据表示范围时，则产生数据的溢出。<br>        “pwn”是一个黑客语法的俚语词，是指攻破设备或者系统。发音类似“砰”，对于黑客而言，这就是成功实施黑客攻击的声音—-砰的一声，被“黑”的电脑或手机就被操控。</p>
 
         <h1 id="三-复习寄存器">
           <a href="#三-复习寄存器" class="heading-link"><i class="fas fa-link"></i></a><a href="#三-复习寄存器" class="headerlink" title="三.复习寄存器"></a>三.复习寄存器</h1>
@@ -61,133 +81,78 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></he
 
         <h1 id="四-复习汇编">
           <a href="#四-复习汇编" class="heading-link"><i class="fas fa-link"></i></a><a href="#四-复习汇编" class="headerlink" title="四.复习汇编"></a>四.复习汇编</h1>
-      <p>32位x86架构下汇编指令有两种格式intel与AT&amp;T<br>Intel：寄存器名称和数值前无符号     AT&amp;T：寄存器名称前加”%“，数值前加”$”<br>在.gdbinit配置文件中可以配置：set disassembly-flavor intel</p>
+      <p>  *32位x86架构下汇编指令有两种格式intel与AT&amp;T<br>  *Intel：寄存器名称和数值前无符号     AT&amp;T：寄存器名称前加”%“，数值前加”$”<br>  *在.gdbinit配置文件中可以配置：set disassembly-flavor intel</p>
 
         <h1 id="五-栈帧">
           <a href="#五-栈帧" class="heading-link"><i class="fas fa-link"></i></a><a href="#五-栈帧" class="headerlink" title="五.栈帧"></a>五.栈帧</h1>
       <p>栈帧就是一个函数执行的环境：函数参数、局部变量、函数执行后返回到哪里等等。每一个栈帧代表的就是一个未执行完的函数</p>
-<p>ps:[ebp - xx]一般都是局部变量<br>     [ebp + xx]一般都是参数</p>
+<pre><code>    ps: [ebp - xx]一般都是局部变量
+        [ebp + xx]一般都是参数
+</code></pre>
 
         <h1 id="六-分析函数执行时堆栈变化">
           <a href="#六-分析函数执行时堆栈变化" class="heading-link"><i class="fas fa-link"></i></a><a href="#六-分析函数执行时堆栈变化" class="headerlink" title="六.分析函数执行时堆栈变化"></a>六.分析函数执行时堆栈变化</h1>
-      <p>在linux的控制台编译C文件<br>要求：熟悉Linux常用命令和Vi编辑器</p>
-<p>首先进入root用户模式 sudo su：</p>
-<p>ls 命令 显示文件目录：</p>
-<p>命令cd  切换到指定目录：<br>cd 桌面<br>命令mkdir 创建目录：<br>mkdir PWN<br>命令chmod 修改文件或目录权限：<br>chmod 777                                      最高权限<br>命令touch 创建相关文件：<br>touch heilo.c<br>进入Vi编辑器打开文本：<br>vi hello.c<br>之后按下 i 才能进行编辑，输入以下代码：</p>
-<pre><code class="C">#include&lt;stdio.h&gt;
+      
+        <h2 id="1-在linux的控制台编译C文件">
+          <a href="#1-在linux的控制台编译C文件" class="heading-link"><i class="fas fa-link"></i></a><a href="#1-在linux的控制台编译C文件" class="headerlink" title="1. 在linux的控制台编译C文件"></a>1. 在linux的控制台编译C文件</h2>
+      <p>要求：熟悉Linux常用命令和Vi编辑器</p>
+<p>首先进入root用户模式 sudo su：<br><img src="/2022/09/24/pwn%2001/pwn1.png" alt="图片"><br>ls 命令 显示文件目录：<br><img src="/2022/09/24/pwn%2001/pwn2.png" alt="图片"><br>命令cd  切换到指定目录：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd 桌面</span><br></pre></td></tr></table></div></figure>
+<p>命令mkdir 创建目录：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir PWN</span><br></pre></td></tr></table></div></figure>
+<p>命令chmod 修改文件或目录权限：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777             //最高权限</span><br></pre></td></tr></table></div></figure>
+<p>命令touch 创建相关文件：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch heilo.c</span><br></pre></td></tr></table></div></figure>
+<p>进入Vi编辑器打开文本：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi hello.c</span><br></pre></td></tr></table></div></figure>
+<p>之后按下 i 才能进行编辑，输入以下代码：</p>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">test</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b)</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">int</span> c=a+b;</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">int</span> d=test(<span class="number">1</span>,<span class="number">2</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
 
-int test(int a,int b)
-&#123;
-        int c=a+b;
-        return c;
-&#125;
-
-int main()
-&#123;
-        int d=test(1,2);
-        return 0;
-&#125;
-
-然后按Esc后输入 :wq 才能保存并且退出！
-
-命令gcc 编译.c文件：
-gcc -m32 -o hello hello.c
-
-2. 运行gdb
-gdb hello 
+<p>然后按Esc后输入 :wq 才能保存并且退出！</p>
+<p>命令gcc 编译.c文件：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">gcc -m32 -o hello hello.c</span><br></pre></td></tr></table></div></figure>
 
 
-disass main                                              反汇编查看main函数
+        <h2 id="2-运行gdb">
+          <a href="#2-运行gdb" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-运行gdb" class="headerlink" title="2. 运行gdb"></a>2. 运行gdb</h2>
+      <figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb hello </span><br></pre></td></tr></table></div></figure>
+<p><img src="/2022/09/24/pwn%2001/pwn3.png" alt="图片"></p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">disass main          反汇编查看main函数</span><br></pre></td></tr></table></div></figure>
+<p><img src="/2022/09/24/pwn%2001/pwn4.png" alt="图片"></p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">disass test                                                           查看test函数</span><br></pre></td></tr></table></div></figure>
+<p><img src="/2022/09/24/pwn%2001/pwn5.png" alt="图片"></p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b *0x565554ed                                          加断点 </span><br></pre></td></tr></table></div></figure>
+<p><img src="/2022/09/24/pwn%2001/pwn6.png" alt="图片"></p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">run                                                              运行</span><br><span class="line">r是运行</span><br><span class="line">n是单步执行，next遇到函数不会进入函数内部</span><br><span class="line">si是步入，step会执行到函数内部c是继续运行，调试时，使用continue命令继续执行程序。程序遇到断电后再次暂停执行；</span><br><span class="line">如果没有断点，就会一直执行到结束</span><br></pre></td></tr></table></div></figure>
+<p><img src="/2022/09/24/pwn%2001/pwn7.png" alt="图片"><br>这里即使到了我们的断点。</p>
+<p>然后按 n 单步执行，注意观察堆栈变化：<br>push ebp就是把寄存器ebp的值，也就是ebp的地址压入堆栈中<br><img src="/2022/09/24/pwn%2001/pwn8.png" alt="图片"></p>
+<p>mov ebp，esp就是把esp的地址传给epd，因ebp会上移动到esp所在的位置<br><img src="/2022/09/24/pwn%2001/pwn9.png" alt="图片"></p>
+<p>sub esp，0x10就是把esp的地址减去了16字节，外观上看就是把esp上移了4行<br><img src="/2022/09/24/pwn%2001/pwn10.png" alt="图片"></p>
+<p>call   __x86.get_pc_thunk.ax   这个就先不管啦<br>add    eax, 0x1ae4 也是先不管</p>
+<p>mov    edx, dword ptr [ebp + 8] 这个其实就是esp寻址，把参数1放到edx<br>mov    eax, dword ptr [ebp + 0xc]   这个其实也是，把参数2放到eax<br>此时看的该是寄存器：<br><img src="/2022/09/24/pwn%2001/pwn11.png" alt="图片"></p>
+<p>add    eax, edx       把edx的值和eax相加后保存到eax<br><img src="/2022/09/24/pwn%2001/pwn12.png" alt="图片"></p>
+<p>此时堆栈都还没发生变化，主要是在实现函数的主要功能</p>
+<p>mov    dword ptr [ebp - 4], eax    就是把eax存储的最后计算结果转存到堆栈中<br><img src="/2022/09/24/pwn%2001/pwn13.png" alt="图片"></p>
+<p>mov    eax, dword ptr [ebp - 4]   又把计算结果返回给EAX</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">leave是汇编语言中用来关闭栈帧的指令名，通常用于函数末尾</span><br><span class="line">在16位汇编下相当于:</span><br><span class="line">mov sp,bp</span><br><span class="line">pop bp</span><br><span class="line"> </span><br><span class="line">在32位汇编下相当于:</span><br><span class="line">mov esp,ebp;</span><br><span class="line">//将ebp指向（ebp内部应当保存一个地址，所谓指向即这个地址对应的空间）的值赋给esp</span><br><span class="line">pop ebp </span><br><span class="line"> </span><br><span class="line">/* leave指令将EBP寄存器的内容复制到ESP寄存器中，</span><br><span class="line">以释放分配给该过程的所有堆栈空间。然后，它从堆栈恢复EBP寄存器的旧值。*/</span><br><span class="line">enter有时在函数开头，正好相反,相当于：</span><br><span class="line">push ebp</span><br><span class="line">mov ebp,esp</span><br><span class="line"></span><br></pre></td></tr></table></div></figure>
 
-
-disass test                                                           查看test函数
-
-
-b *0x565554ed                                          加断点 
-
-
-run                                                              运行
-r是运行
-n是单步执行，next遇到函数不会进入函数内部
-si是步入，step会执行到函数内部c是继续运行，调试时，使用continue命令继续执行程序。程序遇到断电后再次暂停执行；如果没有断点，就会一直执行到结束
-
-这里即使到了我们的断点。
-
-然后按 n 单步执行，注意观察堆栈变化：
-push ebp就是把寄存器ebp的值，也就是ebp的地址压入堆栈中
-
-
-mov ebp，esp就是把esp的地址传给epd，因ebp会上移动到esp所在的位置
-
-
-sub esp，0x10就是把esp的地址减去了16字节，外观上看就是把esp上移了4行
-
-
-call   __x86.get_pc_thunk.ax   这个就先不管啦
-add    eax, 0x1ae4 也是先不管
-
-mov    edx, dword ptr [ebp + 8] 这个其实就是esp寻址，把参数1放到edx
-mov    eax, dword ptr [ebp + 0xc]   这个其实也是，把参数2放到eax
-此时看的该是寄存器：
-
-add    eax, edx       把edx的值和eax相加后保存到eax
-
-此时堆栈都还没发生变化，主要是在实现函数的主要功能1
-
-mov    dword ptr [ebp - 4], eax    就是把eax存储的最后计算结果转存到堆栈中
-
-
-mov    eax, dword ptr [ebp - 4]   又把计算结果返回给EAX
-
-leave是汇编语言中用来关闭栈帧的指令名，通常用于函数末尾
-在16位汇编下相当于:
-mov sp,bp
-pop bp
- 
-在32位汇编下相当于:
-mov esp,ebp;
-//将ebp指向（ebp内部应当保存一个地址，所谓指向即这个地址对应的空间）的值赋给esp
-pop ebp 
- 
-/* leave指令将EBP寄存器的内容复制到ESP寄存器中，
-以释放分配给该过程的所有堆栈空间。然后，它从堆栈恢复EBP寄存器的旧值。*/
-enter有时在函数开头，正好相反,相当于：
-push ebp
-mov ebp,esp
-
-
-
-
-ret 返回，把当前栈顶的值放入EIP，并且使栈顶指针加地址4默认，可以看到上面，esp储存的就是main函数内存地址
-代码块跳转变化：
-
-
-堆栈变化：
-
-
-add    esp, 8   平衡堆栈，esp+8，就是esp地址下移动8字节，两行
-
-
-mov    dword ptr [ebp - 4], eax   又是把eax的数据转存到堆栈
-mov    eax, 0    把eax清零
-leave
-
-
-ret 从main函数再返回就到结束阶段了，后面不解释
-
-
-
-delete     最后删除所有断点 
-
-掌握函数调用的流程，以及函数调用约定，就像今天的例子压入1，2，3，用高级语言进行汇编，所以压入栈内就是321了，了解栈的特性：先进后出。栈的生长方向 ，堆栈平衡的操作。要继续熟悉掌握汇编语言，会看x86的汇编指令，了解eflag标志寄存器的变化。了解掌握gdb调试（pwndbg，peda）的使用，和相关指令。
-</code></pre>
+<p><img src="/2022/09/24/pwn%2001/pwn14.png" alt="图片"><br>ret 返回，把当前栈顶的值放入EIP，并且使栈顶指针加地址4默认，可以看到上面，esp储存的就是main函数内存地址<br>代码块跳转变化：<br><img src="/2022/09/24/pwn%2001/pwn15.png" alt="图片"></p>
+<p>堆栈变化：<br><img src="/2022/09/24/pwn%2001/pwn16.png" alt="图片"></p>
+<p>add    esp, 8   平衡堆栈，esp+8，就是esp地址下移动8字节，两行<br><img src="/2022/09/24/pwn%2001/pwn17.png" alt="图片"></p>
+<p>mov    dword ptr [ebp - 4], eax   又是把eax的数据转存到堆栈<br>mov    eax, 0    把eax清零<br>leave<br><img src="/2022/09/24/pwn%2001/pwn18.png" alt="图片"></p>
+<p>ret 从main函数再返回就到结束阶段了，后面不解释<br><img src="/2022/09/24/pwn%2001/pwn19.png" alt="图片"></p>
+<p>delete     最后删除所有断点 </p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">掌握函数调用的流程，以及函数调用约定，</span><br><span class="line">就像今天的例子压入1，2，3，用高级语言进行汇编，所以压入栈内就是321了，</span><br><span class="line">了解栈的特性：先进后出。栈的生长方向 ，堆栈平衡的操作。</span><br><span class="line">要继续熟悉掌握汇编语言，会看x86的汇编指令，了解eflag标志寄存器的变化。</span><br><span class="line">了解掌握gdb调试（pwndbg，peda）的使用，和相关指令。</span><br></pre></td></tr></table></div></figure>
 </div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="https://unique-yyds.gitee.io">乙太</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="https://unique-yyds.gitee.io/2022/09/24/pwn%2001/">https://unique-yyds.gitee.io/2022/09/24/pwn%2001/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://unique-yyds.gitee.io/tags/PWN/">PWN</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://unique-yyds.gitee.io/tags/01-PWN%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">01 PWN基础知识</a></span></div><div class="post-reward reward"><div class="reward-button">请我喝杯咖啡~</div><div class="reward-qrcode"><span class="reward-qrcode-alipay"><img class="reward-qrcode-alipay__img" src="/images/zhifubao.jpg"><div class="reward-qrcode-alipay__text">支付宝打赏</div></span><span class="reward-qrcode-wechat"><img class="reward-qrcode-wechat__img" src="/images/wechat.jpg"><div class="reward-qrcode-wechat__text">微信打赏</div></span></div></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2022/02/10/boke/"><span class="paginator-prev__text">博客的搭建教程</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div><div class="comments" id="comments"><div id="lv-container" data-id="city" data-uid="MTAyMC81NjQ3My8zMjkzNg"></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80-%E4%BB%80%E4%B9%88%E6%98%AF%E6%BA%A2%E5%87%BA%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">
           一.什么是溢出？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C-%E4%BB%80%E4%B9%88%E6%98%AFPWN%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">
           二.什么是PWN？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89-%E5%A4%8D%E4%B9%A0%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">3.</span> <span class="toc-text">
           三.复习寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B-%E5%A4%8D%E4%B9%A0%E6%B1%87%E7%BC%96"><span class="toc-number">4.</span> <span class="toc-text">
           四.复习汇编</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94-%E6%A0%88%E5%B8%A7"><span class="toc-number">5.</span> <span class="toc-text">
           五.栈帧</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD-%E5%88%86%E6%9E%90%E5%87%BD%E6%95%B0%E6%89%A7%E8%A1%8C%E6%97%B6%E5%A0%86%E6%A0%88%E5%8F%98%E5%8C%96"><span class="toc-number">6.</span> <span class="toc-text">
-          六.分析函数执行时堆栈变化</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/avatar.jpg" alt="avatar"></div><p class="sidebar-ov-author__text">记得一键三连哦~</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/unique-Elven" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://space.bilibili.com/2098810443" target="_blank" rel="noopener" data-popover="Youtube" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-youtube"></i></span></a></div><div class="sidebar-ov-feed"><span class="sidebar-ov-feed-rss"><a class="sidebar-ov-feed-rss__link" href="/atom.xml" target="_blank" rel="noopener"><span class="sidebar-ov-feed-rss__icon"><i class="fas fa-rss"></i></span><span>RSS 订阅</span></a></span></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">5</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">9</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">9</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div><html><head></head><body><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=436355381&auto=1&height=66">
+          六.分析函数执行时堆栈变化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9C%A8linux%E7%9A%84%E6%8E%A7%E5%88%B6%E5%8F%B0%E7%BC%96%E8%AF%91C%E6%96%87%E4%BB%B6"><span class="toc-number">6.1.</span> <span class="toc-text">
+          1. 在linux的控制台编译C文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%BF%90%E8%A1%8Cgdb"><span class="toc-number">6.2.</span> <span class="toc-text">
+          2. 运行gdb</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/avatar.jpg" alt="avatar"></div><p class="sidebar-ov-author__text">记得一键三连哦~</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/unique-Elven" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://space.bilibili.com/2098810443" target="_blank" rel="noopener" data-popover="Youtube" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-youtube"></i></span></a></div><div class="sidebar-ov-feed"><span class="sidebar-ov-feed-rss"><a class="sidebar-ov-feed-rss__link" href="/atom.xml" target="_blank" rel="noopener"><span class="sidebar-ov-feed-rss__icon"><i class="fas fa-rss"></i></span><span>RSS 订阅</span></a></span></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">5</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">9</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">9</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div><html><head></head><body><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=436355381&auto=1&height=66">
 </iframe>
 <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=471589421&auto=0&height=66">
 </iframe>
