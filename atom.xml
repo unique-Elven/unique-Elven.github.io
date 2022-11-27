@@ -6,7 +6,7 @@
   <link href="https://unique-yyds.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://unique-yyds.gitee.io/"/>
-  <updated>2022-11-27T10:31:49.251Z</updated>
+  <updated>2022-11-27T10:36:02.126Z</updated>
   <id>https://unique-yyds.gitee.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://unique-yyds.gitee.io/2022/11/08/pwn002/"/>
     <id>https://unique-yyds.gitee.io/2022/11/08/pwn002/</id>
     <published>2022-11-08T13:49:13.000Z</published>
-    <updated>2022-11-27T10:31:49.251Z</updated>
+    <updated>2022-11-27T10:36:02.126Z</updated>
     
     
     <summary type="html">操作系统提供了许多安全机制来尝试降低或阻止缓冲区溢出攻击带来的安全风险，包括DEP、ASLR等。</summary>

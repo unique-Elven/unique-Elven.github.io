@@ -13,7 +13,7 @@
 <meta property="og:image" content="https://unique-yyds.gitee.io/2022/11/08/pwn002/pwn06.png">
 <meta property="og:image" content="https://unique-yyds.gitee.io/2022/11/08/pwn002/pwn07.png">
 <meta property="article:published_time" content="2022-11-08T13:49:13.000Z">
-<meta property="article:modified_time" content="2022-11-27T10:31:49.251Z">
+<meta property="article:modified_time" content="2022-11-27T10:36:02.126Z">
 <meta property="article:author" content="乙太">
 <meta property="article:tag" content="PWN">
 <meta property="article:tag" content="02 PWN基础知识">
@@ -56,38 +56,44 @@ var CONFIG = {
 window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">乙太</div><div class="header-banner-info__subtitle">乙太</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">保护概念和栈溢出实例</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2022-11-08</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-11-27</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
         <h1 id="一-常见的保护">
           <a href="#一-常见的保护" class="heading-link"><i class="fas fa-link"></i></a><a href="#一-常见的保护" class="headerlink" title="一.常见的保护"></a>一.常见的保护</h1>
-      <p>  操作系统提供了许多安全机制来尝试降低或阻止缓冲区溢出攻击带来的安全风险，包括DEP、ASLR等。在编写漏洞利用代码的时候，需要特别注意目标进程是否开启了DEP（Linux下对应NX）、ASLR(Linux下对应PIE)等机制，例如存在DEP(NX)的话就不能执行栈上地数据，存在ASLR的话各个系统调用的就是随机变化的。</p>
+      <pre><code>操作系统提供了许多安全机制来尝试降低或阻止缓冲区溢出攻击带来的安全风险，包括DEP、ASLR等。在编写漏洞利用代码的时候，需要特别注意目标进程是否开启了DEP（Linux下对应NX）、ASLR(Linux下对应PIE)等机制，例如存在DEP(NX)的话就不能执行栈上地数据，存在ASLR的话各个系统调用的就是随机变化的。
+</code></pre>
 <ol>
 <li>CANARY (栈保护)<br>  这个选项表示栈保护功能是否开启</li>
 </ol>
-<p>栈溢出保护是一种缓冲区溢出攻击缓冲手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shsellcode能够得到执行。当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就会停止程序运行。攻击者在覆盖返回地址的时候往往也会将cookie信息覆盖掉，导致栈保护检查失败而阻止shellcode的执行。在Linux中我们将cookie信息称为canary。</p>
+<pre><code>栈溢出保护是一种缓冲区溢出攻击缓冲手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shsellcode能够得到执行。当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就会停止程序运行。攻击者在覆盖返回地址的时候往往也会将cookie信息覆盖掉，导致栈保护检查失败而阻止shellcode的执行。在Linux中我们将cookie信息称为canary。
+</code></pre>
 <ol start="2">
-<li><p>FORTIFY<br>也是防止缓冲区溢出攻击，新颖少见</p>
+<li><p>FORTIFY<br> 也是防止缓冲区溢出攻击，新颖少见</p>
 </li>
-<li><p>NX（DEP）<br>NX即No-eXecute（不可执行），基本原理即将数据所在内存页标识为不可执行·，当程序溢出成功转入shellocode时，程序会尝试在数据页面上执行指令，此时CPU就会抛出异常，而不是去执行恶意指令。</p>
+<li><p>NX（DEP）<br> NX即No-eXecute（不可执行），基本原理即将数据所在内存页标识为不可执行·，当程序溢出成功转入shellocode时，程序会尝试在数据页面上执行指令，此时CPU就会抛出异常，而不是去执行恶意指令。</p>
 </li>
-<li><p>PIE（ASLR）<br>一般情况下NX（Windows上称为DEP）和地址空间分布随机化（ASLR）会同时工作。<br>内存地址随机化机制（address sapace layout randomizatuion）,有以下三种情况<br>0–表示关闭进程地址空间随机变化<br>1–表示将mmap的基址，stack和vdso页面随机变化<br>2–表示在1的基础上增加栈（heap）的随机变<br>可以防范基于Ret21ibc方式的针对DEP的攻击。ASLR和DEP配合使用，能有效阻止攻击者在堆栈上运行恶意代码。</p>
+<li><p>PIE（ASLR）<br> 一般情况下NX（Windows上称为DEP）和地址空间分布随机化（ASLR）会同时工作。<br> 内存地址随机化机制（address sapace layout randomizatuion）,有以下三种情况<br>0–表示关闭进程地址空间随机变化<br>1–表示将mmap的基址，stack和vdso页面随机变化<br>2–表示在1的基础上增加栈（heap）的随机变<br> 可以防范基于Ret21ibc方式的针对DEP的攻击。ASLR和DEP配合使用，能有效阻止攻击者在堆栈上运行恶意代码。</p>
 </li>
 </ol>
-<p>5.RELPO<br>设置符号重定向表格为只读或在程序启动时就解析并绑定所有动态符号，从而减少对GOT（Global Offset Table）攻击。RELRO为“Partial RELRO”, 说明我们对GOT表具有写权限。</p>
+<p>5.RELPO<br>    设置符号重定向表格为只读或在程序启动时就解析并绑定所有动态符号，从而减少对GOT（Global Offset Table）攻击。RELRO为“Partial RELRO”, 说明我们对GOT表具有写权限。</p>
+<hr>
 
         <h1 id="二-Linux检查保护情况">
           <a href="#二-Linux检查保护情况" class="heading-link"><i class="fas fa-link"></i></a><a href="#二-Linux检查保护情况" class="headerlink" title="二. Linux检查保护情况"></a>二. Linux检查保护情况</h1>
       <p>命令：checksec 文件名<br>注意：要以root权限执行<br>要在该文件目录下执行：</p>
 <p><img src="/2022/11/08/pwn002/pwn01.png" alt="图片"></p>
 <p>解读查询结构：i386架构，32位，little是小端存储<br>partial RELR0<br>Carry found<br>NX enabled<br>以上开启了三种保护<br>NO PIE 没开启地址随机变换</p>
+<hr>
 
         <h1 id="三-关闭保护">
           <a href="#三-关闭保护" class="heading-link"><i class="fas fa-link"></i></a><a href="#三-关闭保护" class="headerlink" title="三. 关闭保护"></a>三. 关闭保护</h1>
       <figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">命令：gcc -no-pie -fno-stack-protector -z execstack -m32 -o read read.c</span><br></pre></td></tr></table></div></figure>
 <p>再查看：</p>
 <p><img src="/2022/11/08/pwn002/pwn02.png" alt="图片"></p>
+<hr>
 
         <h1 id="四-查看程序使用了哪些函数">
           <a href="#四-查看程序使用了哪些函数" class="heading-link"><i class="fas fa-link"></i></a><a href="#四-查看程序使用了哪些函数" class="headerlink" title="四. 查看程序使用了哪些函数"></a>四. 查看程序使用了哪些函数</h1>
       <p>命令：objdump 是查看目标文件或者可执行的目标文件的构成的gcc工具。<br>详情：<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://man.linuxde.net/objdump">https://man.linuxde.net/objdump</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
 <figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-j name    仅仅显示指定名称为name的section的信息</span><br><span class="line">-t              显示文件的符号表入口</span><br><span class="line">objdump -t -j .text read                 <span class="comment">//查看已经编译的read程序的.text段有哪些函数</span></span><br></pre></td></tr></table></div></figure>
 <p><img src="/2022/11/08/pwn002/pwn03.png" alt="图片"></p>
+<hr>
 
         <h1 id="五-实战演练">
           <a href="#五-实战演练" class="heading-link"><i class="fas fa-link"></i></a><a href="#五-实战演练" class="headerlink" title="五. 实战演练"></a>五. 实战演练</h1>
@@ -99,6 +105,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></he
 <p>然后编译，同时也需要关闭保护，然后查看保护，如上命令！</p>
 <figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">记得权限：chmod 777 read</span><br></pre></td></tr></table></div></figure>
 <p>可见函数func()里面实现的功能就是可以从command line读取0x50的字符串，放入空间为0x20的字符串数组，显然会超出范围，就会发生堆栈溢出!</p>
+<hr>
 
         <h2 id="2-函数解释：">
           <a href="#2-函数解释：" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-函数解释：" class="headerlink" title="2. 函数解释："></a>2. 函数解释：</h2>
@@ -111,6 +118,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></he
 <p>** 返回值：**</p>
 <figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">成功：返回写入的字节数</span><br><span class="line">失败：返回-1并设置errno</span><br><span class="line">ps： 写常规文件时，write的返回值通常等于请求写的字节</span><br><span class="line">数count， 而向终端设备或者网络写时则不一定</span><br></pre></td></tr></table></div></figure>
 <p>command line相当于windows控制台窗口！</p>
+<hr>
 
         <h2 id="3-查看程序段函数：">
           <a href="#3-查看程序段函数：" class="heading-link"><i class="fas fa-link"></i></a><a href="#3-查看程序段函数：" class="headerlink" title="3.查看程序段函数："></a>3.查看程序段函数：</h2>
@@ -137,6 +145,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></he
 <p>ret    |保存返回地址数据</p>
 <p>如果程序要执行exploit函数，那么要把这个函数的入口地址覆盖保存到ret</p>
 <p>所以我们首先要找下exploit()函数的入口地址：disass exploit<br> <img src="/2022/11/08/pwn002/pwn05.png" alt="图片"><br>0x08048456</p>
+<hr>
 
         <h2 id="4-写exp">
           <a href="#4-写exp" class="heading-link"><i class="fas fa-link"></i></a><a href="#4-写exp" class="headerlink" title="4.写exp:"></a>4.写exp:</h2>
