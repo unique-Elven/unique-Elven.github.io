@@ -628,7 +628,7 @@ body::after {
   position: fixed;
   height: 100vh;
   z-index: -2;
-  background: url("/images/beijin.jpg") no-repeat center/cover;
+  background: url("/images/beijing.jpg") no-repeat center/cover;
 }
 .container {
   white-space: normal;
@@ -974,7 +974,7 @@ body::after {
   color: #f5f6f7;
   background-color: #2d2e30;
   z-index: 0;
-  background: url("/images/beijin.jpg") no-repeat center/cover;
+  background: url("/images/beijing.jpg") no-repeat center/cover;
 }
 .footer a {
   color: #c20808;

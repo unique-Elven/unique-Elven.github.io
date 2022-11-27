@@ -6,7 +6,7 @@
   <link href="https://unique-yyds.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://unique-yyds.gitee.io/"/>
-  <updated>2022-10-27T04:57:29.445Z</updated>
+  <updated>2022-11-27T10:31:49.251Z</updated>
   <id>https://unique-yyds.gitee.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>保护概念和栈溢出实例</title>
+    <link href="https://unique-yyds.gitee.io/2022/11/08/pwn002/"/>
+    <id>https://unique-yyds.gitee.io/2022/11/08/pwn002/</id>
+    <published>2022-11-08T13:49:13.000Z</published>
+    <updated>2022-11-27T10:31:49.251Z</updated>
+    
+    
+    <summary type="html">操作系统提供了许多安全机制来尝试降低或阻止缓冲区溢出攻击带来的安全风险，包括DEP、ASLR等。</summary>
+    
+    
+    
+    <category term="PWN" scheme="https://unique-yyds.gitee.io/categories/categories-PWN/"/>
+    
+    <category term="02 PWN基础知识" scheme="https://unique-yyds.gitee.io/categories/categories-PWN/02-PWN%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+    
+    <category term="PWN" scheme="https://unique-yyds.gitee.io/tags/PWN/"/>
+    
+    <category term="02 PWN基础知识" scheme="https://unique-yyds.gitee.io/tags/02-PWN%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+  </entry>
   
   <entry>
     <title>PWN基础知识</title>
