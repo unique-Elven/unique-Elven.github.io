@@ -6,7 +6,7 @@
   <link href="https://unique-yyds.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://unique-yyds.gitee.io/"/>
-  <updated>2023-02-20T09:56:53.936Z</updated>
+  <updated>2023-02-20T10:05:49.514Z</updated>
   <id>https://unique-yyds.gitee.io/</id>
   
   <author>
@@ -21,11 +21,21 @@
     <link href="https://unique-yyds.gitee.io/2023/02/20/pwn003/"/>
     <id>https://unique-yyds.gitee.io/2023/02/20/pwn003/</id>
     <published>2023-02-20T09:56:53.000Z</published>
-    <updated>2023-02-20T09:56:53.936Z</updated>
+    <updated>2023-02-20T10:05:49.514Z</updated>
+    
+    
+    <summary type="html">还是上一节课的read在学逆向论坛，找到pwn-02开启动态靶机，注意靶机地址：</summary>
     
     
     
+    <category term="PWN" scheme="https://unique-yyds.gitee.io/categories/categories-PWN/"/>
     
+    <category term="03 远程PWN" scheme="https://unique-yyds.gitee.io/categories/categories-PWN/03-%E8%BF%9C%E7%A8%8BPWN/"/>
+    
+    
+    <category term="PWN" scheme="https://unique-yyds.gitee.io/tags/PWN/"/>
+    
+    <category term="03 远程PWN" scheme="https://unique-yyds.gitee.io/tags/03-%E8%BF%9C%E7%A8%8BPWN/"/>
     
   </entry>
   
