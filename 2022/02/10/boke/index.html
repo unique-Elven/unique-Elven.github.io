@@ -1,4 +1,26 @@
-<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/tb.jpg?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/tb.jpg?v=2.6.2" type="image/png" sizes="32x32"><link rel="apple-touch-icon" href="/images/tb.jpg?v=2.6.2" sizes="180x180"><meta name="description" content="我的私人博客是如何建立的呢？为了让你们也可以搭建出与我一样的个人博客网站，我特此总结了以下基础搭建教程，包括思维导图。">
+<!DOCTYPE html>
+<html lang="zh-CN,en,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"unique-yyds.gitee.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="我的私人博客是如何建立的呢？为了让你们也可以搭建出与我一样的个人博客网站，我特此总结了以下基础搭建教程，包括思维导图。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="博客的搭建教程">
 <meta property="og:url" content="https://unique-yyds.gitee.io/2022/02/10/boke/index.html">
@@ -16,386 +38,570 @@
 <meta property="article:tag" content="博客搭建">
 <meta property="article:tag" content="博客的搭建教程">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://unique-yyds.gitee.io/2022/02/10/boke/bk1.png"><title>博客的搭建教程 | 乙太</title><link ref="canonical" href="https://unique-yyds.gitee.io/2022/02/10/boke/"><link rel="alternate" href="/atom.xml" type="application/atom+xml"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><link rel="dns-prefetch" href="https://hm.baidu.com"><script src="/live2d-widget/autoload.js"></script><script>var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement('script');
-  hm.src = 'https://hm.baidu.com/hm.js?f044c58249290639d0e8a63276ebca36';
-  hm.async = true;
+<meta name="twitter:image" content="https://unique-yyds.gitee.io/2022/02/10/boke/bk1.png">
 
-  if (false) {
-    hm.setAttribute('data-pjax', '');
+<link rel="canonical" href="https://unique-yyds.gitee.io/2022/02/10/boke/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>博客的搭建教程 | 乙太</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f044c58249290639d0e8a63276ebca36";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
   }
-  var s = document.getElementsByTagName('script')[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();</script><script>var Stun = window.Stun || {};
-var CONFIG = {
-  root: '/',
-  algolia: undefined,
-  assistSearch: undefined,
-  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
-  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
-  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
-  postWidget: {"endText":true},
-  nightMode: {"enable":true},
-  back2top: {"enable":true},
-  codeblock: {"style":"default","highlight":"light","wordWrap":false},
-  reward: true,
-  fancybox: false,
-  zoomImage: {"gapAside":"20px"},
-  galleryWaterfall: undefined,
-  lazyload: false,
-  pjax: undefined,
-  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
-  shortcuts: undefined,
-  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
-  sourcePath: {"js":"js","css":"css","images":"images"},
-};
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">乙太</div><div class="header-banner-info__subtitle">乙太</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">博客的搭建教程</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2022-02-10</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-05-27</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><p>点击文章标题进入阅读模式！</p>
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">乙太</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">乙太</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/unique-Elven" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://unique-yyds.gitee.io/2022/02/10/boke/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="乙太">
+      <meta itemprop="description" content="一个神奇的网站,知识就是力量！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乙太">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          博客的搭建教程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-10 13:20:51" itemprop="dateCreated datePublished" datetime="2022-02-10T13:20:51+08:00">2022-02-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-27 09:05:00" itemprop="dateModified" datetime="2022-05-27T09:05:00+08:00">2022-05-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/categories-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index"><span itemprop="name">博客搭建</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/categories-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">博客的搭建教程</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>点击文章标题进入阅读模式！</p>
 <p>前言：<br>很荣幸这是我的第一篇私人博客，所以在我想些要准备用博客来干些什么，写些什么的时候，我决定先和大家分享一下我的私人博客是如何建立的，这也算个不错的优良记录和备份的习惯。</p>
 <p>大家如果有任何觉得我写的的不好的地方欢迎指出改进。可以再b站私信我</p>
-<p>链接<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://space.bilibili.com/2098810443">欢迎大家关注我的Bilibli</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><img src="/2022/02/10/boke/bk1.png" alt="思维导图"></p>
+<p>链接<a target="_blank" rel="noopener" href="https://space.bilibili.com/2098810443">欢迎大家关注我的Bilibli</a><br><img src="/2022/02/10/boke/bk1.png" alt="思维导图"></p>
 <p>创建一个文件夹blog，这里面将放入你的博客文件</p>
-
-        <h1 id="环境搭建：">
-          <a href="#环境搭建：" class="heading-link"><i class="fas fa-link"></i></a><a href="#环境搭建：" class="headerlink" title="环境搭建："></a>环境搭建：</h1>
-      <ol>
+<h1 id="环境搭建："><a href="#环境搭建：" class="headerlink" title="环境搭建："></a>环境搭建：</h1><ol>
 <li>node.js<br>浏览器上搜索node.is去官网点击下载安装包(.msi),根据自己的需求，我这里选择的是windows64位</li>
 <li>git<br>去git官网点击Download for Windows我选择的是64-bit Git for Windows Setup.</li>
-<li>hexo<br>在blog文件目录下鼠标右键打开Git Bash Here<br>执行：npm config set registry <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://registry.npm.taobao.org/">http://registry.npm.taobao.org</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>执行：npm install hexo-cli -g</li>
+<li>hexo<br>在blog文件目录下鼠标右键打开Git Bash Here<br>执行：npm config set registry <a target="_blank" rel="noopener" href="http://registry.npm.taobao.org/">http://registry.npm.taobao.org</a><br>执行：npm install hexo-cli -g</li>
 </ol>
-
-        <h1 id="生成博客文件：">
-          <a href="#生成博客文件：" class="heading-link"><i class="fas fa-link"></i></a><a href="#生成博客文件：" class="headerlink" title="生成博客文件："></a>生成博客文件：</h1>
-      <p>  执行：hexo init</p>
-
-        <h1 id="预览博客文件：">
-          <a href="#预览博客文件：" class="heading-link"><i class="fas fa-link"></i></a><a href="#预览博客文件：" class="headerlink" title="预览博客文件："></a>预览博客文件：</h1>
-      <p>  执行：hexo s<br>  此时可以复制搜索输出的网址，即可预览到自己的博客网页。<br>  Ctrl+c</p>
-
-        <h1 id="部署到码云-gitee-平台：">
-          <a href="#部署到码云-gitee-平台：" class="heading-link"><i class="fas fa-link"></i></a><a href="#部署到码云-gitee-平台：" class="headerlink" title="部署到码云(gitee)平台："></a>部署到码云(gitee)平台：</h1>
-      <p>  首先到gitee网页点击右上角的加号，新建库，名字最好以自己的账户名命名，分支选择master,点击创建。<br>  复制网页上这一条网址：在很显眼的位置，点击红色我框住的地方即可直接复制。<br> <img src="/2022/02/10/boke/bk2.png" alt="图片"><br>在blog文件夹下找到_config.yml文件，用记事本打开，找到最下方这个位置。<br>在type:’’的单引号中输入git<br>换行，空格，输入repo:空一格，粘贴上面复制的文件<br>换行，输入branch: master<br> <img src="/2022/02/10/boke/bk3.png" alt="图片"></p>
-
-        <h2 id="安装部署工具：npm-install-hexo-deployer-git-–save">
-          <a href="#安装部署工具：npm-install-hexo-deployer-git-–save" class="heading-link"><i class="fas fa-link"></i></a><a href="#安装部署工具：npm-install-hexo-deployer-git-–save" class="headerlink" title="安装部署工具：npm install hexo-deployer-git –save"></a>安装部署工具：npm install hexo-deployer-git –save</h2>
-      
-        <h2 id="生成静态文件：hexo-g">
-          <a href="#生成静态文件：hexo-g" class="heading-link"><i class="fas fa-link"></i></a><a href="#生成静态文件：hexo-g" class="headerlink" title="生成静态文件：hexo g"></a>生成静态文件：hexo g</h2>
-      
-        <h3 id="部署：hexo-d">
-          <a href="#部署：hexo-d" class="heading-link"><i class="fas fa-link"></i></a><a href="#部署：hexo-d" class="headerlink" title="部署：hexo d"></a>部署：hexo d</h3>
-      <p>  这时出现了用户需要用户的登录提示，否则会部署不成功会出现下面的这种情况：<br> <img src="/2022/02/10/boke/bk4.png" alt="图片"><br>  执行：git config –global user.name “你的用户名”<br>  执行：git config -global user.email “你的邮箱”<br>  然后就会弹出Windows安全中心的登录提示：这时候只需要输入你注册gitee时的邮箱，登录gitee的密码即可<br>  执行：hexo d<br>  这里其实部署的就是在blog文件下的public下的所有文件夹到远端分支<br>Gitee Pages 服务：<br>  在网页部署的文件页面下，点击服务，点击gitee pages,这里要上传个人实名认证，一天通过后，就可以直接点击开启服务，稍等后出现一个网址，点击该网址，也可以跳转到我们的博客网页，但是在这里我遇到的问题就是打开后，只有文本字符，没有任何的图形界面。</p>
-<p>  所以我又找到了SCDN的一位大佬：可可与鱼<br>  <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40157728/article/details/114327987?ops_request_misc=&request_id=&biz_id=102&utm_term=Github%20pages%20%E6%8A%A5%E9%94%99404%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80_Keyu_lo&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-114327987.142%5Ev10%5Epc_search_result_control_group,157%5Ev4%5Econtrol&spm=1018.2226.3001.4187">大佬传送门</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<h1 id="生成博客文件："><a href="#生成博客文件：" class="headerlink" title="生成博客文件："></a>生成博客文件：</h1><p>  执行：hexo init</p>
+<h1 id="预览博客文件："><a href="#预览博客文件：" class="headerlink" title="预览博客文件："></a>预览博客文件：</h1><p>  执行：hexo s<br>  此时可以复制搜索输出的网址，即可预览到自己的博客网页。<br>  Ctrl+c</p>
+<h1 id="部署到码云-gitee-平台："><a href="#部署到码云-gitee-平台：" class="headerlink" title="部署到码云(gitee)平台："></a>部署到码云(gitee)平台：</h1><p>  首先到gitee网页点击右上角的加号，新建库，名字最好以自己的账户名命名，分支选择master,点击创建。<br>  复制网页上这一条网址：在很显眼的位置，点击红色我框住的地方即可直接复制。<br> <img src="/2022/02/10/boke/bk2.png" alt="图片"><br>在blog文件夹下找到_config.yml文件，用记事本打开，找到最下方这个位置。<br>在type:’’的单引号中输入git<br>换行，空格，输入repo:空一格，粘贴上面复制的文件<br>换行，输入branch: master<br> <img src="/2022/02/10/boke/bk3.png" alt="图片"></p>
+<h2 id="安装部署工具：npm-install-hexo-deployer-git-–save"><a href="#安装部署工具：npm-install-hexo-deployer-git-–save" class="headerlink" title="安装部署工具：npm install hexo-deployer-git –save"></a>安装部署工具：npm install hexo-deployer-git –save</h2><h2 id="生成静态文件：hexo-g"><a href="#生成静态文件：hexo-g" class="headerlink" title="生成静态文件：hexo g"></a>生成静态文件：hexo g</h2><h3 id="部署：hexo-d"><a href="#部署：hexo-d" class="headerlink" title="部署：hexo d"></a>部署：hexo d</h3><p>  这时出现了用户需要用户的登录提示，否则会部署不成功会出现下面的这种情况：<br> <img src="/2022/02/10/boke/bk4.png" alt="图片"><br>  执行：git config –global user.name “你的用户名”<br>  执行：git config -global user.email “你的邮箱”<br>  然后就会弹出Windows安全中心的登录提示：这时候只需要输入你注册gitee时的邮箱，登录gitee的密码即可<br>  执行：hexo d<br>  这里其实部署的就是在blog文件下的public下的所有文件夹到远端分支<br>Gitee Pages 服务：<br>  在网页部署的文件页面下，点击服务，点击gitee pages,这里要上传个人实名认证，一天通过后，就可以直接点击开启服务，稍等后出现一个网址，点击该网址，也可以跳转到我们的博客网页，但是在这里我遇到的问题就是打开后，只有文本字符，没有任何的图形界面。</p>
+<p>  所以我又找到了SCDN的一位大佬：可可与鱼<br>  <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40157728/article/details/114327987?ops_request_misc=&request_id=&biz_id=102&utm_term=Github%20pages%20%E6%8A%A5%E9%94%99404%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80_Keyu_lo&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-114327987.142%5Ev10%5Epc_search_result_control_group,157%5Ev4%5Econtrol&spm=1018.2226.3001.4187">大佬传送门</a></p>
 <p>  所以我把权限改成了开源，而且github云端建立存放网页的repository时，命名为自己的gitee ID(例如：ID为xxx，则repository name 为xxx.gitee.io)。所以我就是把ID改了，改成和gitee.io前面的xxx一样的内容。这样再点击更新的网址连接图形界面就出来了。</p>
+<h1 id="更换主题："><a href="#更换主题：" class="headerlink" title="更换主题："></a>更换主题：</h1><p>  我们可以直接搜索hexo 主题<br>  我们这里使用的是一个github上的主题：(GitHub - liuyib&#x2F;hexo-theme-stun: 🦄 An elegant theme for Hexo)<br>  在blog文件下的themes文件右键打开git bash here,<br>  执行：git clone GitHub - liuyib&#x2F;hexo-theme-stun: 🦄 An elegant theme for Hexo<br>  就把主题下载进来了，然后我们就要修改配置，还是文本打开_config.yml<br>  找到：<br> <img src="/2022/02/10/boke/bk5.png" alt="图片"><br>把theme: 后面修改成刚才下载的主题文件夹名称<br>安装依赖：npm install –save hexo-renderer-pug<br>预览新主题：hexo s<br>生成新静态文件：hexo g<br>重新部署：hexo d<br>更新gitee pages服务<br>  至此呢我们的个人博客差不多就算是搭建好了。</p>
 
-        <h1 id="更换主题：">
-          <a href="#更换主题：" class="heading-link"><i class="fas fa-link"></i></a><a href="#更换主题：" class="headerlink" title="更换主题："></a>更换主题：</h1>
-      <p>  我们可以直接搜索hexo 主题<br>  我们这里使用的是一个github上的主题：(GitHub - liuyib&#x2F;hexo-theme-stun: 🦄 An elegant theme for Hexo)<br>  在blog文件下的themes文件右键打开git bash here,<br>  执行：git clone GitHub - liuyib&#x2F;hexo-theme-stun: 🦄 An elegant theme for Hexo<br>  就把主题下载进来了，然后我们就要修改配置，还是文本打开_config.yml<br>  找到：<br> <img src="/2022/02/10/boke/bk5.png" alt="图片"><br>把theme: 后面修改成刚才下载的主题文件夹名称<br>安装依赖：npm install –save hexo-renderer-pug<br>预览新主题：hexo s<br>生成新静态文件：hexo g<br>重新部署：hexo d<br>更新gitee pages服务<br>  至此呢我们的个人博客差不多就算是搭建好了。</p>
-</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="https://unique-yyds.gitee.io">乙太</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="https://unique-yyds.gitee.io/2022/02/10/boke/">https://unique-yyds.gitee.io/2022/02/10/boke/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://unique-yyds.gitee.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://unique-yyds.gitee.io/tags/%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/">博客的搭建教程</a></span></div><div class="post-reward reward"><div class="reward-button">请我喝杯咖啡~</div><div class="reward-qrcode"><span class="reward-qrcode-alipay"><img class="reward-qrcode-alipay__img" src="/images/zhifubao.jpg"><div class="reward-qrcode-alipay__text">支付宝打赏</div></span><span class="reward-qrcode-wechat"><img class="reward-qrcode-wechat__img" src="/images/wechat.jpg"><div class="reward-qrcode-wechat__text">微信打赏</div></span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2022/10/26/pwn001/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">PWN基础知识</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/07/10/hello-world/"><span class="paginator-prev__text">Hello World</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div><div class="comments" id="comments"><div id="lv-container" data-id="city" data-uid="MTAyMC81NjQ3My8zMjkzNg"></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">
-          环境搭建：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%8D%9A%E5%AE%A2%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">
-          生成博客文件：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%84%E8%A7%88%E5%8D%9A%E5%AE%A2%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="toc-number">3.</span> <span class="toc-text">
-          预览博客文件：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E5%88%B0%E7%A0%81%E4%BA%91-gitee-%E5%B9%B3%E5%8F%B0%EF%BC%9A"><span class="toc-number">4.</span> <span class="toc-text">
-          部署到码云(gitee)平台：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7%EF%BC%9Anpm-install-hexo-deployer-git-%E2%80%93save"><span class="toc-number">4.1.</span> <span class="toc-text">
-          安装部署工具：npm install hexo-deployer-git –save</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%EF%BC%9Ahexo-g"><span class="toc-number">4.2.</span> <span class="toc-text">
-          生成静态文件：hexo g</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%EF%BC%9Ahexo-d"><span class="toc-number">4.2.1.</span> <span class="toc-text">
-          部署：hexo d</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9B%B4%E6%8D%A2%E4%B8%BB%E9%A2%98%EF%BC%9A"><span class="toc-number">5.</span> <span class="toc-text">
-          更换主题：</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/avatar.jpg" alt="avatar"></div><p class="sidebar-ov-author__text">记得一键三连哦~</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/unique-Elven" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://space.bilibili.com/2098810443" target="_blank" rel="noopener" data-popover="Youtube" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-youtube"></i></span></a></div><div class="sidebar-ov-feed"><span class="sidebar-ov-feed-rss"><a class="sidebar-ov-feed-rss__link" href="/atom.xml" target="_blank" rel="noopener"><span class="sidebar-ov-feed-rss__icon"><i class="fas fa-rss"></i></span><span>RSS 订阅</span></a></span></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">7</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">11</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">11</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div><html><head></head><body><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=436355381&auto=1&height=66">
-</iframe>
-<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=471589421&auto=0&height=66">
-</iframe>
-<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1352045760&auto=0&height=66">
-</iframe><p>    ❤ 网易云音乐提供支持——乙太 ❤</p></body></html></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2023</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>乙太</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><div class="search-mask"></div><div class="search-popup"><span class="search-close"></span><div class="search-input"><input placeholder="搜索文章（支持多关键词，请用空格分隔）"></div><div class="search-results"></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,255,255" opacity="0.6" count="199" zIndex="-1"></script><script>function initSearch() {
-  var isXML = true;
-  var search_path = 'search.json';
+    </div>
 
-  if (!search_path) {
-    search_path = 'search.xml';
-  } else if (/json$/i.test(search_path)) {
-    isXML = false;
-  }
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="乙太 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/zhifubao.jpg" alt="乙太 支付宝">
+        <p>支付宝</p>
+      </div>
 
-  var path = '/' + search_path;
-  $.ajax({
-    url: path,
-    dataType: isXML ? 'xml' : 'json',
-    async: true,
-    success: function (res) {
-      var datas = isXML ? $('entry', res).map(function () {
-        // 将 XML 转为 JSON
-        return {
-          title: $('title', this).text(),
-          content: $('content', this).text(),
-          url: $('url', this).text()
-        };
-      }).get() : res;
-      var $input = $('.search-input input');
-      var $result = $('.search-results');
-      // 搜索对象（标题、内容）的权重，影响显示顺序
-      var WEIGHT = { title: 100, content: 1 };
-      var searchPost = function () {
-        var searchText = $input.val().toLowerCase().trim();
-        // 根据空白字符分隔关键字
-        var keywords = searchText.split(/[\s]+/);
-        // 搜索结果
-        var matchPosts = [];
+  </div>
+</div>
 
-        // 有多个关键字时，将原文字整个保存下来
-        if (keywords.length > 1) {
-          keywords.push(searchText);
-        }
-        // 防止未输入字符时搜索
-        if (searchText.length > 0) {
-          datas.forEach(function (data) {
-            var isMatch  = false;
-            // 没有标题的文章使用预设的 i18n 变量代替
-            var title = (data.title && data.title.trim()) || '[ 文章无标题 ]';
-            var titleLower = title && title.toLowerCase();
-            // 删除 HTML 标签 和 所有空白字符
-            var content = data.content && data.content.replace(/<[^>]+>/g, '');
-            var contentLower = content && content.toLowerCase();
-            // 删除重复的 /
-            var postURL = data.url && decodeURI(data.url).replace(/\/{2,}/g, '/');
-            // 标题中匹配到的关键词
-            var titleHitSlice = [];
-            // 内容中匹配到的关键词
-            var contentHitSlice = [];
+        
 
-            keywords.forEach(function (keyword) {
-              /**
-              * 获取匹配的关键词的索引
-              * @param {String} keyword 要匹配的关键字
-              * @param {String} text 原文字
-              * @param {Boolean} caseSensitive 是否区分大小写
-              * @param {Number} weight 匹配对象的权重。权重大的优先显示
-              * @return {Array}
-              */
-              function getIndexByword (word, text, caseSensitive, weight) {
-                if (!word || !text) {
-                  return [];
-                };
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
 
-                var startIndex = 0; // 每次匹配的开始索引
-                var index = -1;     // 匹配到的索引值
-                var result = [];    // 匹配结果
+    <div class="social-list">
 
-                if (!caseSensitive) {
-                  word = word.toLowerCase();
-                  text = text.toLowerCase();
-                }
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
 
-                while((index = text.indexOf(word, startIndex)) !== -1) {
-                  var hasMatch = false;
-                  // 索引位置相同的关键词，保留长度较长的
-                  titleHitSlice.forEach(function (hit) {
-                    if (hit.index === index && hit.word.length < word.length) {
-                      hit.word = word;
-                      hasMatch = true;
-                    }
-                  });
-                  startIndex = index + word.length;
-                  !hasMatch && result.push({ index: index, word: word, weight: weight });
-                }
-                return result;
-              }
-              titleHitSlice = titleHitSlice.concat(getIndexByword(keyword, titleLower, false, WEIGHT.title));
-              contentHitSlice = contentHitSlice.concat(getIndexByword(keyword, contentLower, false, WEIGHT.content));
-            });
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
 
-            var hitTitle = titleHitSlice.length;
-            var hitContent = contentHitSlice.length;
 
-            if (hitTitle > 0 || hitContent > 0) {
-              isMatch = true;
-            }
-            if (isMatch) {
-              ;[titleHitSlice, contentHitSlice].forEach(function (hit) {
-                // 按照匹配文字的索引的递增顺序排序
-                hit.sort(function (left, right) {
-                  return left.index - right.index;
-                });
-              });
-              /**
-              * 给文本中匹配到的关键词添加标记，从而进行高亮显示
-              * @param {String} text 原文本
-              * @param {Array} hitSlice 匹配项的索引信息
-              * @param {Number} start 开始索引
-              * @param {Number} end 结束索引
-              * @return {String}
-              */
-              function highlightKeyword (text, hitSlice, start, end) {
-                if (!text || !hitSlice || !hitSlice.length) {
-                  return;
-                }
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag"># 博客搭建</a>
+              <a href="/tags/%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/" rel="tag"># 博客的搭建教程</a>
+          </div>
 
-                var result = '';
-                var startIndex = start;
-                var endIndex = end;
-                hitSlice.forEach(function (hit) {
-                  if (hit.index < startIndex) {
-                    return;
-                  }
+        
 
-                  var hitWordEnd = hit.index + hit.word.length;
-                  result += text.slice(startIndex, hit.index);
-                  result += '<b>' + text.slice(hit.index, hitWordEnd) + '</b>';
-                  startIndex = hitWordEnd;
-                });
-                result += text.slice(startIndex, endIndex);
-                return result;
-              }
 
-              var postData = {};
-              // 文章总的搜索权重
-              var postWeight = titleHitSlice.length * WEIGHT.title + contentHitSlice.length * WEIGHT.content;
-              // 标记匹配关键词后的标题
-              var postTitle = highlightKeyword(title, titleHitSlice, 0, title.length) || title;
-              // 标记匹配关键词后的内容
-              var postContent;
-              // 显示内容的长度
-              var SHOW_WORD_LENGTH = 200;
-              // 命中关键词前的字符显示长度
-              var SHOW_WORD_FRONT_LENGTH = 20;
-              var SHOW_WORD_END_LENGTH = SHOW_WORD_LENGTH - SHOW_WORD_FRONT_LENGTH;
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/07/10/hello-world/" rel="prev" title="Hello World">
+      <i class="fa fa-chevron-left"></i> Hello World
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/10/26/pwn001/" rel="next" title="PWN基础知识">
+      PWN基础知识 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
 
-              // 截取匹配的第一个字符，前后共 200 个字符来显示
-              if (contentHitSlice.length > 0) {
-                var firstIndex = contentHitSlice[0].index;
-                var start = firstIndex > SHOW_WORD_FRONT_LENGTH ? firstIndex - SHOW_WORD_FRONT_LENGTH : 0;
-                var end = firstIndex + SHOW_WORD_END_LENGTH;
-                postContent = highlightKeyword(content, contentHitSlice, start, end);
-              } else { // 未匹配到内容，直接截取前 200 个字符来显示
-                postContent = content.slice(0, SHOW_WORD_LENGTH);
-              }
-              postData.title = postTitle;
-              postData.content = postContent;
-              postData.url = postURL;
-              postData.weight = postWeight;
-              matchPosts.push(postData);
-            }
-          });
-        }
 
-        var resultInnerHtml = '';
-        if (matchPosts.length) {
-          // 按权重递增的顺序排序，使权重大的优先显示
-          matchPosts.sort(function (left, right) {
-            return right.weight - left.weight;
-          });
-          resultInnerHtml += '<ul>';
-          matchPosts.forEach(function (post) {
-            resultInnerHtml += '<li><a class="search-results-title" href="' + post.url + '">';
-            resultInnerHtml += post.title;
-            resultInnerHtml += '</a><div class="search-results-content">';
-            resultInnerHtml += post.content;
-            resultInnerHtml += '</div></li>';
-          });
-          resultInnerHtml += '</ul>';
-        } else {
-          resultInnerHtml += '<div class="search-results-none"><i class="far fa-meh"></i></div>';
-        }
-        $result.html(resultInnerHtml);
-      };
-      $input.on('input', searchPost);
-      $input.on('keyup', function (e) {
-        if (e.keyCode === Stun.utils.codeToKeyCode('Enter')) {
-          searchPost();
-        }
-      });
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81NjQ3My8zMjkzNg"></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
     }
   });
-}
-
-function closeSearch () {
-  $('body').css({ overflow: 'auto' });
-  $('.search-popup').css({ display: 'none' });
-  $('.search-mask').css({ display: 'none' });
-}
-
-window.addEventListener('DOMContentLoaded', function () {
-  Stun.utils.pjaxReloadLocalSearch = function () {
-    $('.header-nav-search').on('click', function (e) {
-      e.stopPropagation();
-      $('body').css('overflow', 'hidden');
-      $('.search-popup')
-        .velocity('stop')
-        .velocity('transition.expandIn', {
-          duration: 300,
-          complete: function () {
-            $('.search-popup input').focus();
-          }
-        });
-      $('.search-mask')
-        .velocity('stop')
-        .velocity('transition.fadeIn', {
-          duration: 300
-        });
-
-      initSearch();
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
     });
-    $('.search-mask, .search-close').on('click', function () {
-      closeSearch();
-    });
-    $(document).on('keydown', function (e) {
-      // Escape <=> 27
-      if (e.keyCode === Stun.utils.codeToKeyCode('Escape')) {
-        closeSearch();
-      }
-    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+     <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86
+      src="//music.163.com/outchain/player?type=2&id=436355381&auto=1&height=66">
+     </iframe>
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">环境搭建：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%8D%9A%E5%AE%A2%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">生成博客文件：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A2%84%E8%A7%88%E5%8D%9A%E5%AE%A2%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">预览博客文件：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E5%88%B0%E7%A0%81%E4%BA%91-gitee-%E5%B9%B3%E5%8F%B0%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">部署到码云(gitee)平台：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7%EF%BC%9Anpm-install-hexo-deployer-git-%E2%80%93save"><span class="nav-number">4.1.</span> <span class="nav-text">安装部署工具：npm install hexo-deployer-git –save</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%EF%BC%9Ahexo-g"><span class="nav-number">4.2.</span> <span class="nav-text">生成静态文件：hexo g</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%EF%BC%9Ahexo-d"><span class="nav-number">4.2.1.</span> <span class="nav-text">部署：hexo d</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%8D%A2%E4%B8%BB%E9%A2%98%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">更换主题：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="乙太"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">乙太</p>
+  <div class="site-description" itemprop="description">一个神奇的网站,知识就是力量！</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/unique-Elven" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;unique-Elven" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/2098810443" title="YouTube → https:&#x2F;&#x2F;space.bilibili.com&#x2F;2098810443" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i>YouTube</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2022 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乙太</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
   };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
 
-  Stun.utils.pjaxReloadLocalSearch();
-}, false);
-
-function safeOpenUrl(url) {
-  var newTab = window.open();
-  newTab.opener = null;
-  newTab.location = url;
-}
-
-function extSearch(engine) {
-  var engines = {
-    google: 'https://www.google.com/search?q=',
-    bing: 'https://cn.bing.com/search?q=',
-    baidu: 'https://www.baidu.com/s?ie=UTF-8&wd=',
-  };
-  var host = window.location.host;
-  var query = $('.search-input input').val().toLowerCase().trim();
-  var uri = engines[engine] + query + ' site:' + host;
-
-  if (query) {
-    safeOpenUrl(uri);
-  } else {
-    Stun.utils.popAlert('warning', '请输入字符');
-  }
-}
-
-var assistSearchList = window.CONFIG.assistSearch;
-
-if (Array.isArray(assistSearchList)) {
-  assistSearchList.forEach(function (name) {
-    document.querySelector('.search-btns-item--' + name).addEventListener('click', function () {
-      extSearch(name);
-    }, false);
-  });
-}</script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script>function loadLivere () {
-  var d = document, s = d.createElement('script');
-
-  if (!d.getElementById('lv-container')) {
-    return;
-  }
-  if (typeof LivereTower === 'function') {
-    return;
-  }
-  s.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-  if (false) {
-    s.setAttribute('data-pjax-rm', '');
-  }
-  (d.head || d.body).appendChild(s);
-}
-
-if (false) {
-  loadLivere();
-} else {
-  window.addEventListener('DOMContentLoaded', loadLivere, false);
-}</script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script><script type="application/json" src="/search.json"></script></body></html>
+</body>
+</html>
