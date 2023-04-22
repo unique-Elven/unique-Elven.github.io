@@ -6,7 +6,7 @@
   <link href="https://unique-yyds.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://unique-yyds.gitee.io/"/>
-  <updated>2023-02-20T10:05:49.514Z</updated>
+  <updated>2022-10-10T02:02:14.196Z</updated>
   <id>https://unique-yyds.gitee.io/</id>
   
   <author>
@@ -15,6 +15,75 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>程序脱壳篇</title>
+    <link href="https://unique-yyds.gitee.io/2023/04/22/ketu/"/>
+    <id>https://unique-yyds.gitee.io/2023/04/22/ketu/</id>
+    <published>2023-04-22T13:55:01.048Z</published>
+    <updated>2022-10-10T02:02:14.196Z</updated>
+    
+    
+    <summary type="html">壳是最早出现的专用加密软件技术！程序的壳可以是开发者未来保护自己的代码不被借鉴、破解、逆向；也可用来病毒、木马、蠕虫隐藏恶意代码，不被杀毒如软件查杀！所以我们每次逆向破解的时候遇到带壳程序会非常头疼，这篇文章主要是有关程序脱壳的技术的讲解，内容详细，深入学习者一定不能错过，带你深入研究程序脱壳技术，一定有所收获！</summary>
+    
+    
+    
+    <category term="程序壳" scheme="https://unique-yyds.gitee.io/categories/categories-%E7%A8%8B%E5%BA%8F%E5%A3%B3/"/>
+    
+    <category term="程序脱壳篇" scheme="https://unique-yyds.gitee.io/categories/categories-%E7%A8%8B%E5%BA%8F%E5%A3%B3/%E7%A8%8B%E5%BA%8F%E8%84%B1%E5%A3%B3%E7%AF%87/"/>
+    
+    
+    <category term="程序壳" scheme="https://unique-yyds.gitee.io/tags/%E7%A8%8B%E5%BA%8F%E5%A3%B3/"/>
+    
+    <category term="程序脱壳篇" scheme="https://unique-yyds.gitee.io/tags/%E7%A8%8B%E5%BA%8F%E8%84%B1%E5%A3%B3%E7%AF%87/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>恺撒密码</title>
+    <link href="https://unique-yyds.gitee.io/2023/04/22/kaisa/"/>
+    <id>https://unique-yyds.gitee.io/2023/04/22/kaisa/</id>
+    <published>2023-04-22T13:55:01.046Z</published>
+    <updated>2022-05-27T01:03:04.465Z</updated>
+    
+    
+    <summary type="html">这里我们主要讨论的还是如何使用C语言，和Python语言实现恺撒密码的算法！在密码学中，恺撒密码（英语：Caesar cipher），或称恺撒加密、恺撒变换、变换加密，是一种最简单且最广为人知的加密技术。它是一种替换加密的技术，明文中的所有字母都在字母表上向后（或向前）按照一个固定数目进行偏移后被替换成密文。例如，当偏移量是3的时候，所有的字母A将被替换成D，B变成E，以此类推。这个加密方法是以罗马共和时期恺撒的名字命名的，当年恺撒曾用此方法与其将军们进行联系。</summary>
+    
+    
+    
+    <category term="密码学" scheme="https://unique-yyds.gitee.io/categories/categories-%E5%AF%86%E7%A0%81%E5%AD%A6/"/>
+    
+    <category term="恺撒密码" scheme="https://unique-yyds.gitee.io/categories/categories-%E5%AF%86%E7%A0%81%E5%AD%A6/%E6%81%BA%E6%92%92%E5%AF%86%E7%A0%81/"/>
+    
+    
+    <category term="密码学" scheme="https://unique-yyds.gitee.io/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/"/>
+    
+    <category term="恺撒密码" scheme="https://unique-yyds.gitee.io/tags/%E6%81%BA%E6%92%92%E5%AF%86%E7%A0%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="https://unique-yyds.gitee.io/2023/04/22/hello-world/"/>
+    <id>https://unique-yyds.gitee.io/2023/04/22/hello-world/</id>
+    <published>2023-04-22T13:55:01.045Z</published>
+    <updated>2022-05-27T01:03:17.710Z</updated>
+    
+    
+    <summary type="html">博客的搭建相关网站和指令。</summary>
+    
+    
+    
+    <category term="博客搭建" scheme="https://unique-yyds.gitee.io/categories/categories-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"/>
+    
+    <category term="hello-world" scheme="https://unique-yyds.gitee.io/categories/categories-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/hello-world/"/>
+    
+    
+    <category term="博客搭建" scheme="https://unique-yyds.gitee.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"/>
+    
+    <category term="hello-world" scheme="https://unique-yyds.gitee.io/tags/hello-world/"/>
+    
+  </entry>
   
   <entry>
     <title>pwn003</title>
@@ -105,75 +174,6 @@
     <category term="博客搭建" scheme="https://unique-yyds.gitee.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"/>
     
     <category term="博客的搭建教程" scheme="https://unique-yyds.gitee.io/tags/%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="https://unique-yyds.gitee.io/2021/07/10/hello-world/"/>
-    <id>https://unique-yyds.gitee.io/2021/07/10/hello-world/</id>
-    <published>2021-07-10T10:52:55.760Z</published>
-    <updated>2022-05-27T01:03:17.710Z</updated>
-    
-    
-    <summary type="html">博客的搭建相关网站和指令。</summary>
-    
-    
-    
-    <category term="博客搭建" scheme="https://unique-yyds.gitee.io/categories/categories-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"/>
-    
-    <category term="hello-world" scheme="https://unique-yyds.gitee.io/categories/categories-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/hello-world/"/>
-    
-    
-    <category term="博客搭建" scheme="https://unique-yyds.gitee.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"/>
-    
-    <category term="hello-world" scheme="https://unique-yyds.gitee.io/tags/hello-world/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>恺撒密码</title>
-    <link href="https://unique-yyds.gitee.io/2021/07/10/kaisa/"/>
-    <id>https://unique-yyds.gitee.io/2021/07/10/kaisa/</id>
-    <published>2021-07-10T10:52:55.760Z</published>
-    <updated>2022-05-27T01:03:04.465Z</updated>
-    
-    
-    <summary type="html">这里我们主要讨论的还是如何使用C语言，和Python语言实现恺撒密码的算法！在密码学中，恺撒密码（英语：Caesar cipher），或称恺撒加密、恺撒变换、变换加密，是一种最简单且最广为人知的加密技术。它是一种替换加密的技术，明文中的所有字母都在字母表上向后（或向前）按照一个固定数目进行偏移后被替换成密文。例如，当偏移量是3的时候，所有的字母A将被替换成D，B变成E，以此类推。这个加密方法是以罗马共和时期恺撒的名字命名的，当年恺撒曾用此方法与其将军们进行联系。</summary>
-    
-    
-    
-    <category term="密码学" scheme="https://unique-yyds.gitee.io/categories/categories-%E5%AF%86%E7%A0%81%E5%AD%A6/"/>
-    
-    <category term="恺撒密码" scheme="https://unique-yyds.gitee.io/categories/categories-%E5%AF%86%E7%A0%81%E5%AD%A6/%E6%81%BA%E6%92%92%E5%AF%86%E7%A0%81/"/>
-    
-    
-    <category term="密码学" scheme="https://unique-yyds.gitee.io/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/"/>
-    
-    <category term="恺撒密码" scheme="https://unique-yyds.gitee.io/tags/%E6%81%BA%E6%92%92%E5%AF%86%E7%A0%81/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>程序脱壳篇</title>
-    <link href="https://unique-yyds.gitee.io/2021/07/10/ketu/"/>
-    <id>https://unique-yyds.gitee.io/2021/07/10/ketu/</id>
-    <published>2021-07-10T10:52:55.760Z</published>
-    <updated>2022-10-10T02:02:14.196Z</updated>
-    
-    
-    <summary type="html">壳是最早出现的专用加密软件技术！程序的壳可以是开发者未来保护自己的代码不被借鉴、破解、逆向；也可用来病毒、木马、蠕虫隐藏恶意代码，不被杀毒如软件查杀！所以我们每次逆向破解的时候遇到带壳程序会非常头疼，这篇文章主要是有关程序脱壳的技术的讲解，内容详细，深入学习者一定不能错过，带你深入研究程序脱壳技术，一定有所收获！</summary>
-    
-    
-    
-    <category term="程序壳" scheme="https://unique-yyds.gitee.io/categories/categories-%E7%A8%8B%E5%BA%8F%E5%A3%B3/"/>
-    
-    <category term="程序脱壳篇" scheme="https://unique-yyds.gitee.io/categories/categories-%E7%A8%8B%E5%BA%8F%E5%A3%B3/%E7%A8%8B%E5%BA%8F%E8%84%B1%E5%A3%B3%E7%AF%87/"/>
-    
-    
-    <category term="程序壳" scheme="https://unique-yyds.gitee.io/tags/%E7%A8%8B%E5%BA%8F%E5%A3%B3/"/>
-    
-    <category term="程序脱壳篇" scheme="https://unique-yyds.gitee.io/tags/%E7%A8%8B%E5%BA%8F%E8%84%B1%E5%A3%B3%E7%AF%87/"/>
     
   </entry>
   
