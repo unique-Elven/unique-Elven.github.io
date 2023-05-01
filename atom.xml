@@ -109,11 +109,11 @@
   </entry>
   
   <entry>
-    <title>保护概念和栈溢出实例</title>
+    <title>02. 保护概念和栈溢出实例</title>
     <link href="https://unique-yyds.gitee.io/2022/11/08/pwn002/"/>
     <id>https://unique-yyds.gitee.io/2022/11/08/pwn002/</id>
     <published>2022-11-08T13:49:13.000Z</published>
-    <updated>2022-11-27T10:36:02.126Z</updated>
+    <updated>2023-05-01T08:22:18.380Z</updated>
     
     
     <summary type="html">操作系统提供了许多安全机制来尝试降低或阻止缓冲区溢出攻击带来的安全风险，包括DEP、ASLR等。</summary>
@@ -132,11 +132,11 @@
   </entry>
   
   <entry>
-    <title>PWN基础知识</title>
+    <title>01. PWN基础知识</title>
     <link href="https://unique-yyds.gitee.io/2022/10/26/pwn001/"/>
     <id>https://unique-yyds.gitee.io/2022/10/26/pwn001/</id>
     <published>2022-10-26T14:10:45.000Z</published>
-    <updated>2022-10-27T04:57:29.445Z</updated>
+    <updated>2023-05-01T08:17:49.629Z</updated>
     
     
     <summary type="html">“pwn&quot;是一个黑客语法的俚语词，是指攻破设备或者系统。发音类似“砰”，对于黑客而言，这就是成功实施黑客攻击的声音----砰的一声，被“黑”的电脑或手机就被操控。</summary>
