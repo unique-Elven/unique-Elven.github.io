@@ -6,7 +6,7 @@
   <link href="https://unique-elven.github.io/atom.xml" rel="self"/>
   
   <link href="https://unique-elven.github.io/"/>
-  <updated>2022-10-10T02:02:14.196Z</updated>
+  <updated>2023-05-02T16:20:05.167Z</updated>
   <id>https://unique-elven.github.io/</id>
   
   <author>
@@ -15,6 +15,75 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>06. 格式化字符串漏洞发生的条件</title>
+    <link href="https://unique-elven.github.io/2023/05/03/pwn006/"/>
+    <id>https://unique-elven.github.io/2023/05/03/pwn006/</id>
+    <published>2023-05-02T16:14:59.000Z</published>
+    <updated>2023-05-02T16:20:05.167Z</updated>
+    
+    
+    <summary type="html">实例分析程序1，2，3</summary>
+    
+    
+    
+    <category term="PWN" scheme="https://unique-elven.github.io/categories/categories-PWN/"/>
+    
+    <category term="06 格式化字符串漏洞发生的条件" scheme="https://unique-elven.github.io/categories/categories-PWN/06-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%8F%91%E7%94%9F%E7%9A%84%E6%9D%A1%E4%BB%B6/"/>
+    
+    
+    <category term="PWN" scheme="https://unique-elven.github.io/tags/PWN/"/>
+    
+    <category term="06 格式化字符串漏洞发生的条件" scheme="https://unique-elven.github.io/tags/06-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%8F%91%E7%94%9F%E7%9A%84%E6%9D%A1%E4%BB%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>05. printf漏洞概述和调试</title>
+    <link href="https://unique-elven.github.io/2023/05/02/pwn005/"/>
+    <id>https://unique-elven.github.io/2023/05/02/pwn005/</id>
+    <published>2023-05-02T15:58:49.000Z</published>
+    <updated>2023-05-02T16:14:09.477Z</updated>
+    
+    
+    <summary type="html">我们知道printf函数在执行时，首先进行格式化字符串的解析--从栈（或寄存器）获取参数并于符号说明进行匹配，比如参数个数少于符号声明个数时，就有可能造成泄露。</summary>
+    
+    
+    
+    <category term="PWN" scheme="https://unique-elven.github.io/categories/categories-PWN/"/>
+    
+    <category term="05 printf漏洞概述和调试" scheme="https://unique-elven.github.io/categories/categories-PWN/05-printf%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0%E5%92%8C%E8%B0%83%E8%AF%95/"/>
+    
+    
+    <category term="PWN" scheme="https://unique-elven.github.io/tags/PWN/"/>
+    
+    <category term="05 printf漏洞概述和调试" scheme="https://unique-elven.github.io/tags/05-printf%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0%E5%92%8C%E8%B0%83%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>04. 细说Canary保护</title>
+    <link href="https://unique-elven.github.io/2023/05/02/pwn004/"/>
+    <id>https://unique-elven.github.io/2023/05/02/pwn004/</id>
+    <published>2023-05-02T15:35:35.000Z</published>
+    <updated>2023-05-02T16:08:51.650Z</updated>
+    
+    
+    <summary type="html">当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就会停止程序运行</summary>
+    
+    
+    
+    <category term="PWN" scheme="https://unique-elven.github.io/categories/categories-PWN/"/>
+    
+    <category term="04 远程PWN" scheme="https://unique-elven.github.io/categories/categories-PWN/04-%E8%BF%9C%E7%A8%8BPWN/"/>
+    
+    
+    <category term="PWN" scheme="https://unique-elven.github.io/tags/PWN/"/>
+    
+    <category term="04 远程PWN" scheme="https://unique-elven.github.io/tags/04-%E8%BF%9C%E7%A8%8BPWN/"/>
+    
+  </entry>
   
   <entry>
     <title>程序脱壳篇</title>
@@ -67,7 +136,7 @@
     <link href="https://unique-elven.github.io/2023/04/22/hello-world/"/>
     <id>https://unique-elven.github.io/2023/04/22/hello-world/</id>
     <published>2023-04-22T13:55:01.045Z</published>
-    <updated>2022-05-27T01:03:17.710Z</updated>
+    <updated>2023-05-01T13:00:45.199Z</updated>
     
     
     <summary type="html">博客的搭建相关网站和指令。</summary>
@@ -86,11 +155,11 @@
   </entry>
   
   <entry>
-    <title>pwn003</title>
+    <title>03. 远程PWN</title>
     <link href="https://unique-elven.github.io/2023/02/20/pwn003/"/>
     <id>https://unique-elven.github.io/2023/02/20/pwn003/</id>
     <published>2023-02-20T09:56:53.000Z</published>
-    <updated>2023-02-20T10:05:49.514Z</updated>
+    <updated>2023-05-02T15:22:19.459Z</updated>
     
     
     <summary type="html">还是上一节课的read在学逆向论坛，找到pwn-02开启动态靶机，注意靶机地址：</summary>
@@ -159,7 +228,7 @@
     <link href="https://unique-elven.github.io/2022/02/10/boke/"/>
     <id>https://unique-elven.github.io/2022/02/10/boke/</id>
     <published>2022-02-10T05:20:51.000Z</published>
-    <updated>2022-05-27T01:05:00.429Z</updated>
+    <updated>2023-05-02T15:35:05.694Z</updated>
     
     
     <summary type="html">我的私人博客是如何建立的呢？为了让你们也可以搭建出与我一样的个人博客网站，我特此总结了以下基础搭建教程，包括思维导图。</summary>

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-CN,en,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"unique-elven.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就会停止程序运行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="04. 细说Canary保护">
+<meta property="og:url" content="https://unique-elven.github.io/2023/05/02/pwn004/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就会停止程序运行">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ghchart.rshah.org/409ba5/unique-Elven">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/1.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/2.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/3.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/4.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/5.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/6.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/7.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/8.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/9.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/10.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/11.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/12.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/13.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/14.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/15.png">
+<meta property="og:image" content="https://unique-elven.github.io/2023/05/02/pwn004/16.png">
+<meta property="article:published_time" content="2023-05-02T15:35:35.000Z">
+<meta property="article:modified_time" content="2023-05-02T16:08:51.650Z">
+<meta property="article:author" content="乙太">
+<meta property="article:tag" content="PWN">
+<meta property="article:tag" content="04 远程PWN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ghchart.rshah.org/409ba5/unique-Elven">
+
+<link rel="canonical" href="https://unique-elven.github.io/2023/05/02/pwn004/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>04. 细说Canary保护 | 乙太</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f044c58249290639d0e8a63276ebca36";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">乙太</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">乙太</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/unique-Elven" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://unique-elven.github.io/2023/05/02/pwn004/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="乙太">
+      <meta itemprop="description" content="一个神奇的网站,知识就是力量！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乙太">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          04. 细说Canary保护
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-05-02 23:35:35" itemprop="dateCreated datePublished" datetime="2023-05-02T23:35:35+08:00">2023-05-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-03 00:08:51" itemprop="dateModified" datetime="2023-05-03T00:08:51+08:00">2023-05-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/categories-PWN/" itemprop="url" rel="index"><span itemprop="name">PWN</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/categories-PWN/04-%E8%BF%9C%E7%A8%8BPWN/" itemprop="url" rel="index"><span itemprop="name">04 远程PWN</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <img src="https://ghchart.rshah.org/409ba5/unique-Elven" alt="unqique-Elven's Blue Github Chart">
+
+<h1 id="一-canary保护："><a href="#一-canary保护：" class="headerlink" title="一.canary保护："></a>一.canary保护：</h1><p>在第二节课已经提到过，这里我们再把它引用过来复习：<br>CANARY (栈保护)<br>这个选项表示栈保护功能是否开启<br>栈溢出保护是一种缓冲区溢出攻击缓冲手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shsellcode能够得到执行。当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就会停止程序运行。攻击者在覆盖返回地址的时候往往也会将cookie信息覆盖掉，导致栈保护检查失败而阻止shellcode的执行。在Linux中我们将cookie信息称为canary。<br>为了更加直观，画出有无canary保护的堆栈图对比一下：</p>
+<table>
+<thead>
+<tr>
+<th>无canary</th>
+<th>保护有canary保护</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>局部变量</td>
+<td>局部变量</td>
+</tr>
+<tr>
+<td>EBP</td>
+<td>Cookie信息</td>
+</tr>
+<tr>
+<td>RET</td>
+<td>EBP</td>
+</tr>
+<tr>
+<td>参数</td>
+<td>RET</td>
+</tr>
+<tr>
+<td>-</td>
+<td>参数</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="二-实例程序解读"><a href="#二-实例程序解读" class="headerlink" title="二.实例程序解读"></a>二.实例程序解读</h1><p>root用户环境：<br>编写代码：  vi canary.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> <span class="type">const</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">char</span> *name = <span class="string">&quot;zhongyuwen&quot;</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;My name is %s\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<h2 id="保存-wq"><a href="#保存-wq" class="headerlink" title="保存    :wq"></a>保存    :wq</h2><h2 id="1-无canary保护："><a href="#1-无canary保护：" class="headerlink" title="1.无canary保护："></a>1.无canary保护：</h2><p>编译，不开启canary保护：gcc -no-pie -fno-stack-protector -m32 -o canary canary.c<br><img src="/2023/05/02/pwn004/1.png" alt="图片"><br>编译成功出现一把小锁，权限不足，<br><img src="/2023/05/02/pwn004/2.png" alt="图片"><br>提权：chmod 777 canary<br>这就没限制了：<br><img src="/2023/05/02/pwn004/3.png" alt="图片"></p>
+<p>运行调试器打开canary：  gdb canary<br>先查看mian函数代码段：disass main<br><img src="/2023/05/02/pwn004/4.png" alt="图片"></p>
+<p>查看有什么断点：i b<br>删除断点：d 断点编号<br>加断点：b *地址<br><img src="/2023/05/02/pwn004/5.png" alt="图片"><br>运行：run<br><img src="/2023/05/02/pwn004/6.png" alt="图片"><br>可以看到这就运行到了我们加的断点的地方，也就是main函数入口处吧EP!<br>单步执行：next<br>分析代码：<br>第1行，把esp+4地址保存到ecx<br><img src="/2023/05/02/pwn004/7.png" alt="图片"></p>
+<p>+4行，内存对齐：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">主流编译器规则规定“程序访问的地址必须向16字节对齐（被16整除的数）”内存对齐后可以提高访问效率。</span><br><span class="line">我认为这就相当于最近流行的硬盘4K对齐吧！</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/05/02/pwn004/8.png" alt="图片"><br>原来3c往上推了3行到30，刚好16字节</p>
+<p>+7行，把mian函数的返回地址压栈<br><img src="/2023/05/02/pwn004/9.png" alt="图片"></p>
+<p>+10行就开始第二节课讲的正常操作，压入栈帧了等等。<br>退出：q</p>
+<hr>
+<h2 id="2-有canary保护"><a href="#2-有canary保护" class="headerlink" title="2.有canary保护"></a>2.有canary保护</h2><p>重新覆盖编译：<br>开启canary保护，为所有函数插入保护：gcc -no-pie -fstack-protector-all -m32 -o canary canary.c<br><img src="/2023/05/02/pwn004/10.png" alt="图片"><br>记得提权：chmod 777 canary<br>调试：gdb canary<br>查看main函数：disass main<br><img src="/2023/05/02/pwn004/11.png" alt="图片"><br>可以看到正如定义红字可知，如上画线部分，向堆栈传入了gs段的一个参数，后面还做对比，决定是否需要跳转！</p>
+<p>加断点到加保护处：b *0x080484af<br>再运行：<br><img src="/2023/05/02/pwn004/12.png" alt="图片"></p>
+<p>+41行，把待验证数据保存到ebx<br><img src="/2023/05/02/pwn004/13.png" alt="图片"></p>
+<p>+41就是把数据转存到堆栈了<br>一直单步执行到+90，这里进行异或运算，对吧堆栈哪个位置的数据是否还和ebx一样<br>查看全部寄存器：i r<br><img src="/2023/05/02/pwn004/14.png" alt="图片"><br>0x286转化成二进制数后对照eip寄存器表：<br><img src="/2023/05/02/pwn004/15.png" alt="图片"><br>je指令看的时ZF位，其实也可以知道【】号里面写出来的都是置1的标识位了</p>
+<p>+90运行：<br><img src="/2023/05/02/pwn004/16.png" alt="图片"><br>此时ZF位置1了，je达成跳转条件
+ </p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="乙太 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/zhifubao.jpg" alt="乙太 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/PWN/" rel="tag"># PWN</a>
+              <a href="/tags/04-%E8%BF%9C%E7%A8%8BPWN/" rel="tag"># 04 远程PWN</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/04/22/ketu/" rel="prev" title="程序脱壳篇">
+      <i class="fa fa-chevron-left"></i> 程序脱壳篇
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/05/02/pwn005/" rel="next" title="05. printf漏洞概述和调试">
+      05. printf漏洞概述和调试 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81NjQ3My8zMjkzNg"></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+     <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86
+      src="//music.163.com/outchain/player?type=2&id=436355381&auto=1&height=66">
+     </iframe>
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80-canary%E4%BF%9D%E6%8A%A4%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">一.canary保护：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C-%E5%AE%9E%E4%BE%8B%E7%A8%8B%E5%BA%8F%E8%A7%A3%E8%AF%BB"><span class="nav-number">2.</span> <span class="nav-text">二.实例程序解读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98-wq"><span class="nav-number">2.1.</span> <span class="nav-text">保存    :wq</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%97%A0canary%E4%BF%9D%E6%8A%A4%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">1.无canary保护：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%9C%89canary%E4%BF%9D%E6%8A%A4"><span class="nav-number">2.3.</span> <span class="nav-text">2.有canary保护</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="乙太"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">乙太</p>
+  <div class="site-description" itemprop="description">一个神奇的网站,知识就是力量！</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/unique-Elven" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;unique-Elven" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/2098810443" title="YouTube → https:&#x2F;&#x2F;space.bilibili.com&#x2F;2098810443" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i>YouTube</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2022 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乙太</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+<!-- hexo injector body_end start -->
+  <script data-pjax src="https://npm.elemecdn.com/reverse-stu-allversions@1.0.1/butterfly/diy/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?uniuqe-Elven";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="uniuqe-Elven";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><!-- hexo injector body_end end --></body>
+</html>
