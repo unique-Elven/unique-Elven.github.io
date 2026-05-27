@@ -1,0 +1,690 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>003滴水第一期的笔记逆向破解实战班 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="16 InlineHook补丁技术 认识Inline HOOK其实在之前学习硬件HOOK的时候，我们已经自行了解过了。   HOOK的分类：Inline HOOK，APIHOOK,，IATHOOK，硬件HOOK 什么是InlineHOOK 通过修改汇编代码从而实现修改程序执行流程   易语言里的超级HOOK是什么？ 是InlineHOOK的一种，可以对任意地址进行HOOK易语言外挂作者常常称这种H">
+<meta property="og:type" content="article">
+<meta property="og:title" content="003滴水第一期的笔记逆向破解实战班">
+<meta property="og:url" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="16 InlineHook补丁技术 认识Inline HOOK其实在之前学习硬件HOOK的时候，我们已经自行了解过了。   HOOK的分类：Inline HOOK，APIHOOK,，IATHOOK，硬件HOOK 什么是InlineHOOK 通过修改汇编代码从而实现修改程序执行流程   易语言里的超级HOOK是什么？ 是InlineHOOK的一种，可以对任意地址进行HOOK易语言外挂作者常常称这种H">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204161429.png">
+<meta property="article:published_time" content="2026-05-27T14:42:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:51.605Z">
+<meta property="article:author" content="乙太">
+<meta property="article:tag" content="pragma">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204161429.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "003滴水第一期的笔记逆向破解实战班",
+  "url": "https://blog.oisec.cn/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/",
+  "image": "https://blog.oisec.cn/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204161429.png",
+  "datePublished": "2026-05-27T14:42:48.000Z",
+  "dateModified": "2026-05-27T17:42:51.605Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '003滴水第一期的笔记逆向破解实战班',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204161429.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">003滴水第一期的笔记逆向破解实战班</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">003滴水第一期的笔记逆向破解实战班</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T14:42:48.000Z" title="发表于 2026-05-27 22:42:48">2026-05-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:51.605Z" title="更新于 2026-05-28 01:42:51">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/">逆向工程师养成计划</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="16-InlineHook补丁技术"><a href="#16-InlineHook补丁技术" class="headerlink" title="16 InlineHook补丁技术"></a>16 InlineHook补丁技术</h1><ul>
+<li>认识Inline HOOK<br>其实在之前学习硬件HOOK的时候，我们已经自行了解过了。</li>
+</ul>
+<ol>
+<li>HOOK的分类：Inline HOOK，APIHOOK,，IATHOOK，硬件HOOK</li>
+<li>什么是InlineHOOK<blockquote>
+<p>通过修改汇编代码从而实现修改程序执行流程</p>
+</blockquote>
+</li>
+<li>易语言里的超级HOOK是什么？<blockquote>
+<p>是InlineHOOK的一种，可以对任意地址进行HOOK<br>易语言外挂作者常常称这种HOOK技术为超级HOOK</p>
+</blockquote>
+</li>
+</ol>
+<ul>
+<li>示例：利用InlineHOOK给程序添加信息框</li>
+</ul>
+<p>OD分析易语言程序的时候，最好同时使用E-Debug_20.dll（包含CodeMake.exe），和E-Debug_302.dll两个插件。先使用E-Debug_20.dll，再点击使用E-Debug_302.dll！如果发现E-Debug_20.dll弹窗使用不了，那就在Alt+M内存窗口中查看找到，当前的内存地址开始(基址)和偏移的大小是多少，再回来填入弹框即可！</p>
+<p>如下图，假如在下原本点击按钮只是会修改窗口标题的程序的按钮事件ff55fc5f5e下断点，我们需要通过lnlinehook技术，让它可以增加弹窗功能，F7跟踪得到如下图，我们想要在画红框的地方，进行jmp到一个全部为0的地方。<br>{为什么会有大片00的地方呢？原来PE文件有对齐机制}<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204161429.png" alt="Pasted image 20240204161429"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204161440.png" alt="Pasted image 20240204161440"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//从右往左压入参数</span><br><span class="line">int MessageBox(</span><br><span class="line">  [in, optional] HWND    hWnd,</span><br><span class="line">  [in, optional] LPCTSTR lpText,</span><br><span class="line">  [in, optional] LPCTSTR lpCaption,</span><br><span class="line">  [in]           UINT    uType</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204161831.png" alt="Pasted image 20240204161831"><br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204180137.png" alt="Pasted image 20240204180137"><br>然后在那个地方开始编写自己的代码。最后要思考，怎么恢复被我们的jmp覆盖掉的原来的指令？其实在空白处的最后写回去再jmp回到原来的下面的地址就行。最后保存执行效果如下图：<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204180220.png" alt="Pasted image 20240204180220"></p>
+<p>课堂中，NCK老师还演示了<code>通用DLL注入器</code>的使用，是由易语言写的一个小工具，再拿个样例程序，看OD中找到个可以HOOK的地址，然后借助画眉(NCK)老师的<code>画眉HOOK模块</code>来编译个dll，最后借助<code>通用DLL注入器</code>选择dll–》选择注入进程–》远程线程注入–》开始注入。</p>
+<ul>
+<li>上节课<code>小生帝王CM2无壳无VM</code>作业讲解<br>有了上面的知识铺垫，那么再分析这个程序，发现按钮事件后，看E-debug的注释call好像什么也没有做，那再哪里进行了关键比较呢？猜测有API被HOOK了，比较应该是再某个HOOK后的函数内进行的！</li>
+</ul>
+<p>小tips：可以使用火绒剑或者pchunter等工具查看<code>钩子扫描</code><br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204214437.png" alt="Pasted image 20240204214437"><br>还有字节集的概念，在内存中是个结构体，包含（编号，数据大小几个字节，几个字节的数据）<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204223804.png" alt="Pasted image 20240204223804"></p>
+<blockquote>
+<p>如下分析：<br>HOOK（有两个，前面那个在内部比较了两个内部的字符串不相等就跳过了一大段比较，后面那个内部比较了两个内部的字符串相等才是继续判断对比注册码）（其实就是自我判断是否为第一个call，如果是就不进行比较）–&gt;创建线程–》用线程判断注册码<br>第一步，下断点按钮事件<br>第二步，发现按钮事件内部都只有读取组件属性和设置组件属性，没有自定义函数吗？<br>第三步，跟踪其中一个设置组件属性的call，F7后一直F8<br>第四步，F8到一个地方，很类似于上面dll注入使用的HOOK，是个jmp<br>第五步，跟踪这个jmp，发现HOOK后是创建线程<br>第六步，跟踪这个线程，就可以来到算法处<br>第七步。借助E-debug分析算法。<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204214447.png" alt="Pasted image 20240204214447"></p>
+</blockquote>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204214454.png" alt="Pasted image 20240204214454"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204214507.png" alt="Pasted image 20240204214507"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204214513.png" alt="Pasted image 20240204214513"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204214519.png" alt="Pasted image 20240204214519"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204214527.png" alt="Pasted image 20240204214527"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204214540.png" alt="Pasted image 20240204214540"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240205104832.png" alt="Pasted image 20240205104832"></p>
+<p>最后跟踪算法到最后！nop一些跳转，成功实现破解，而且逆出注册码：<code>牧牛论坛      bbs.92fzb.com</code><br>最后留下的作业，用lilineHook技术实现音乐的播放，关键的API就是<code>mciSendString</code><br>但是我搜索00,发现0047DFCD的区段00的位置不够，到内存窗口一看才发现程序竟然多了个.test段，好那就跳到这里来004BB081吧，最后开始编写成功了，如下图<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240205115113.png" alt="Pasted image 20240205115113"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240205115120.png" alt="Pasted image 20240205115120"></p>
+<h1 id="17-上节课堂回顾-amp-初识浮点寄存器"><a href="#17-上节课堂回顾-amp-初识浮点寄存器" class="headerlink" title="17 上节课堂回顾 &amp; 初识浮点寄存器"></a>17 上节课堂回顾 &amp; 初识浮点寄存器</h1><ul>
+<li>课程回顾</li>
+</ul>
+<ol>
+<li>什么是InlineHook(就是修改汇编代码的hook)</li>
+<li>Inlinehook的原理是什么（jmp出去再回来）</li>
+<li>利用 易语言Inlinehook给程序添加一个打开网页的功能(上节课翻车了)</li>
+<li>超级HOOK的应用，挂钩易语言核心库</li>
+<li>如何快速找到当前程序的HOOK位置（火绒剑等）</li>
+</ol>
+<ul>
+<li><p>上节课翻车补充</p>
+<blockquote>
+<p>昨天，发现注入后，点击dll产生的按钮之后会卡死，没反应，看附件代码，发现，就是易语言的消息循环问题，dll有<code>载入(窗口1，，真)</code>，这里面的真就是是否为模态对话框，是真就为模态对话框，所以程序会阻塞，所以要写假！但是直接改假之后发现再注入成功过后dll程序又一闪而过。<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240205173258.png" alt="Pasted image 20240205173258"><br>所以最好的接解决办法就是在dll创建一个线程，再手动写消息循环就可以了，才能接收到用户点击消息，这是易语言，C没这么麻烦，底层封装问题，如下图<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240205171832.png" alt="Pasted image 20240205171832"><br>总结：易语言在线程里面创建的窗口，消息循环需要自己写，不然窗口就一闪而过</p>
+</blockquote>
+</li>
+<li><p>分析上节作业程序是何时进行HOOK的</p>
+<blockquote>
+<ol>
+<li>可以在火绒剑直接扫描到HOOK的位置</li>
+<li>按钮事件下断点也能跟踪到jmp<br>但是我们发现提前在那个位置下断点，竟然不是jmp。它是在程序的执行过程中给变成了jmp的HOOK</li>
+</ol>
+</blockquote>
+<p>  思考？这是什么原因造成的呢？猜测，在内存段中程序多个.test段。或许就是在这里做的手脚。。。<br>  要知道究竟是怎么回事，还是需要知道下面这个知识的铺垫，类比一下豁然开朗！</p>
+</li>
+<li><p>DLL永久注入技术（文件注入）—————————–感觉非常重要！<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240205173553.png" alt="Pasted image 20240205173553"></p>
+</li>
+</ul>
+<p>原理其实就是把整个PE文件贴进去了，而且优先于OEP先执行，有点像是壳的原理</p>
+<p>对比两个程序的区别：<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240205175453.png" alt="Pasted image 20240205175453"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240205175459.png" alt="Pasted image 20240205175459"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240205175505.png" alt="Pasted image 20240205175505"></p>
+<p>emmm~发现这个差别后，就有一种很扫的思路，就是修改OEP，打开CFF Explorer–》找到可选头部–》修改AddressOfEntryPoint的值（0017D000–&gt;0005F49D）–&gt;再执行程序，发现就会直接从原来未被注入的程序的OEP开始执行了，但是其实代码还在PE文件中的，只是不执行了，这是一种巧妙的绕过思路呀！</p>
+<ul>
+<li>永久注入后的PE文件提取<br>思考？有没有什么办法可以提出PE文件里面被永久注入的dll呢?<br>其实很简单啦，如下图而已。<br>在单步F8跟踪运行到.gdata节里的代码指令的时候，在<code>0057D0D7</code>的位置–》右键–》数据窗口中跟随–》内存地址–》由于用的是取地址的中括号（指针）–》所以在下面的内存窗口开始应该选中四个字节右键–》数据窗口中跟随DWORD（这个是非常重要的）</li>
+</ul>
+<p>就能看到一个以MZ开头的数据，这难道不是我们熟悉的PE文件结构吗？直接开始拉到选中按Shfit，拉到最后面全选，然后复制保存到类似010Editer的软件保存成dll</p>
+<p>发现把这段扒拉出来的dll，用dll注入器注入到正常的作业中，一样能用，我这里连大小都一样（字节有细微差别哈哈复制的原因）<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240205204007.png" alt="Pasted image 20240205204007"></p>
+<ul>
+<li><p>C语言手动编写dll,HOOK任意地址(是指任意指令的首地址，不是中间的数据地址)播放音乐<br>由于上节课课后我是直接汇编改了哈哈哈哈<br>这节课学习一下C语言写的！<br>在属性中按照事前所学设置，调试–》命令–》填入待HOOK的exe程序路径<br>示例exe程序直接LoadlibraryA(“Inlinehook.dll”)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;Windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BEA_ENGINE_STATIC </span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BEA_USE_STDCALL</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;BeaEngine.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;mmsystem.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib,<span class="string">&quot;winmm.lib&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib,<span class="string">&quot;BeaEngine.lib&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib, <span class="string">&quot;legacy_stdio_definitions.lib&quot;</span>)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//跳转返回到的地址</span></span><br><span class="line"><span class="type">int</span> gJmpRetAddress;</span><br><span class="line"><span class="comment">//用来存放当前被HOOK的地址</span></span><br><span class="line"><span class="type">int</span> gHookAddress;</span><br><span class="line"><span class="comment">//长度</span></span><br><span class="line"><span class="type">int</span> gLen;</span><br><span class="line"><span class="comment">//HOOK代码写入后被覆盖掉的字节</span></span><br><span class="line">byte gOldArray[<span class="number">256</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">CalcJmpAddress</span><span class="params">(<span class="type">int</span> targetAddress, <span class="type">int</span> hookAddress)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">PlayMusic</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//任意地址HOOK函数</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">SupperHook</span><span class="params">(<span class="type">int</span> hookAddress)</span></span><br><span class="line">&#123;</span><br><span class="line">	gHookAddress = hookAddress;</span><br><span class="line">	DISASM disam;</span><br><span class="line">	disam.EIP = hookAddress;</span><br><span class="line">	gLen = Disasm(&amp;disam);</span><br><span class="line">	<span class="keyword">while</span> (gLen &lt; <span class="number">5</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		disam.EIP += gLen;</span><br><span class="line">		gLen += Disasm(&amp;disam);</span><br><span class="line">	&#125;</span><br><span class="line">	memcpy_s(gOldArray, gLen, (<span class="type">void</span>*)hookAddress, gLen);</span><br><span class="line">	<span class="comment">//计算HOOK执行完毕后jmp返回的地址</span></span><br><span class="line">	gJmpRetAddress = hookAddress + gLen;</span><br><span class="line">	<span class="comment">//得到HOOK需要跳转到的函数地址</span></span><br><span class="line">	<span class="type">int</span> targetAddress = (<span class="type">int</span>)&amp;PlayMusic;</span><br><span class="line">	<span class="comment">//计算jmp xxxxxxxx这个指令中的xxxxxxxx的值</span></span><br><span class="line">	<span class="comment">//计算公式：目标地址-源地址-5</span></span><br><span class="line">	<span class="type">int</span> value = CalcJmpAddress(targetAddress, hookAddress);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//修改内存页属性为可读可写可执行</span></span><br><span class="line">	DWORD oldProtect;</span><br><span class="line">	VirtualProtect((LPVOID)hookAddress, <span class="number">0x1000</span>, PAGE_EXECUTE_READWRITE, &amp;oldProtect);</span><br><span class="line">	<span class="comment">//将要HOOK的地址第一个字节改成Jmp</span></span><br><span class="line">	*((byte*)hookAddress) = <span class="number">0xE9</span>;</span><br><span class="line">	<span class="comment">//将跳转目标地址写入</span></span><br><span class="line">	*((<span class="type">int</span>*)(hookAddress + <span class="number">1</span>)) = value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> __declspec(naked) PlayMusic()</span><br><span class="line">&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//把上一次的音乐关掉</span></span><br><span class="line">	<span class="comment">//mciSendString(&quot;close bkmusic&quot;, NULL, 0, NULL);</span></span><br><span class="line">	<span class="comment">//打开音乐</span></span><br><span class="line">	mciSendString(<span class="string">&quot;open D:\\asus\\桌面\\PROJECT\\逆向\\逆向\\第17课\\InlineHookMusicSolution\\Debug\\播放的音乐.mp3 alias bkmusic&quot;</span>, <span class="literal">NULL</span>, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="comment">//执行播放</span></span><br><span class="line">	mciSendString(<span class="string">&quot;play bkmusic repeat&quot;</span>, <span class="literal">NULL</span>, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">		</span><br><span class="line">	<span class="comment">//打开浏览器</span></span><br><span class="line">	<span class="comment">//ShellExecute(NULL, &quot;open&quot;, &quot;https://www.52ying.top&quot;, NULL, NULL, SW_SHOWNORMAL);</span></span><br><span class="line">	<span class="comment">//恢复原始字节</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; gLen; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		*((byte*)(gHookAddress + i)) = gOldArray[i];</span><br><span class="line">	&#125;</span><br><span class="line">	_asm jmp gHookAddress</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//计算jmp指令后的值</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">CalcJmpAddress</span><span class="params">(<span class="type">int</span> targetAddress, <span class="type">int</span> hookAddress)</span> </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">return</span> targetAddress - hookAddress - <span class="number">5</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//线程</span></span><br><span class="line">DWORD WINAPI <span class="title function_">ThreadProc</span><span class="params">(_In_ LPVOID lpParameter)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> hookAddress;</span><br><span class="line">	<span class="comment">//创建控制台。</span></span><br><span class="line">	AllocConsole();</span><br><span class="line">	<span class="comment">//将stdout设备输出的数据重定向到控制台输出</span></span><br><span class="line">	freopen(<span class="string">&quot;CONOUT$&quot;</span>, <span class="string">&quot;w+t&quot;</span>, <span class="built_in">stdout</span>);</span><br><span class="line">	<span class="comment">//将stdin设备输入的数据重定向到控制台输入</span></span><br><span class="line">	freopen(<span class="string">&quot;CONIN$&quot;</span>, <span class="string">&quot;r+t&quot;</span>, <span class="built_in">stdin</span>);</span><br><span class="line">	<span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;请输入要HOOK的地址:&quot;</span>);</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%08X&quot;</span>, &amp;hookAddress);</span><br><span class="line">		<span class="comment">//执行HOOK</span></span><br><span class="line">		SupperHook(hookAddress);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;HOOK执行完毕\n\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">BOOL APIENTRY <span class="title function_">DllMain</span><span class="params">( HMODULE hModule,DWORD  ul_reason_for_call, LPVOID lpReserved)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">switch</span> (ul_reason_for_call)</span><br><span class="line">    &#123;</span><br><span class="line">		<span class="keyword">case</span> DLL_PROCESS_ATTACH:</span><br><span class="line">		&#123;</span><br><span class="line">			HANDLE hTread = CreateThread(<span class="literal">NULL</span>, <span class="number">0</span>, ThreadProc, (LPVOID)<span class="literal">NULL</span>, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">case</span> DLL_THREAD_ATTACH:</span><br><span class="line">		<span class="keyword">case</span> DLL_THREAD_DETACH:</span><br><span class="line">		<span class="keyword">case</span> DLL_PROCESS_DETACH:</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>课后作业</p>
+<blockquote>
+<p>1.自己用易语言写两个整数,相加看看反汇编代码是啥样的。<br>2.查看资料研究下几儿个汇编指零的含义”<br>  ftst<br>  fstsw ax<br>  fchs<br>  fcomp qword ptr ds: [0x501CD5]<br>  fstsw ax<br>  思考:为什么易语言的浮点运算里都有上面这几句指令，作用是什么<br>  3.用易语言定义一个元素个数为20的数组，循环打印出数组里的每一个元素!<br>  通过OD逆向分析，解释下易语言数组和循环是如何实现的</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="18-将汇编还原成易语言源码1"><a href="#18-将汇编还原成易语言源码1" class="headerlink" title="18 将汇编还原成易语言源码1"></a>18 将汇编还原成易语言源码1</h1><p>补习之前学习埋下的坑，IDAFicator.dll插件的陷阱(硬件)（2024&#x2F;4&#x2F;6回来补坑，学到后面其实不是插件问题，是不会下硬件断点哈哈哈，需要暂停也就是挂起线程，在下面的WIN10硬件HOOKC语言版也遇到这个问题，看微软官方介绍<code>SetThreadContext</code>）</p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240206154408.png" alt="Pasted image 20240206154408"><br>所以结论：带有这个<code>IDAFicator.dll</code>插件的时候如果硬件断点没有断下，记得在下硬件段断点的时候先挂起，暂停程序。</p>
+<ul>
+<li><p>课程回顾</p>
+<blockquote>
+<p>1.给其他进程注入DLL创建窗口，最好不要在进程的主线程创建窗口(why? )<br>（会导致后面的消息卡死，最好是另启线程）<br>2.有什么办法解决上述问题?<br>3.文件注入，也叫文件合并、永久注入等<br>4.文件注入后的DLL如何提取出来 (还可以搜索MZ)<br>5.用C语言编写了对任意指令HOOK的程序</p>
+</blockquote>
+</li>
+<li><p>历史渊源<br>在很久很久以前，8086十六位汇编的时候，8087就诞生了。</p>
+</li>
+</ul>
+<p>8087并不是和CPU一起的，它是一个单独的芯片，用来协助我们的处理器完成一些任务，比如浮点运算，他有自己的一套指令集，叫做浮点指令集。</p>
+<p>后来处理器的开发人员发现，很多时候浮点运算都是和常规的非浮点运算混合执行的。于是从80486开始，X87FPU诞生了，它取代了8087协处理器，保留了浮点指令集。</p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240207110230.png" alt="Pasted image 20240207110230"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240207110252.png" alt="Pasted image 20240207110252"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240207110332.png" alt="Pasted image 20240207110332"></p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240207110357.png" alt="Pasted image 20240207110357"></p>
+<p>现在开始随便写个易语言程序的整数算法，然后开始汇编分析，下按钮事件断点如下图，跟踪到浮点计算，发现易语言总会把计算转化成浮点运算，如下图<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240207145649.png" alt="Pasted image 20240207145649"></p>
+<p>1.fild(浮点压栈—-遵循IEEE协议将整型转化为浮点型，压入浮点寄存器压栈)</p>
+<p>2.fstp(浮点出栈指令)</p>
+<p>3.fld(浮点数没转换直接压栈)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">00401082    D9E4            ftst                                     ; 比较st0是否为0，导致FST(状态寄存器)变化</span><br><span class="line">00401084    DFE0            fstsw ax                                 ; 把浮点状态寄存器的值赋值给ax</span><br><span class="line">00401086    F6C4 01         test ah,0x1                              ; ah是ax的高8位，也就是判断ah的最后一位是否为1</span><br><span class="line">00401089    74 02           je short 看浮点运.0040108D                   ; 不跳就求补</span><br><span class="line">0040108B    D9E0            fchs                                     ; 求补嘛，取相反数</span><br><span class="line">0040108D    DC1D CD2C5000   fcomp qword ptr ds:[0x502CCD]            ; 结合OD2.0分析，就是在把相减结果和0.0000001比较</span><br><span class="line">00401093    DFE0            fstsw ax                                 ; 上面fcomp又会影响FST，把浮点状态寄存器的值赋值给ax</span><br><span class="line">00401095    F6C4 41         test ah,0x41                             ; 当ah为0，不论立即数是啥相与结果都是0</span><br><span class="line">00401098    0F84 39000000   je 看浮点运.004010D7                         ; 为0永远都会跳转</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>[!Info]<br>ftst                                     ; 比较st0是否为0，导致FST(状态寄存器)变化<br>fstsw ax                                 ; 把浮点状态寄存器的值赋值给ax<br>test ah,0x1 （ah是ax的高8位，也就是判断ah的最后一位是否为1，也就是浮点状态寄存器的第8位，C0位，OD寄存器显示窗口的Cond 0位）<br>je short 看浮点运.0040108D                   ; 不跳就求补<br>fchs                                     ; 求补嘛，取相反数<br>fcomp qword ptr ds:[0x502CCD]            ; 结合OD2.0分析，就是在把相减结果和0.0000001比较<br>fstsw ax                                 ; 上面fcomp又会影响FST，把浮点状态寄存器的值赋值给ax<br>test ah,0x41                             ; 当ah为0，不论立即数是啥相与结果都是0<br>je 看浮点运.004010D7                         ; 为0永远都会跳转</p>
+</blockquote>
+<blockquote>
+<p>[!Info]<br>9.999999999999998E-08是科学计数法，相当于9.999999999999998乘以10的-8次方<br>这其实是OD1.0的bug，在OD2.0中，其实显示的是1.00000000000000E-07<br>也就是说这个数就是0.00000001</p>
+</blockquote>
+<p>fcomp会影响Cond，如下图：把SRC比作0.0000001</p>
+<p><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240207110426.png" alt="Pasted image 20240207110426"><br>所以最后我们要纠正一个学习汇编时候的惯性思维，也是上面注释有些错误的地方，我补充一下：<br>je我们曾经学的是为0则跳，不为0就不跳，那时对于cmp指令来说的！我们不能够对这句话养成一个惯性思维！当je的指令前面是test的时候就应该这么说：“相与为0则跳，不相等则不跳”。所以Test的一个非常普遍的用法是用来&#x3D;&#x3D;测试一方寄存器是否为空&#x3D;&#x3D;<a target="_blank" rel="noopener" href="https://blog.csdn.net/r1553789169/article/details/109965726">汇编语言Test指令</a></p>
+<ul>
+<li>总结<br>如下图，所以在逆向易语言的汇编算法的时候，可以把他的浮点计算像我下面这个图一样，用红线分成两部分来看，上部分才是关键算法，下部分是固定的<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240207145237.png" alt="Pasted image 20240207145237"><br>推出关键算法： 密码-1024&#x3D;123456<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240207145335.png" alt="Pasted image 20240207145335"></li>
+</ul>
+<p>好好好，最后去IDA里面看看，通过OD找到算法位置，在IDA里面直接搜按G，找到位置后发现F5不成功，是因为没有把汇编代码识别成函数，在头部按P即可！！！F5<br>最后推荐一本书《浮点计算-编程原理.实现与应》</p>
+<h1 id="19-将汇编还原成易语言源码2-老班长传的"><a href="#19-将汇编还原成易语言源码2-老班长传的" class="headerlink" title="19 将汇编还原成易语言源码2__老班长传的"></a>19 将汇编还原成易语言源码2__老班长传的</h1><p>这节课首先讲了一下老师给的Inlinhok模块源码如何调试的。其实就是自己建一个项目，把模块源码一个个全部的复制出来，再HOOK自己，右键跳到函数定义处下断点运行，调试即可</p>
+<ul>
+<li><p>易语言循环汇编<br>众所周知，ECX是循环计数寄存器<br>而易语言的循环和数组，下标其实都是从1开始的<br>写一个易语言简单的循环代码，然后分析其汇编代码，如下图<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240209192329.png" alt="Pasted image 20240209192329"><br>按钮事件跟踪，到此处，发现汇编代码处有一段灰白的的线条，框起来一段代码，inc到jmp这就是循环，具体分析汇编请看下面注释<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240209192301.png" alt="Pasted image 20240209192301"></p>
+</li>
+<li><p>易语言循环数组<br>代码如下<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240210210737.png" alt="Pasted image 20240210210737"></p>
+</li>
+</ul>
+<p>按钮事件断点跟踪，分析如下，重点要关注取数组成员那个call的特性，跟进去要牢记这个call的特性，EBX指向第一个元素的起始位置（如下图红框）,取数组元素个数给eax。如紫色标记这个数组结构体，有点类似之前我们学过的字节集.<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240210210435.png" alt="Pasted image 20240210210435"></p>
+<p>后面还会有很多这样的call，才发现易语言的数组赋值是有这样的规律的，如下图所示。如果这个数组很长，那这段代码应该会依次类推很长一段<br><img src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240210223336.png" alt="Pasted image 20240210223336"></p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/pragma/">pragma</a></div><div class="post-share"><div class="social-share" data-image="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204161429.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/SOCP/driftingblues9%20-%20%E6%BA%A2%E5%87%BAASLR(%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%9C%BA%E5%88%B6)/" title="driftingblues9 - 溢出ASLR(内存地址随机化机制)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">driftingblues9 - 溢出ASLR(内存地址随机化机制)</div></div><div class="info-2"><div class="info-item-1">Site Unreachable          driftingblues9 easy aPphp GETSHELL、searchsploit使用、凭据收集、gdb使用、缓冲区溢出漏洞（难）、pattern_create.rb、pattern_offset.rb 使用   主机发现12┌──(kali㉿kali)-[~/桌面/OSCP]└─$ sudo netdiscover -i eth0 -r 192.168.44.139/24 服务探测123456┌──(kali㉿kali)-[~/桌面/OSCP]└─$ sudo nmap -sV -A -T 4 -p- 192.168.44.139  80/tcp    open  http    Apache httpd 2.4.10 ((Debian))111/tcp   open  rpcbind 2-4 (RPC #100000) 目录扫描1234http://192.168.44.139/README.txt// ApPHP MicroBlog Free// Version: 1.0.1  漏洞扫描123456789101...</div></div></div></a><a class="pagination-related" href="/SOCP/gigachad%20-%20suid/" title="gigachad - suid"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">gigachad - suid</div></div><div class="info-2"><div class="info-item-1">         gigachad easy ftp利用、google反图搜索、 suid提权、s-nail 提权   主机发现12┌──(kali㉿kali)-[~/桌面/OSCP]└─$ sudo netdiscover -i eth0 -r 192.168.44.138/24  服务探测12345┌──(kali㉿kali)-[~/桌面/OSCP]└─$ sudo nmap -sV -A -T 4 -p- 192.168.44.138 |_/kingchad.html 开放了21，22，80访问http://192.168.44.138//kingchad.html是一张带字的图，翻译 123456HELL0? IS IT MI5 OR MI6?他是谁？是军情五处还是军情六处？WHATEVER, SOMEONE IS TRYINGTO HACK US不管怎么说，有人想黑我们  目录扫描123456┌──(kali㉿kali)-[~/桌面/OSCP]└─$ gobuster dir -u http://192.168.44.138/ -w /usr/share/wordlis...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/" title="001滴水第一期的笔记逆向破解实战班"><img class="cover" src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-27</div><div class="info-item-2">001滴水第一期的笔记逆向破解实战班</div></div><div class="info-2"><div class="info-item-1">如何快速定位关键点并爆破什么是关键点：程序进行判断注册码是否正确的位置 什么是爆破：通过修改程序的流程，让程序判断失误 VM壳被称为代码层的最后一层防御。   理解简单程序验证流程：   点击注册按钮 读取读取注册码 GetWindowTextA 判断注册码是否合法 提示用户是否成功 MessageBoxA  scanf函数无法直接在VS中编译，由于有栈溢出漏洞，要编译需要在属性配置中关闭SDL检查。 关键位置：jcc指令跳转到jmp下。 方法：  交叉引用查找法IDA 调用堆栈–ALT+K 暂停法 搜索字符串 访问断点法 自动跟踪法-控制台程序（什么地方卡住就在什么地方下断点F7跟踪，继续自动步过） Ctrl+G搜索MessageBoxA  在OD中快捷键Shift+F2打开条件断点！破解易语言程序，由于按钮时间常常被其他事件干扰，若以经常要用到条件断点。（但是汉化版可能会有bug，用原版英文即可） 条件断点–举例子：[esp+4]!=00290642 调试+自动步过的快捷键Ctrl+F8可以自动跟踪执行。 OD的插件(ImmLabel)Im.004011C1–&gt;Edit...</div></div></div></a><a class="pagination-related" href="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/" title="001滴水第一期的笔记逆向破解实战班"><img class="cover" src="/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-27</div><div class="info-item-2">001滴水第一期的笔记逆向破解实战班</div></div><div class="info-2"><div class="info-item-1">如何快速定位关键点并爆破什么是关键点：程序进行判断注册码是否正确的位置 什么是爆破：通过修改程序的流程，让程序判断失误 VM壳被称为代码层的最后一层防御。   理解简单程序验证流程：   点击注册按钮 读取读取注册码 GetWindowTextA 判断注册码是否合法 提示用户是否成功 MessageBoxA  scanf函数无法直接在VS中编译，由于有栈溢出漏洞，要编译需要在属性配置中关闭SDL检查。 关键位置：jcc指令跳转到jmp下。 方法：  交叉引用查找法IDA 调用堆栈–ALT+K 暂停法 搜索字符串 访问断点法 自动跟踪法-控制台程序（什么地方卡住就在什么地方下断点F7跟踪，继续自动步过） Ctrl+G搜索MessageBoxA  在OD中快捷键Shift+F2打开条件断点！破解易语言程序，由于按钮时间常常被其他事件干扰，若以经常要用到条件断点。（但是汉化版可能会有bug，用原版英文即可） 条件断点–举例子：[esp+4]!=00290642 调试+自动步过的快捷键Ctrl+F8可以自动跟踪执行。 OD的插件(ImmLabel)Im.004011C1–&gt;Edit...</div></div></div></a><a class="pagination-related" href="/%E9%80%86%E5%90%91/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/" title="003滴水第一期的笔记逆向破解实战班"><img class="cover" src="/%E9%80%86%E5%90%91/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204161429.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-27</div><div class="info-item-2">003滴水第一期的笔记逆向破解实战班</div></div><div class="info-2"><div class="info-item-1">16 InlineHook补丁技术 认识Inline HOOK其实在之前学习硬件HOOK的时候，我们已经自行了解过了。   HOOK的分类：Inline HOOK，APIHOOK,，IATHOOK，硬件HOOK 什么是InlineHOOK 通过修改汇编代码从而实现修改程序执行流程   易语言里的超级HOOK是什么？ 是InlineHOOK的一种，可以对任意地址进行HOOK易语言外挂作者常常称这种HOOK技术为超级HOOK     示例：利用InlineHOOK给程序添加信息框  OD分析易语言程序的时候，最好同时使用E-Debug_20.dll（包含CodeMake.exe），和E-Debug_302.dll两个插件。先使用E-Debug_20.dll，再点击使用E-Debug_302.dll！如果发现E-Debug_20.dll弹窗使用不了，那就在Alt+M内存窗口中查看找到，当前的内存地址开始(基址)和偏移的大小是多少，再回来填入弹框即可！ 如下图，假如在下原本点击按钮只是会修改窗口标题的程序的按钮事件ff55fc5f5e下断点，我们需要通过lnlinehook技术，让它可以...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#16-InlineHook%E8%A1%A5%E4%B8%81%E6%8A%80%E6%9C%AF"><span class="toc-number">1.</span> <span class="toc-text">16 InlineHook补丁技术</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#17-%E4%B8%8A%E8%8A%82%E8%AF%BE%E5%A0%82%E5%9B%9E%E9%A1%BE-amp-%E5%88%9D%E8%AF%86%E6%B5%AE%E7%82%B9%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">17 上节课堂回顾 &amp; 初识浮点寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#18-%E5%B0%86%E6%B1%87%E7%BC%96%E8%BF%98%E5%8E%9F%E6%88%90%E6%98%93%E8%AF%AD%E8%A8%80%E6%BA%90%E7%A0%811"><span class="toc-number">3.</span> <span class="toc-text">18 将汇编还原成易语言源码1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#19-%E5%B0%86%E6%B1%87%E7%BC%96%E8%BF%98%E5%8E%9F%E6%88%90%E6%98%93%E8%AF%AD%E8%A8%80%E6%BA%90%E7%A0%812-%E8%80%81%E7%8F%AD%E9%95%BF%E4%BC%A0%E7%9A%84"><span class="toc-number">4.</span> <span class="toc-text">19 将汇编还原成易语言源码2__老班长传的</span></a></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

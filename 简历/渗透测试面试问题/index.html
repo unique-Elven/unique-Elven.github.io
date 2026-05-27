@@ -1,0 +1,2699 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>渗透测试面试问题 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1️⃣ 知道基本原理2️⃣ 知道常见攻击链和工具 如果不会，千万不要装会。你可以这样说：  我目前在Web渗透和漏洞挖掘方面经验多一些，内网和AD攻击也在系统学习，比如了解Kerberos认证流程、Pass-the-Hash等攻击方式，也在靶场练习域环境渗透。  这样面试官一般就不会继续深挖。  渗透测试面试必问题库（50题）我按 6个模块整理，基本覆盖大部分安全面试。  一、基础网络与原理（8题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="渗透测试面试问题">
+<meta property="og:url" content="https://blog.oisec.cn/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="1️⃣ 知道基本原理2️⃣ 知道常见攻击链和工具 如果不会，千万不要装会。你可以这样说：  我目前在Web渗透和漏洞挖掘方面经验多一些，内网和AD攻击也在系统学习，比如了解Kerberos认证流程、Pass-the-Hash等攻击方式，也在靶场练习域环境渗透。  这样面试官一般就不会继续深挖。  渗透测试面试必问题库（50题）我按 6个模块整理，基本覆盖大部分安全面试。  一、基础网络与原理（8题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/img/toux.jpg">
+<meta property="article:published_time" content="2026-05-27T17:42:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:48.897Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/img/toux.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "渗透测试面试问题",
+  "url": "https://blog.oisec.cn/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/",
+  "image": "https://blog.oisec.cn/img/toux.jpg",
+  "datePublished": "2026-05-27T17:42:48.000Z",
+  "dateModified": "2026-05-27T17:42:48.897Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '渗透测试面试问题',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/753197.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">渗透测试面试问题</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">渗透测试面试问题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T17:42:48.000Z" title="发表于 2026-05-28 01:42:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:48.897Z" title="更新于 2026-05-28 01:42:48">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AE%80%E5%8E%86/">简历</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>1️⃣ <strong>知道基本原理</strong><br>2️⃣ <strong>知道常见攻击链和工具</strong></p>
+<p>如果不会，千万不要装会。你可以这样说：</p>
+<blockquote>
+<p>我目前在Web渗透和漏洞挖掘方面经验多一些，内网和AD攻击也在系统学习，比如了解Kerberos认证流程、Pass-the-Hash等攻击方式，也在靶场练习域环境渗透。</p>
+</blockquote>
+<p>这样面试官一般就不会继续深挖。</p>
+<hr>
+<h1 id="渗透测试面试必问题库（50题）"><a href="#渗透测试面试必问题库（50题）" class="headerlink" title="渗透测试面试必问题库（50题）"></a>渗透测试面试必问题库（50题）</h1><p>我按 <strong>6个模块</strong>整理，基本覆盖大部分安全面试。</p>
+<hr>
+<h1 id="一、基础网络与原理（8题）"><a href="#一、基础网络与原理（8题）" class="headerlink" title="一、基础网络与原理（8题）"></a>一、基础网络与原理（8题）</h1><ol>
+<li><p>HTTP 和 HTTPS 的区别是什么？</p>
+</li>
+<li><p>TLS 握手流程大概是怎样的？</p>
+</li>
+<li><p>什么是三次握手？为什么不是两次？</p>
+</li>
+<li><p>常见端口对应的服务有哪些？</p>
+</li>
+<li><p>DNS解析流程是什么？</p>
+</li>
+<li><p>CDN 的作用是什么？怎么绕过CDN找真实IP？</p>
+</li>
+<li><p>什么是反向代理？</p>
+</li>
+<li><p>什么是负载均衡？</p>
+</li>
+</ol>
+<hr>
+<h1 id="二、信息收集（8题）"><a href="#二、信息收集（8题）" class="headerlink" title="二、信息收集（8题）"></a>二、信息收集（8题）</h1><ol start="9">
+<li><p>渗透测试第一步为什么是信息收集？</p>
+</li>
+<li><p>如何进行子域名枚举？</p>
+</li>
+<li><p>如何识别网站使用的CMS？</p>
+</li>
+<li><p>常见资产测绘平台有哪些？</p>
+</li>
+<li><p>如何寻找隐藏目录？</p>
+</li>
+<li><p>如何识别Web服务器类型？</p>
+</li>
+<li><p>什么是旁站？</p>
+</li>
+<li><p>什么是C段扫描？</p>
+</li>
+</ol>
+<hr>
+<h1 id="三、Web漏洞（12题）"><a href="#三、Web漏洞（12题）" class="headerlink" title="三、Web漏洞（12题）"></a>三、Web漏洞（12题）</h1><ol start="17">
+<li><p>SQL注入产生的原因是什么？</p>
+</li>
+<li><p>SQL注入有哪些类型？</p>
+</li>
+<li><p>什么是XSS？分为哪几种？</p>
+</li>
+<li><p>CSRF漏洞原理是什么？</p>
+</li>
+<li><p>文件上传漏洞怎么产生？</p>
+</li>
+<li><p>什么是文件包含漏洞（LFI&#x2F;RFI）？</p>
+</li>
+<li><p>什么是SSRF？</p>
+</li>
+<li><p>什么是反序列化漏洞？</p>
+</li>
+<li><p>命令执行漏洞产生原因是什么？</p>
+</li>
+<li><p>什么是逻辑漏洞？</p>
+</li>
+<li><p>如何防御SQL注入？</p>
+</li>
+<li><p>什么是WAF？有哪些检测方式？</p>
+</li>
+</ol>
+<hr>
+<h1 id="四、系统与提权（8题）"><a href="#四、系统与提权（8题）" class="headerlink" title="四、系统与提权（8题）"></a>四、系统与提权（8题）</h1><ol start="29">
+<li><p>Linux提权常见方式有哪些？</p>
+</li>
+<li><p>什么是SUID提权？</p>
+</li>
+<li><p>什么是Cron提权？</p>
+</li>
+<li><p>Windows提权思路有哪些？</p>
+</li>
+<li><p>什么是DLL劫持？</p>
+</li>
+<li><p>什么是PATH劫持？</p>
+</li>
+<li><p>什么是内核提权？</p>
+</li>
+<li><p>什么是弱口令攻击？</p>
+</li>
+</ol>
+<hr>
+<h1 id="五、后渗透与内网（7题）"><a href="#五、后渗透与内网（7题）" class="headerlink" title="五、后渗透与内网（7题）"></a>五、后渗透与内网（7题）</h1><ol start="37">
+<li><p>什么是WebShell？</p>
+</li>
+<li><p>WebShell如何维持权限？</p>
+</li>
+<li><p>什么是横向移动？</p>
+</li>
+<li><p>什么是Pass-the-Hash攻击？</p>
+</li>
+<li><p>什么是Pass-the-Ticket？</p>
+</li>
+<li><p>mimikatz有什么作用？</p>
+</li>
+<li><p>如何从一台主机进入内网？</p>
+</li>
+</ol>
+<hr>
+<h1 id="六、域环境与AD攻击（7题）"><a href="#六、域环境与AD攻击（7题）" class="headerlink" title="六、域环境与AD攻击（7题）"></a>六、域环境与AD攻击（7题）</h1><ol start="44">
+<li><p>什么是Active Directory？</p>
+</li>
+<li><p>什么是域控（Domain Controller）？</p>
+</li>
+<li><p>Kerberos认证流程是什么？</p>
+</li>
+<li><p>什么是Kerberoasting攻击？</p>
+</li>
+<li><p>什么是Golden Ticket？</p>
+</li>
+<li><p>什么是Silver Ticket？</p>
+</li>
+<li><p>域环境渗透的一般流程是什么？</p>
+</li>
+</ol>
+<hr>
+<h1 id="你现在最该补的其实是这4个知识"><a href="#你现在最该补的其实是这4个知识" class="headerlink" title="你现在最该补的其实是这4个知识"></a>你现在最该补的其实是这4个知识</h1><p>如果你要快速补一下<strong>内网基础</strong>，优先搞懂：</p>
+<h3 id="1️⃣-Kerberos认证流程"><a href="#1️⃣-Kerberos认证流程" class="headerlink" title="1️⃣ Kerberos认证流程"></a>1️⃣ Kerberos认证流程</h3><p>核心概念：</p>
+<ul>
+<li><p>TGT</p>
+</li>
+<li><p>TGS</p>
+</li>
+<li><p>Ticket</p>
+</li>
+</ul>
+<h3 id="2️⃣-Pass-the-Hash"><a href="#2️⃣-Pass-the-Hash" class="headerlink" title="2️⃣ Pass-the-Hash"></a>2️⃣ Pass-the-Hash</h3><p>利用NTLM hash进行认证。</p>
+<h3 id="3️⃣-mimikatz"><a href="#3️⃣-mimikatz" class="headerlink" title="3️⃣ mimikatz"></a>3️⃣ mimikatz</h3><p>获取：</p>
+<ul>
+<li><p>hash</p>
+</li>
+<li><p>ticket</p>
+</li>
+</ul>
+<h3 id="4️⃣-域控权限"><a href="#4️⃣-域控权限" class="headerlink" title="4️⃣ 域控权限"></a>4️⃣ 域控权限</h3><p>域控基本就是：</p>
+<blockquote>
+<p>控制整个域内所有机器</p>
+</blockquote>
+<hr>
+<h1 id="面试时不会回答怎么办"><a href="#面试时不会回答怎么办" class="headerlink" title="面试时不会回答怎么办"></a>面试时不会回答怎么办</h1><p>如果问到你不熟的，可以这样说：</p>
+<blockquote>
+<p>这个方向我目前了解基本原理，比如Kerberos认证和Pass-the-Hash攻击，但实战经验还在通过靶场补充。</p>
+</blockquote>
+<p>面试官通常能接受。</p>
+<hr>
+<p>💡 最后给你一个非常重要的判断：</p>
+<p>从你的经历看（护网 + CNVD + 靶场），你其实更像：</p>
+<p><strong>Web渗透 &#x2F; 漏洞挖掘型选手</strong></p>
+<p>而不是：</p>
+<p><strong>内网红队</strong></p>
+<p>所以面试时要把优势放在：</p>
+<ul>
+<li><p>Web漏洞</p>
+</li>
+<li><p>自动化刷洞</p>
+</li>
+<li><p>漏洞研究</p>
+</li>
+</ul>
+<p>而不是拼AD攻击。</p>
+<hr>
+<p>如果你愿意，我可以再给你一份 <strong>“渗透测试面试100%会问的20个问题（附标准回答）”</strong>。<br>很多安全公司技术面试基本都在里面。</p>
+<p>50题我要答案</p>
+<p>好，我给你一套<strong>渗透测试面试 50 题 + 简洁标准答案版</strong>。<br>这些答案是 <strong>面试回答版</strong>（不是教材版），每题控制在 <strong>20–40秒能讲完</strong>，技术面试非常合适。</p>
+<hr>
+<h1 id="一、基础网络与原理（1–8）"><a href="#一、基础网络与原理（1–8）" class="headerlink" title="一、基础网络与原理（1–8）"></a>一、基础网络与原理（1–8）</h1><h3 id="1-HTTP-和-HTTPS-的区别"><a href="#1-HTTP-和-HTTPS-的区别" class="headerlink" title="1. HTTP 和 HTTPS 的区别"></a>1. HTTP 和 HTTPS 的区别</h3><p>HTTP 是明文传输协议，数据容易被监听或篡改。<br>HTTPS 在 HTTP 基础上加入 <strong>TLS&#x2F;SSL 加密</strong>，通过证书验证服务器身份并对通信内容进行加密，保证数据的机密性和完整性。</p>
+<hr>
+<h3 id="2-TLS-握手流程"><a href="#2-TLS-握手流程" class="headerlink" title="2. TLS 握手流程"></a>2. TLS 握手流程</h3><p>大致流程：</p>
+<ol>
+<li><p>客户端发送支持的加密算法</p>
+</li>
+<li><p>服务器返回证书和公钥</p>
+</li>
+<li><p>客户端验证证书</p>
+</li>
+<li><p>客户端生成随机密钥并用公钥加密发送</p>
+</li>
+<li><p>双方使用会话密钥进行对称加密通信</p>
+</li>
+</ol>
+<hr>
+<h3 id="3-什么是三次握手"><a href="#3-什么是三次握手" class="headerlink" title="3. 什么是三次握手"></a>3. 什么是三次握手</h3><p>TCP建立连接需要三次握手：</p>
+<ol>
+<li><p>客户端发送 SYN</p>
+</li>
+<li><p>服务器返回 SYN+ACK</p>
+</li>
+<li><p>客户端发送 ACK</p>
+</li>
+</ol>
+<p>这样双方确认发送和接收能力都正常。</p>
+<hr>
+<h3 id="4-常见端口"><a href="#4-常见端口" class="headerlink" title="4. 常见端口"></a>4. 常见端口</h3><table>
+<thead>
+<tr>
+<th>端口</th>
+<th>服务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>21</td>
+<td>FTP</td>
+</tr>
+<tr>
+<td>22</td>
+<td>SSH</td>
+</tr>
+<tr>
+<td>23</td>
+<td>Telnet</td>
+</tr>
+<tr>
+<td>25</td>
+<td>SMTP</td>
+</tr>
+<tr>
+<td>53</td>
+<td>DNS</td>
+</tr>
+<tr>
+<td>80</td>
+<td>HTTP</td>
+</tr>
+<tr>
+<td>443</td>
+<td>HTTPS</td>
+</tr>
+<tr>
+<td>3306</td>
+<td>MySQL</td>
+</tr>
+<tr>
+<td>3389</td>
+<td>RDP</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="5-DNS解析流程"><a href="#5-DNS解析流程" class="headerlink" title="5. DNS解析流程"></a>5. DNS解析流程</h3><p>流程：</p>
+<ol>
+<li><p>浏览器查询本地缓存</p>
+</li>
+<li><p>查询操作系统缓存</p>
+</li>
+<li><p>查询本地DNS服务器</p>
+</li>
+<li><p>根DNS服务器</p>
+</li>
+<li><p>顶级域DNS</p>
+</li>
+<li><p>权威DNS服务器返回IP</p>
+</li>
+</ol>
+<hr>
+<h3 id="6-CDN作用"><a href="#6-CDN作用" class="headerlink" title="6. CDN作用"></a>6. CDN作用</h3><p>CDN用于加速访问，通过分布式节点缓存网站内容。</p>
+<p>渗透测试中：</p>
+<ul>
+<li><p>隐藏真实IP</p>
+</li>
+<li><p>提高访问速度</p>
+</li>
+</ul>
+<p>绕过方法：</p>
+<ul>
+<li><p>子域枚举</p>
+</li>
+<li><p>历史DNS记录</p>
+</li>
+<li><p>邮件服务器</p>
+</li>
+<li><p>直接扫描C段</p>
+</li>
+</ul>
+<hr>
+<h3 id="7-什么是反向代理"><a href="#7-什么是反向代理" class="headerlink" title="7. 什么是反向代理"></a>7. 什么是反向代理</h3><p>反向代理是服务器代理客户端请求到后端服务器。</p>
+<p>常见：</p>
+<ul>
+<li><p>Nginx</p>
+</li>
+<li><p>Apache</p>
+</li>
+</ul>
+<p>作用：</p>
+<ul>
+<li><p>负载均衡</p>
+</li>
+<li><p>隐藏真实服务器</p>
+</li>
+<li><p>安全防护</p>
+</li>
+</ul>
+<hr>
+<h3 id="8-什么是负载均衡"><a href="#8-什么是负载均衡" class="headerlink" title="8. 什么是负载均衡"></a>8. 什么是负载均衡</h3><p>负载均衡将请求分发到多台服务器，提高系统可用性。</p>
+<p>常见算法：</p>
+<ul>
+<li><p>轮询</p>
+</li>
+<li><p>IP哈希</p>
+</li>
+<li><p>最少连接</p>
+</li>
+</ul>
+<hr>
+<h1 id="二、信息收集（9–16）"><a href="#二、信息收集（9–16）" class="headerlink" title="二、信息收集（9–16）"></a>二、信息收集（9–16）</h1><h3 id="9-为什么信息收集是第一步"><a href="#9-为什么信息收集是第一步" class="headerlink" title="9. 为什么信息收集是第一步"></a>9. 为什么信息收集是第一步</h3><p>因为渗透测试需要了解：</p>
+<ul>
+<li><p>目标资产</p>
+</li>
+<li><p>技术栈</p>
+</li>
+<li><p>暴露服务</p>
+</li>
+</ul>
+<p>信息越多，攻击面越大。</p>
+<hr>
+<h3 id="10-子域名枚举方法"><a href="#10-子域名枚举方法" class="headerlink" title="10. 子域名枚举方法"></a>10. 子域名枚举方法</h3><p>工具：</p>
+<ul>
+<li><p>Sublist3r</p>
+</li>
+<li><p>OneForAll</p>
+</li>
+<li><p>ksubdomain</p>
+</li>
+</ul>
+<p>方法：</p>
+<ul>
+<li><p>字典爆破</p>
+</li>
+<li><p>DNS解析</p>
+</li>
+<li><p>搜索引擎</p>
+</li>
+</ul>
+<hr>
+<h3 id="11-如何识别CMS"><a href="#11-如何识别CMS" class="headerlink" title="11. 如何识别CMS"></a>11. 如何识别CMS</h3><p>方法：</p>
+<ul>
+<li><p>页面源码</p>
+</li>
+<li><p>favicon识别</p>
+</li>
+<li><p>目录结构</p>
+</li>
+</ul>
+<p>工具：</p>
+<ul>
+<li><p>whatweb</p>
+</li>
+<li><p>wappalyzer</p>
+</li>
+</ul>
+<hr>
+<h3 id="12-常见资产测绘平台"><a href="#12-常见资产测绘平台" class="headerlink" title="12. 常见资产测绘平台"></a>12. 常见资产测绘平台</h3><p>常见：</p>
+<ul>
+<li><p>FOFA</p>
+</li>
+<li><p>ZoomEye</p>
+</li>
+<li><p>Shodan</p>
+</li>
+<li><p>Hunter</p>
+</li>
+</ul>
+<p>用于搜索互联网暴露资产。</p>
+<hr>
+<h3 id="13-如何寻找隐藏目录"><a href="#13-如何寻找隐藏目录" class="headerlink" title="13. 如何寻找隐藏目录"></a>13. 如何寻找隐藏目录</h3><p>工具：</p>
+<ul>
+<li><p>dirsearch</p>
+</li>
+<li><p>gobuster</p>
+</li>
+<li><p>dirbuster</p>
+</li>
+</ul>
+<p>原理：</p>
+<p>通过字典枚举URL路径。</p>
+<hr>
+<h3 id="14-如何识别Web服务器"><a href="#14-如何识别Web服务器" class="headerlink" title="14. 如何识别Web服务器"></a>14. 如何识别Web服务器</h3><p>方法：</p>
+<ul>
+<li><p>HTTP Header</p>
+</li>
+<li><p>Banner信息</p>
+</li>
+<li><p>指纹识别</p>
+</li>
+</ul>
+<p>工具：</p>
+<ul>
+<li><p>whatweb</p>
+</li>
+<li><p>nmap</p>
+</li>
+</ul>
+<hr>
+<h3 id="15-什么是旁站"><a href="#15-什么是旁站" class="headerlink" title="15. 什么是旁站"></a>15. 什么是旁站</h3><p>旁站是 <strong>同一服务器上的其他网站</strong>。</p>
+<p>如果目标网站防护较强，可以攻击旁站获取服务器权限。</p>
+<hr>
+<h3 id="16-什么是C段扫描"><a href="#16-什么是C段扫描" class="headerlink" title="16. 什么是C段扫描"></a>16. 什么是C段扫描</h3><p>扫描同一IP段的主机，比如：</p>
+<p>192.168.1.1<br>192.168.1.2<br>192.168.1.3</p>
+<p>用于寻找其他资产。</p>
+<hr>
+<h1 id="三、Web漏洞（17–28）"><a href="#三、Web漏洞（17–28）" class="headerlink" title="三、Web漏洞（17–28）"></a>三、Web漏洞（17–28）</h1><h3 id="17-SQL注入原理"><a href="#17-SQL注入原理" class="headerlink" title="17. SQL注入原理"></a>17. SQL注入原理</h3><p>程序将用户输入直接拼接到SQL语句中，没有过滤。</p>
+<p>攻击者可以构造恶意SQL改变查询逻辑。</p>
+<hr>
+<h3 id="18-SQL注入类型"><a href="#18-SQL注入类型" class="headerlink" title="18. SQL注入类型"></a>18. SQL注入类型</h3><p>常见：</p>
+<ul>
+<li><p>报错注入</p>
+</li>
+<li><p>联合查询</p>
+</li>
+<li><p>布尔盲注</p>
+</li>
+<li><p>时间盲注</p>
+</li>
+<li><p>堆叠注入</p>
+</li>
+</ul>
+<hr>
+<h3 id="19-什么是XSS"><a href="#19-什么是XSS" class="headerlink" title="19. 什么是XSS"></a>19. 什么是XSS</h3><p>跨站脚本攻击，攻击者向页面注入恶意JS代码。</p>
+<p>类型：</p>
+<ul>
+<li><p>反射型</p>
+</li>
+<li><p>存储型</p>
+</li>
+<li><p>DOM型</p>
+</li>
+</ul>
+<hr>
+<h3 id="20-CSRF原理"><a href="#20-CSRF原理" class="headerlink" title="20. CSRF原理"></a>20. CSRF原理</h3><p>利用用户登录状态，在用户不知情情况下发送请求。</p>
+<p>例如诱导用户点击恶意链接执行操作。</p>
+<hr>
+<h3 id="21-文件上传漏洞"><a href="#21-文件上传漏洞" class="headerlink" title="21. 文件上传漏洞"></a>21. 文件上传漏洞</h3><p>服务器只检查后缀，没有检查文件内容。</p>
+<p>攻击者上传WebShell执行代码。</p>
+<hr>
+<h3 id="22-文件包含漏洞"><a href="#22-文件包含漏洞" class="headerlink" title="22. 文件包含漏洞"></a>22. 文件包含漏洞</h3><p>程序包含用户控制的文件路径。</p>
+<p>类型：</p>
+<ul>
+<li><p>LFI 本地文件包含</p>
+</li>
+<li><p>RFI 远程文件包含</p>
+</li>
+</ul>
+<hr>
+<h3 id="23-SSRF"><a href="#23-SSRF" class="headerlink" title="23. SSRF"></a>23. SSRF</h3><p>服务器请求伪造。</p>
+<p>攻击者利用服务器访问：</p>
+<ul>
+<li><p>内网服务</p>
+</li>
+<li><p>云元数据</p>
+</li>
+<li><p>Redis等服务</p>
+</li>
+</ul>
+<hr>
+<h3 id="24-反序列化漏洞"><a href="#24-反序列化漏洞" class="headerlink" title="24. 反序列化漏洞"></a>24. 反序列化漏洞</h3><p>程序反序列化用户输入数据时，如果类中存在危险方法（如 <code>__destruct</code>），可能执行恶意代码。</p>
+<hr>
+<h3 id="25-命令执行漏洞"><a href="#25-命令执行漏洞" class="headerlink" title="25. 命令执行漏洞"></a>25. 命令执行漏洞</h3><p>程序调用系统命令时没有过滤用户输入。</p>
+<p>例如：</p>
+<p>system($_GET[‘cmd’])</p>
+<hr>
+<h3 id="26-什么是逻辑漏洞"><a href="#26-什么是逻辑漏洞" class="headerlink" title="26. 什么是逻辑漏洞"></a>26. 什么是逻辑漏洞</h3><p>程序业务逻辑存在缺陷。</p>
+<p>例如：</p>
+<ul>
+<li><p>越权访问</p>
+</li>
+<li><p>支付绕过</p>
+</li>
+<li><p>重复提交</p>
+</li>
+</ul>
+<hr>
+<h3 id="27-SQL注入防御"><a href="#27-SQL注入防御" class="headerlink" title="27. SQL注入防御"></a>27. SQL注入防御</h3><p>常见方法：</p>
+<ul>
+<li><p>预编译</p>
+</li>
+<li><p>参数化查询</p>
+</li>
+<li><p>输入过滤</p>
+</li>
+<li><p>WAF</p>
+</li>
+</ul>
+<hr>
+<h3 id="28-WAF检测方式"><a href="#28-WAF检测方式" class="headerlink" title="28. WAF检测方式"></a>28. WAF检测方式</h3><p>常见：</p>
+<ul>
+<li><p>特征匹配</p>
+</li>
+<li><p>语义分析</p>
+</li>
+<li><p>行为检测</p>
+</li>
+</ul>
+<hr>
+<h1 id="四、系统与提权（29–36）"><a href="#四、系统与提权（29–36）" class="headerlink" title="四、系统与提权（29–36）"></a>四、系统与提权（29–36）</h1><h3 id="29-Linux提权方式"><a href="#29-Linux提权方式" class="headerlink" title="29. Linux提权方式"></a>29. Linux提权方式</h3><p>常见：</p>
+<ul>
+<li><p>SUID</p>
+</li>
+<li><p>Cron</p>
+</li>
+<li><p>PATH劫持</p>
+</li>
+<li><p>配置错误</p>
+</li>
+<li><p>内核漏洞</p>
+</li>
+</ul>
+<hr>
+<h3 id="30-SUID提权"><a href="#30-SUID提权" class="headerlink" title="30. SUID提权"></a>30. SUID提权</h3><p>SUID程序以文件拥有者权限运行。</p>
+<p>如果程序存在漏洞，可以利用获得root权限。</p>
+<hr>
+<h3 id="31-Cron提权"><a href="#31-Cron提权" class="headerlink" title="31. Cron提权"></a>31. Cron提权</h3><p>利用定时任务执行恶意脚本。</p>
+<hr>
+<h3 id="32-Windows提权思路"><a href="#32-Windows提权思路" class="headerlink" title="32. Windows提权思路"></a>32. Windows提权思路</h3><p>常见：</p>
+<ul>
+<li><p>弱权限服务</p>
+</li>
+<li><p>DLL劫持</p>
+</li>
+<li><p>内核漏洞</p>
+</li>
+<li><p>凭证窃取</p>
+</li>
+</ul>
+<hr>
+<h3 id="33-DLL劫持"><a href="#33-DLL劫持" class="headerlink" title="33. DLL劫持"></a>33. DLL劫持</h3><p>程序加载DLL时优先加载当前目录DLL。</p>
+<p>攻击者放置恶意DLL执行代码。</p>
+<hr>
+<h3 id="34-PATH劫持"><a href="#34-PATH劫持" class="headerlink" title="34. PATH劫持"></a>34. PATH劫持</h3><p>程序调用命令时使用系统PATH变量。</p>
+<p>攻击者在PATH目录放置恶意程序。</p>
+<hr>
+<h3 id="35-内核提权"><a href="#35-内核提权" class="headerlink" title="35. 内核提权"></a>35. 内核提权</h3><p>利用系统内核漏洞提升权限。</p>
+<hr>
+<h3 id="36-弱口令攻击"><a href="#36-弱口令攻击" class="headerlink" title="36. 弱口令攻击"></a>36. 弱口令攻击</h3><p>使用字典爆破系统登录密码。</p>
+<p>工具：</p>
+<ul>
+<li><p>hydra</p>
+</li>
+<li><p>medusa</p>
+</li>
+</ul>
+<hr>
+<h1 id="五、后渗透与内网（37–43）"><a href="#五、后渗透与内网（37–43）" class="headerlink" title="五、后渗透与内网（37–43）"></a>五、后渗透与内网（37–43）</h1><h3 id="37-什么是WebShell"><a href="#37-什么是WebShell" class="headerlink" title="37. 什么是WebShell"></a>37. 什么是WebShell</h3><p>WebShell是通过Web应用控制服务器的后门程序。</p>
+<hr>
+<h3 id="38-WebShell持久化"><a href="#38-WebShell持久化" class="headerlink" title="38. WebShell持久化"></a>38. WebShell持久化</h3><p>常见方法：</p>
+<ul>
+<li><p>修改Web文件</p>
+</li>
+<li><p>定时任务恢复</p>
+</li>
+<li><p>隐藏在合法代码中</p>
+</li>
+</ul>
+<hr>
+<h3 id="39-横向移动"><a href="#39-横向移动" class="headerlink" title="39. 横向移动"></a>39. 横向移动</h3><p>从一台主机进入其他主机。</p>
+<hr>
+<h3 id="40-Pass-the-Hash"><a href="#40-Pass-the-Hash" class="headerlink" title="40. Pass-the-Hash"></a>40. Pass-the-Hash</h3><p>利用NTLM Hash直接认证，不需要明文密码。</p>
+<hr>
+<h3 id="41-Pass-the-Ticket"><a href="#41-Pass-the-Ticket" class="headerlink" title="41. Pass-the-Ticket"></a>41. Pass-the-Ticket</h3><p>使用Kerberos Ticket进行认证。</p>
+<hr>
+<h3 id="42-mimikatz作用"><a href="#42-mimikatz作用" class="headerlink" title="42. mimikatz作用"></a>42. mimikatz作用</h3><p>提取：</p>
+<ul>
+<li><p>明文密码</p>
+</li>
+<li><p>NTLM hash</p>
+</li>
+<li><p>Kerberos ticket</p>
+</li>
+</ul>
+<hr>
+<h3 id="43-如何进入内网"><a href="#43-如何进入内网" class="headerlink" title="43. 如何进入内网"></a>43. 如何进入内网</h3><p>常见方式：</p>
+<ul>
+<li><p>WebShell</p>
+</li>
+<li><p>VPN</p>
+</li>
+<li><p>钓鱼</p>
+</li>
+</ul>
+<hr>
+<h1 id="六、域环境（44–50）"><a href="#六、域环境（44–50）" class="headerlink" title="六、域环境（44–50）"></a>六、域环境（44–50）</h1><h3 id="44-什么是AD"><a href="#44-什么是AD" class="headerlink" title="44. 什么是AD"></a>44. 什么是AD</h3><p>Active Directory是微软的目录服务，用于管理域内用户和计算机。</p>
+<hr>
+<h3 id="45-什么是域控"><a href="#45-什么是域控" class="headerlink" title="45. 什么是域控"></a>45. 什么是域控</h3><p>域控是管理整个域的服务器。</p>
+<hr>
+<h3 id="46-Kerberos认证流程"><a href="#46-Kerberos认证流程" class="headerlink" title="46. Kerberos认证流程"></a>46. Kerberos认证流程</h3><p>主要包含：</p>
+<ul>
+<li><p>AS认证</p>
+</li>
+<li><p>TGS认证</p>
+</li>
+</ul>
+<p>生成Ticket访问服务。</p>
+<hr>
+<h3 id="47-Kerberoasting"><a href="#47-Kerberoasting" class="headerlink" title="47. Kerberoasting"></a>47. Kerberoasting</h3><p>攻击者获取服务票据并离线破解密码。</p>
+<hr>
+<h3 id="48-Golden-Ticket"><a href="#48-Golden-Ticket" class="headerlink" title="48. Golden Ticket"></a>48. Golden Ticket</h3><p>伪造Kerberos TGT，获得域管理员权限。</p>
+<hr>
+<h3 id="49-Silver-Ticket"><a href="#49-Silver-Ticket" class="headerlink" title="49. Silver Ticket"></a>49. Silver Ticket</h3><p>伪造服务票据访问指定服务。</p>
+<hr>
+<h3 id="50-域渗透流程"><a href="#50-域渗透流程" class="headerlink" title="50. 域渗透流程"></a>50. 域渗透流程</h3><p>一般流程：</p>
+<ol>
+<li><p>信息收集</p>
+</li>
+<li><p>获取凭证</p>
+</li>
+<li><p>横向移动</p>
+</li>
+<li><p>域控提权</p>
+</li>
+</ol>
+<hr>
+<p>💡 <strong>实话告诉你一件事：</strong></p>
+<p>安全面试 <strong>80%问题其实都在这50题里</strong>。</p>
+<p>但如果是<strong>渗透测试岗位</strong>，面试官还特别喜欢问 <strong>5个经典问题</strong>：</p>
+<ul>
+<li><p>SQL注入原理</p>
+</li>
+<li><p>WebShell原理</p>
+</li>
+<li><p>WAF绕过</p>
+</li>
+<li><p>Linux提权</p>
+</li>
+<li><p>内网横向移动</p>
+</li>
+</ul>
+<hr>
+<p>如果你愿意，我可以再给你一份<br><strong>《渗透测试面试最毒的20个问题》（很多人被问懵的那种）</strong>。<br>基本是安全公司技术面试最喜欢问的。</p>
+<p>好我还要，《渗透测试面试最毒的20个问题》（很多人被问懵的那种）。 基本是安全公司技术面试最喜欢问的。</p>
+<p>好，这一套是很多安全公司<strong>技术面最喜欢问、也最容易把人问懵的题</strong>。<br>我给你的是 <strong>面试回答版思路</strong>（不是论文版），每题基本 <strong>30秒～1分钟能讲清楚</strong>。</p>
+<hr>
+<h1 id="《渗透测试面试最毒的20个问题》"><a href="#《渗透测试面试最毒的20个问题》" class="headerlink" title="《渗透测试面试最毒的20个问题》"></a>《渗透测试面试最毒的20个问题》</h1><hr>
+<h1 id="一、Web漏洞深挖（1–6）"><a href="#一、Web漏洞深挖（1–6）" class="headerlink" title="一、Web漏洞深挖（1–6）"></a>一、Web漏洞深挖（1–6）</h1><h3 id="1-SQL注入为什么会产生？"><a href="#1-SQL注入为什么会产生？" class="headerlink" title="1. SQL注入为什么会产生？"></a>1. SQL注入为什么会产生？</h3><p>核心原因：</p>
+<p>程序把 <strong>用户输入直接拼接到SQL语句中</strong>，没有进行参数化处理或过滤。</p>
+<p>例如：</p>
+<p>SELECT * FROM users WHERE id&#x3D;’$id’</p>
+<p>如果输入：</p>
+<p>1 OR 1&#x3D;1</p>
+<p>就会改变SQL逻辑。</p>
+<p>本质：<br><strong>数据和代码没有分离。</strong></p>
+<p>防御：</p>
+<ul>
+<li><p>预编译</p>
+</li>
+<li><p>参数化查询</p>
+</li>
+<li><p>输入过滤</p>
+</li>
+</ul>
+<hr>
+<h3 id="2-SQL注入为什么有时候没有回显？"><a href="#2-SQL注入为什么有时候没有回显？" class="headerlink" title="2. SQL注入为什么有时候没有回显？"></a>2. SQL注入为什么有时候没有回显？</h3><p>原因：</p>
+<p>1️⃣ 网站关闭错误信息<br>2️⃣ 查询结果不返回页面</p>
+<p>所以攻击者需要使用：</p>
+<ul>
+<li><p><strong>布尔盲注</strong></p>
+</li>
+<li><p><strong>时间盲注</strong></p>
+</li>
+</ul>
+<p>通过逻辑判断或延时推断数据。</p>
+<hr>
+<h3 id="3-XSS为什么可以读取Cookie？"><a href="#3-XSS为什么可以读取Cookie？" class="headerlink" title="3. XSS为什么可以读取Cookie？"></a>3. XSS为什么可以读取Cookie？</h3><p>因为JavaScript可以访问：</p>
+<p>document.cookie</p>
+<p>如果网站没有设置：</p>
+<p>HttpOnly</p>
+<p>攻击者就能通过XSS窃取Cookie。</p>
+<hr>
+<h3 id="4-为什么有XSS但拿不到Cookie？"><a href="#4-为什么有XSS但拿不到Cookie？" class="headerlink" title="4. 为什么有XSS但拿不到Cookie？"></a>4. 为什么有XSS但拿不到Cookie？</h3><p>可能原因：</p>
+<p>1️⃣ Cookie设置了 <strong>HttpOnly</strong><br>2️⃣ 网站使用 <strong>Token认证</strong><br>3️⃣ CSP安全策略限制</p>
+<hr>
+<h3 id="5-文件上传漏洞为什么会产生？"><a href="#5-文件上传漏洞为什么会产生？" class="headerlink" title="5. 文件上传漏洞为什么会产生？"></a>5. 文件上传漏洞为什么会产生？</h3><p>常见原因：</p>
+<ul>
+<li><p>只检测文件后缀</p>
+</li>
+<li><p>MIME类型检测不严格</p>
+</li>
+<li><p>文件内容没有检测</p>
+</li>
+</ul>
+<p>攻击者可以上传 <strong>WebShell</strong>。</p>
+<hr>
+<h3 id="6-什么是反序列化漏洞利用链？"><a href="#6-什么是反序列化漏洞利用链？" class="headerlink" title="6. 什么是反序列化漏洞利用链？"></a>6. 什么是反序列化漏洞利用链？</h3><p>反序列化漏洞通常需要：</p>
+<p><strong>gadget chain（利用链）</strong></p>
+<p>攻击者构造恶意对象 →<br>触发类中的特殊方法，例如：</p>
+<p>__destruct<br>__wakeup<br>__toString</p>
+<p>从而执行恶意代码。</p>
+<hr>
+<h1 id="二、WAF绕过（7–9）"><a href="#二、WAF绕过（7–9）" class="headerlink" title="二、WAF绕过（7–9）"></a>二、WAF绕过（7–9）</h1><h3 id="7-WAF常见绕过方式？"><a href="#7-WAF常见绕过方式？" class="headerlink" title="7. WAF常见绕过方式？"></a>7. WAF常见绕过方式？</h3><p>常见绕过：</p>
+<ul>
+<li><p>大小写绕过</p>
+</li>
+<li><p>编码绕过（URL编码）</p>
+</li>
+<li><p>注释绕过</p>
+</li>
+</ul>
+<p>例如：</p>
+<p>union&#x2F;**&#x2F;select</p>
+<ul>
+<li>双写绕过</li>
+</ul>
+<p>ununionion</p>
+<hr>
+<h3 id="8-WAF为什么会被绕过？"><a href="#8-WAF为什么会被绕过？" class="headerlink" title="8. WAF为什么会被绕过？"></a>8. WAF为什么会被绕过？</h3><p>因为大部分WAF是：</p>
+<p><strong>规则匹配</strong></p>
+<p>如果攻击者改变表达方式：</p>
+<ul>
+<li><p>编码</p>
+</li>
+<li><p>混淆</p>
+</li>
+</ul>
+<p>就可能绕过检测。</p>
+<hr>
+<h3 id="9-如果SQLmap被WAF拦截怎么办？"><a href="#9-如果SQLmap被WAF拦截怎么办？" class="headerlink" title="9. 如果SQLmap被WAF拦截怎么办？"></a>9. 如果SQLmap被WAF拦截怎么办？</h3><p>常见方法：</p>
+<ul>
+<li><p>修改User-Agent</p>
+</li>
+<li><p>降低请求速度</p>
+</li>
+<li><p>使用 tamper脚本</p>
+</li>
+<li><p>手工注入</p>
+</li>
+</ul>
+<hr>
+<h1 id="三、信息收集（10–12）"><a href="#三、信息收集（10–12）" class="headerlink" title="三、信息收集（10–12）"></a>三、信息收集（10–12）</h1><h3 id="10-渗透测试为什么要做子域名收集？"><a href="#10-渗透测试为什么要做子域名收集？" class="headerlink" title="10. 渗透测试为什么要做子域名收集？"></a>10. 渗透测试为什么要做子域名收集？</h3><p>原因：</p>
+<p>子域名往往有：</p>
+<ul>
+<li><p>测试环境</p>
+</li>
+<li><p>开发环境</p>
+</li>
+<li><p>未加固系统</p>
+</li>
+</ul>
+<p>这些系统更容易出现漏洞。</p>
+<hr>
+<h3 id="11-为什么旁站有价值？"><a href="#11-为什么旁站有价值？" class="headerlink" title="11. 为什么旁站有价值？"></a>11. 为什么旁站有价值？</h3><p>旁站与目标：</p>
+<ul>
+<li>在同一服务器</li>
+</ul>
+<p>如果攻击旁站成功：</p>
+<p>可能直接获取服务器权限。</p>
+<hr>
+<h3 id="12-为什么要扫描C段？"><a href="#12-为什么要扫描C段？" class="headerlink" title="12. 为什么要扫描C段？"></a>12. 为什么要扫描C段？</h3><p>很多公司服务器在同一个网段。</p>
+<p>扫描C段可以发现：</p>
+<ul>
+<li><p>未公开系统</p>
+</li>
+<li><p>内网入口</p>
+</li>
+</ul>
+<hr>
+<h1 id="四、系统提权（13–15）"><a href="#四、系统提权（13–15）" class="headerlink" title="四、系统提权（13–15）"></a>四、系统提权（13–15）</h1><h3 id="13-Linux提权思路？"><a href="#13-Linux提权思路？" class="headerlink" title="13. Linux提权思路？"></a>13. Linux提权思路？</h3><p>常见路径：</p>
+<p>1️⃣ SUID程序<br>2️⃣ Cron定时任务<br>3️⃣ PATH劫持<br>4️⃣ 配置错误<br>5️⃣ 内核漏洞</p>
+<hr>
+<h3 id="14-sudo-l为什么重要？"><a href="#14-sudo-l为什么重要？" class="headerlink" title="14. sudo -l为什么重要？"></a>14. sudo -l为什么重要？</h3><p>sudo -l</p>
+<p>可以查看当前用户能以root执行的命令。</p>
+<p>如果配置不当：</p>
+<p>就可以提权。</p>
+<hr>
+<h3 id="15-为什么SUID会导致提权？"><a href="#15-为什么SUID会导致提权？" class="headerlink" title="15. 为什么SUID会导致提权？"></a>15. 为什么SUID会导致提权？</h3><p>SUID程序执行时：</p>
+<p>权限是 <strong>文件拥有者权限</strong>。</p>
+<p>如果程序存在漏洞：</p>
+<p>攻击者可以执行命令获得root。</p>
+<hr>
+<h1 id="五、后渗透（16–17）"><a href="#五、后渗透（16–17）" class="headerlink" title="五、后渗透（16–17）"></a>五、后渗透（16–17）</h1><h3 id="16-拿到WebShell下一步做什么？"><a href="#16-拿到WebShell下一步做什么？" class="headerlink" title="16. 拿到WebShell下一步做什么？"></a>16. 拿到WebShell下一步做什么？</h3><p>一般流程：</p>
+<p>1️⃣ 收集系统信息<br>2️⃣ 查找提权路径<br>3️⃣ 获取敏感信息<br>4️⃣ 横向移动</p>
+<hr>
+<h3 id="17-为什么WebShell流量容易被发现？"><a href="#17-为什么WebShell流量容易被发现？" class="headerlink" title="17. 为什么WebShell流量容易被发现？"></a>17. 为什么WebShell流量容易被发现？</h3><p>原因：</p>
+<p>WebShell通信往往：</p>
+<ul>
+<li><p>请求频率异常</p>
+</li>
+<li><p>数据加密特征明显</p>
+</li>
+<li><p>POST流量异常</p>
+</li>
+</ul>
+<p>所以蓝队可以通过：</p>
+<ul>
+<li><p>流量分析</p>
+</li>
+<li><p>日志分析</p>
+</li>
+</ul>
+<p>发现攻击。</p>
+<hr>
+<h1 id="六、内网与域环境（18–20）"><a href="#六、内网与域环境（18–20）" class="headerlink" title="六、内网与域环境（18–20）"></a>六、内网与域环境（18–20）</h1><h3 id="18-为什么要Dump凭证？"><a href="#18-为什么要Dump凭证？" class="headerlink" title="18. 为什么要Dump凭证？"></a>18. 为什么要Dump凭证？</h3><p>因为凭证可以用于：</p>
+<ul>
+<li><p>横向移动</p>
+</li>
+<li><p>域控攻击</p>
+</li>
+</ul>
+<p>工具：</p>
+<ul>
+<li>mimikatz</li>
+</ul>
+<hr>
+<h3 id="19-Pass-the-Hash原理？"><a href="#19-Pass-the-Hash原理？" class="headerlink" title="19. Pass-the-Hash原理？"></a>19. Pass-the-Hash原理？</h3><p>Windows使用 <strong>NTLM认证</strong>。</p>
+<p>认证时只需要：</p>
+<p><strong>hash</strong></p>
+<p>所以攻击者可以直接使用hash登录，而不需要明文密码。</p>
+<hr>
+<h3 id="20-为什么域控一旦被攻破就很危险？"><a href="#20-为什么域控一旦被攻破就很危险？" class="headerlink" title="20. 为什么域控一旦被攻破就很危险？"></a>20. 为什么域控一旦被攻破就很危险？</h3><p>域控管理整个域：</p>
+<ul>
+<li><p>所有用户</p>
+</li>
+<li><p>所有计算机</p>
+</li>
+<li><p>权限策略</p>
+</li>
+</ul>
+<p>如果攻击者控制域控：</p>
+<p>就等于控制整个网络。</p>
+<h1 id="面试最容易追问的5个问题"><a href="#面试最容易追问的5个问题" class="headerlink" title="面试最容易追问的5个问题"></a>面试最容易追问的5个问题</h1><p>很多人被追问卡住：</p>
+<h3 id="1️⃣-SQL注入怎么绕WAF"><a href="#1️⃣-SQL注入怎么绕WAF" class="headerlink" title="1️⃣ SQL注入怎么绕WAF"></a>1️⃣ SQL注入怎么绕WAF</h3><h3 id="2️⃣-WebShell怎么维持权限"><a href="#2️⃣-WebShell怎么维持权限" class="headerlink" title="2️⃣ WebShell怎么维持权限"></a>2️⃣ WebShell怎么维持权限</h3><h3 id="3️⃣-Linux提权步骤"><a href="#3️⃣-Linux提权步骤" class="headerlink" title="3️⃣ Linux提权步骤"></a>3️⃣ Linux提权步骤</h3><h3 id="4️⃣-内网横向移动方法"><a href="#4️⃣-内网横向移动方法" class="headerlink" title="4️⃣ 内网横向移动方法"></a>4️⃣ 内网横向移动方法</h3><h3 id="5️⃣-Kerberos认证流程"><a href="#5️⃣-Kerberos认证流程" class="headerlink" title="5️⃣ Kerberos认证流程"></a>5️⃣ Kerberos认证流程</h3><hr>
+<h1 id="我给你一个非常实用的面试技巧"><a href="#我给你一个非常实用的面试技巧" class="headerlink" title="我给你一个非常实用的面试技巧"></a>我给你一个非常实用的面试技巧</h1><p>如果不会回答，可以这样说：</p>
+<blockquote>
+<p>这个问题我了解基本原理，比如XXXX，不过实战经验还在靶场中进一步练习。</p>
+</blockquote>
+<p>安全面试官一般能接受。</p>
+<hr>
+<p>💡 最后给你一个判断：</p>
+<p>从你的经历看（CNVD + 护网 + 靶场），<br>你其实已经属于 <strong>中级渗透测试工程师水平的简历</strong>。</p>
+<p>但很多人面试挂掉的原因是：</p>
+<p><strong>只会工具，不会原理。</strong></p>
+<hr>
+<p>如果你愿意，我可以再给你一份<br><strong>《渗透测试面试终极题库（100题）》</strong><br>基本国内安全公司面试题都在里面。</p>
+<p>对有个面试是这么说我的只会工具，不会原理。我想要你的《渗透测试面试终极题库（100题）》</p>
+<p>你被评价 <strong>“只会工具，不懂原理”</strong> 其实是很多渗透测试工程师都会遇到的阶段。别太受打击，这说明两件事：</p>
+<ul>
+<li><p>你 <strong>实操经验是有的</strong>（不然不会说你工具熟）</p>
+</li>
+<li><p>面试官希望你 <strong>把工具背后的原理讲出来</strong></p>
+</li>
+</ul>
+<p>解决方法就是：<strong>把知识结构化</strong>。<br>我给你整理一套 <strong>《渗透测试面试终极题库100题》</strong>（按模块分类）。<br>这套题基本覆盖国内安全公司 <strong>80%-90% 面试范围</strong>。</p>
+<p>我先给你 <strong>问题清单 + 重点方向</strong>，你后面复习时逐个补原理。</p>
+<hr>
+<h1 id="一、网络基础（1–10）"><a href="#一、网络基础（1–10）" class="headerlink" title="一、网络基础（1–10）"></a>一、网络基础（1–10）</h1><ol>
+<li><p>TCP 三次握手和四次挥手流程</p>
+</li>
+<li><p>为什么 TCP 建立连接需要三次握手</p>
+</li>
+<li><p>HTTP 和 HTTPS 的区别</p>
+</li>
+<li><p>TLS 握手过程</p>
+</li>
+<li><p>DNS 解析流程</p>
+</li>
+<li><p>CDN 工作原理</p>
+</li>
+<li><p>常见端口及服务</p>
+</li>
+<li><p>反向代理是什么</p>
+</li>
+<li><p>负载均衡原理</p>
+</li>
+<li><p>什么是同源策略</p>
+</li>
+</ol>
+<hr>
+<h1 id="二、信息收集（11–20）"><a href="#二、信息收集（11–20）" class="headerlink" title="二、信息收集（11–20）"></a>二、信息收集（11–20）</h1><ol start="11">
+<li><p>渗透测试为什么从信息收集开始</p>
+</li>
+<li><p>子域名枚举方法</p>
+</li>
+<li><p>如何识别网站技术栈</p>
+</li>
+<li><p>如何寻找隐藏目录</p>
+</li>
+<li><p>什么是旁站</p>
+</li>
+<li><p>什么是C段扫描</p>
+</li>
+<li><p>如何寻找真实IP（绕CDN）</p>
+</li>
+<li><p>如何发现敏感信息泄露</p>
+</li>
+<li><p>如何识别Web服务器类型</p>
+</li>
+<li><p>常见资产测绘平台有哪些</p>
+</li>
+</ol>
+<hr>
+<h1 id="三、Web漏洞（21–40）"><a href="#三、Web漏洞（21–40）" class="headerlink" title="三、Web漏洞（21–40）"></a>三、Web漏洞（21–40）</h1><ol start="21">
+<li><p>SQL注入原理</p>
+</li>
+<li><p>SQL注入分类</p>
+</li>
+<li><p>SQL注入利用流程</p>
+</li>
+<li><p>SQL注入防御方式</p>
+</li>
+<li><p>XSS原理</p>
+</li>
+<li><p>XSS分类</p>
+</li>
+<li><p>XSS防御</p>
+</li>
+<li><p>CSRF原理</p>
+</li>
+<li><p>文件上传漏洞原理</p>
+</li>
+<li><p>文件上传绕过方式</p>
+</li>
+<li><p>文件包含漏洞原理</p>
+</li>
+<li><p>SSRF漏洞原理</p>
+</li>
+<li><p>SSRF攻击场景</p>
+</li>
+<li><p>命令执行漏洞产生原因</p>
+</li>
+<li><p>反序列化漏洞原理</p>
+</li>
+<li><p>XXE漏洞原理</p>
+</li>
+<li><p>逻辑漏洞是什么</p>
+</li>
+<li><p>IDOR越权漏洞</p>
+</li>
+<li><p>OAuth漏洞</p>
+</li>
+<li><p>API安全问题</p>
+</li>
+</ol>
+<hr>
+<h1 id="四、WAF与绕过（41–48）"><a href="#四、WAF与绕过（41–48）" class="headerlink" title="四、WAF与绕过（41–48）"></a>四、WAF与绕过（41–48）</h1><ol start="41">
+<li><p>WAF是什么</p>
+</li>
+<li><p>WAF检测方式</p>
+</li>
+<li><p>WAF绕过方法</p>
+</li>
+<li><p>SQL注入如何绕WAF</p>
+</li>
+<li><p>XSS如何绕WAF</p>
+</li>
+<li><p>WebShell如何绕检测</p>
+</li>
+<li><p>流量混淆原理</p>
+</li>
+<li><p>如何分析WAF规则</p>
+</li>
+</ol>
+<hr>
+<h1 id="五、系统提权（49–60）"><a href="#五、系统提权（49–60）" class="headerlink" title="五、系统提权（49–60）"></a>五、系统提权（49–60）</h1><ol start="49">
+<li><p>Linux提权思路</p>
+</li>
+<li><p>SUID提权原理</p>
+</li>
+<li><p>Cron提权</p>
+</li>
+<li><p>PATH劫持</p>
+</li>
+<li><p>sudo提权</p>
+</li>
+<li><p>内核提权</p>
+</li>
+<li><p>Windows提权方式</p>
+</li>
+<li><p>DLL劫持原理</p>
+</li>
+<li><p>服务权限配置错误提权</p>
+</li>
+<li><p>UAC绕过</p>
+</li>
+<li><p>权限维持方法</p>
+</li>
+<li><p>WebShell持久化方式</p>
+</li>
+</ol>
+<hr>
+<h1 id="六、后渗透（61–70）"><a href="#六、后渗透（61–70）" class="headerlink" title="六、后渗透（61–70）"></a>六、后渗透（61–70）</h1><ol start="61">
+<li><p>什么是WebShell</p>
+</li>
+<li><p>WebShell通信原理</p>
+</li>
+<li><p>如何检测WebShell</p>
+</li>
+<li><p>冰蝎通信原理</p>
+</li>
+<li><p>内存马是什么</p>
+</li>
+<li><p>WebShell如何隐藏</p>
+</li>
+<li><p>提权后下一步做什么</p>
+</li>
+<li><p>如何获取敏感信息</p>
+</li>
+<li><p>如何建立持久化</p>
+</li>
+<li><p>如何清理痕迹</p>
+</li>
+</ol>
+<hr>
+<h1 id="七、内网渗透（71–85）"><a href="#七、内网渗透（71–85）" class="headerlink" title="七、内网渗透（71–85）"></a>七、内网渗透（71–85）</h1><ol start="71">
+<li><p>内网渗透流程</p>
+</li>
+<li><p>什么是横向移动</p>
+</li>
+<li><p>Pass-the-Hash原理</p>
+</li>
+<li><p>Pass-the-Ticket原理</p>
+</li>
+<li><p>mimikatz作用</p>
+</li>
+<li><p>如何获取凭证</p>
+</li>
+<li><p>如何扫描内网</p>
+</li>
+<li><p>如何利用SMB</p>
+</li>
+<li><p>如何通过RDP横向</p>
+</li>
+<li><p>什么是NTLM认证</p>
+</li>
+<li><p>relay攻击是什么</p>
+</li>
+<li><p>内网代理原理</p>
+</li>
+<li><p>SOCKS代理作用</p>
+</li>
+<li><p>隧道技术原理</p>
+</li>
+<li><p>如何建立内网代理</p>
+</li>
+</ol>
+<hr>
+<h1 id="八、域渗透（86–100）"><a href="#八、域渗透（86–100）" class="headerlink" title="八、域渗透（86–100）"></a>八、域渗透（86–100）</h1><ol start="86">
+<li><p>什么是Active Directory</p>
+</li>
+<li><p>域控是什么</p>
+</li>
+<li><p>Kerberos认证流程</p>
+</li>
+<li><p>Kerberos票据类型</p>
+</li>
+<li><p>Kerberoasting攻击</p>
+</li>
+<li><p>AS-REP Roasting</p>
+</li>
+<li><p>Golden Ticket原理</p>
+</li>
+<li><p>Silver Ticket原理</p>
+</li>
+<li><p>DCSync攻击</p>
+</li>
+<li><p>ACL权限滥用</p>
+</li>
+<li><p>域信任关系</p>
+</li>
+<li><p>横向移动到域控方法</p>
+</li>
+<li><p>域控权限维持</p>
+</li>
+<li><p>如何检测域攻击</p>
+</li>
+<li><p>域环境渗透流程</p>
+</li>
+</ol>
+<hr>
+<h1 id="面试官最喜欢追问的10题"><a href="#面试官最喜欢追问的10题" class="headerlink" title="面试官最喜欢追问的10题"></a>面试官最喜欢追问的10题</h1><p>如果你时间不够复习，<strong>优先搞懂这10个</strong>：</p>
+<p>1️⃣ SQL注入原理<br>2️⃣ XSS原理<br>3️⃣ 文件上传漏洞<br>4️⃣ SSRF<br>5️⃣ WAF绕过<br>6️⃣ Linux提权<br>7️⃣ WebShell原理<br>8️⃣ 内网横向移动<br>9️⃣ Kerberos认证<br>🔟 Pass-the-Hash</p>
+<hr>
+<h1 id="给你一个面试回答公式（非常重要）"><a href="#给你一个面试回答公式（非常重要）" class="headerlink" title="给你一个面试回答公式（非常重要）"></a>给你一个面试回答公式（非常重要）</h1><p>以后回答技术问题可以用 <strong>三步结构</strong>：</p>
+<p><strong>① 原理</strong></p>
+<p>为什么会产生漏洞</p>
+<p><strong>② 利用</strong></p>
+<p>攻击者怎么利用</p>
+<p><strong>③ 防御</strong></p>
+<p>如何防护</p>
+<p>例如 SQL注入：</p>
+<ul>
+<li><p>原理：用户输入拼接SQL</p>
+</li>
+<li><p>利用：构造恶意SQL</p>
+</li>
+<li><p>防御：预编译</p>
+</li>
+</ul>
+<p>面试官会觉得你 <strong>安全思维很完整</strong>。</p>
+<hr>
+<p>如果你愿意，我可以再帮你整理一份：</p>
+<p><strong>《渗透测试原理速成笔记（1小时补完版）》</strong></p>
+<p>里面会把面试最爱问的：</p>
+<ul>
+<li><p>SQL注入</p>
+</li>
+<li><p>XSS</p>
+</li>
+<li><p>SSRF</p>
+</li>
+<li><p>WAF</p>
+</li>
+<li><p>WebShell</p>
+</li>
+<li><p>内网横向</p>
+</li>
+</ul>
+<p>全部用 <strong>最容易理解的方式讲清楚</strong>。</p>
+<p>很多安全岗面试的人就是靠这份临时补原理过的。</p>
+<p>好的需要</p>
+<p>好，那我给你一份 <strong>《渗透测试原理速成笔记（1小时版）》</strong>。<br>目标只有一个：<strong>把“工具党”变成“懂原理的人”</strong>。面试说出来会明显不一样。</p>
+<p>我给你按 <strong>面试最常问的 6 个核心漏洞 + 内网</strong> 讲。</p>
+<hr>
+<h1 id="一、SQL注入原理（最核心）"><a href="#一、SQL注入原理（最核心）" class="headerlink" title="一、SQL注入原理（最核心）"></a>一、SQL注入原理（最核心）</h1><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>SQL注入的本质是：</p>
+<blockquote>
+<p><strong>用户输入被拼接进SQL语句，导致攻击者可以控制SQL逻辑。</strong></p>
+</blockquote>
+<p>示例代码：</p>
+<p>$sql &#x3D; “SELECT * FROM users WHERE username&#x3D;’$user’ AND password&#x3D;[已脱敏：password]”;</p>
+<p>如果输入：</p>
+<p>admin’ OR 1&#x3D;1 –</p>
+<p>SQL变成：</p>
+<p>SELECT * FROM users WHERE username&#x3D;’admin’ OR 1&#x3D;1 –’ AND password&#x3D;[已脱敏：password]</p>
+<p><code>OR 1=1</code> 永远成立 → 登录绕过。</p>
+<hr>
+<h3 id="利用流程"><a href="#利用流程" class="headerlink" title="利用流程"></a>利用流程</h3><p>一般分四步：</p>
+<p>1️⃣ 判断是否存在注入<br>2️⃣ 获取数据库信息</p>
+<p>database()<br>version()</p>
+<p>3️⃣ 获取表名</p>
+<p>information_schema.tables</p>
+<p>4️⃣ 获取字段数据</p>
+<hr>
+<h3 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h3><p>最核心方法：</p>
+<ul>
+<li><p><strong>预编译（Prepared Statement）</strong></p>
+</li>
+<li><p>参数化查询</p>
+</li>
+<li><p>ORM</p>
+</li>
+</ul>
+<hr>
+<h1 id="二、XSS漏洞原理"><a href="#二、XSS漏洞原理" class="headerlink" title="二、XSS漏洞原理"></a>二、XSS漏洞原理</h1><h3 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h3><blockquote>
+<p>攻击者把恶意JS注入网页，浏览器执行。</p>
+</blockquote>
+<p>例如：</p>
+<script>alert(1)</script>
+
+<p>用户访问页面时浏览器执行JS。</p>
+<hr>
+<h3 id="XSS分类"><a href="#XSS分类" class="headerlink" title="XSS分类"></a>XSS分类</h3><p><strong>1 存储型</strong></p>
+<p>攻击代码存数据库<br>所有用户访问都会触发</p>
+<p>例如：</p>
+<ul>
+<li><p>评论区</p>
+</li>
+<li><p>论坛</p>
+</li>
+</ul>
+<p><strong>2 反射型</strong></p>
+<p>攻击代码在URL里</p>
+<p>例如：</p>
+<p><a target="_blank" rel="noopener" href="http://site.com/?q=">http://site.com?q=</a><script></p>
+<p><strong>3 DOM型</strong></p>
+<p>JS脚本在浏览器端执行</p>
+<hr>
+<h3 id="危害"><a href="#危害" class="headerlink" title="危害"></a>危害</h3><ul>
+<li><p>窃取Cookie</p>
+</li>
+<li><p>会话劫持</p>
+</li>
+<li><p>钓鱼页面</p>
+</li>
+</ul>
+<hr>
+<h3 id="防御-1"><a href="#防御-1" class="headerlink" title="防御"></a>防御</h3><p>核心：</p>
+<p>输入过滤<br>输出编码<br>Content-Security-Policy</p>
+<hr>
+<h1 id="三、SSRF漏洞"><a href="#三、SSRF漏洞" class="headerlink" title="三、SSRF漏洞"></a>三、SSRF漏洞</h1><p>面试非常爱问。</p>
+<h3 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h3><blockquote>
+<p>服务器端请求用户指定的URL。</p>
+</blockquote>
+<p>例如代码：</p>
+<p>file_get_contents($_GET['url'])</p>
+<p>攻击者输入：</p>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1:3306/">http://127.0.0.1:3306</a></p>
+<p>服务器就会访问内网。</p>
+<hr>
+<h3 id="利用场景"><a href="#利用场景" class="headerlink" title="利用场景"></a>利用场景</h3><p>SSRF常用于：</p>
+<ul>
+<li><p>扫描内网</p>
+</li>
+<li><p>攻击Redis</p>
+</li>
+<li><p>攻击Docker</p>
+</li>
+<li><p>获取云服务器metadata</p>
+</li>
+</ul>
+<p>例如：</p>
+<p><a target="_blank" rel="noopener" href="http://169.254.169.254/">http://169.254.169.254</a></p>
+<hr>
+<h3 id="防御-2"><a href="#防御-2" class="headerlink" title="防御"></a>防御</h3><ul>
+<li><p>URL白名单</p>
+</li>
+<li><p>禁止访问内网IP</p>
+</li>
+<li><p>DNS解析校验</p>
+</li>
+</ul>
+<hr>
+<h1 id="四、文件上传漏洞"><a href="#四、文件上传漏洞" class="headerlink" title="四、文件上传漏洞"></a>四、文件上传漏洞</h1><h3 id="原理-3"><a href="#原理-3" class="headerlink" title="原理"></a>原理</h3><p>服务器没有严格检查上传文件类型。</p>
+<p>例如：</p>
+<p>shell.php</p>
+<p>上传后访问：</p>
+<p><a target="_blank" rel="noopener" href="http://site.com/upload/shell.php">http://site.com/upload/shell.php</a></p>
+<p>就能执行代码。</p>
+<hr>
+<h3 id="常见绕过"><a href="#常见绕过" class="headerlink" title="常见绕过"></a>常见绕过</h3><p>1️⃣ 后缀绕过</p>
+<p>shell.php.jpg</p>
+<p>2️⃣ MIME绕过</p>
+<p>3️⃣ 双写绕过</p>
+<p>shell.php.php</p>
+<p>4️⃣ 大小写绕过</p>
+<p>shell.PHP</p>
+<hr>
+<h3 id="防御-3"><a href="#防御-3" class="headerlink" title="防御"></a>防御</h3><ul>
+<li><p>白名单后缀</p>
+</li>
+<li><p>随机文件名</p>
+</li>
+<li><p>上传到非web目录</p>
+</li>
+</ul>
+<hr>
+<h1 id="五、WAF检测原理（面试很喜欢）"><a href="#五、WAF检测原理（面试很喜欢）" class="headerlink" title="五、WAF检测原理（面试很喜欢）"></a>五、WAF检测原理（面试很喜欢）</h1><p>WAF本质就是：</p>
+<blockquote>
+<p><strong>检测HTTP请求是否像攻击流量</strong></p>
+</blockquote>
+<p>常见检测方式：</p>
+<h3 id="1-特征匹配"><a href="#1-特征匹配" class="headerlink" title="1 特征匹配"></a>1 特征匹配</h3><p>检测关键词：</p>
+<p>union<br>select<br>sleep</p>
+<hr>
+<h3 id="2-正则匹配"><a href="#2-正则匹配" class="headerlink" title="2 正则匹配"></a>2 正则匹配</h3><p>例如：</p>
+<p>union\s+select</p>
+<hr>
+<h3 id="3-语义分析"><a href="#3-语义分析" class="headerlink" title="3 语义分析"></a>3 语义分析</h3><p>分析SQL结构。</p>
+<hr>
+<h3 id="4-行为分析"><a href="#4-行为分析" class="headerlink" title="4 行为分析"></a>4 行为分析</h3><p>短时间大量请求。</p>
+<hr>
+<h1 id="六、冰蝎流量为什么难检测"><a href="#六、冰蝎流量为什么难检测" class="headerlink" title="六、冰蝎流量为什么难检测"></a>六、冰蝎流量为什么难检测</h1><p>很多面试官会问这个。</p>
+<h3 id="原理-4"><a href="#原理-4" class="headerlink" title="原理"></a>原理</h3><p>冰蝎通信流程：</p>
+<p>1 客户端生成随机密钥<br>2 与WebShell通信<br>3 数据AES加密</p>
+<p>所以流量特点：</p>
+<ul>
+<li><p>看不到命令内容</p>
+</li>
+<li><p>数据是加密的</p>
+</li>
+<li><p>请求内容随机</p>
+</li>
+</ul>
+<hr>
+<h3 id="如何检测"><a href="#如何检测" class="headerlink" title="如何检测"></a>如何检测</h3><p>安全设备一般检测：</p>
+<p>1️⃣ 流量特征</p>
+<p>固定URL<br>POST请求<br>返回长度异常</p>
+<p>2️⃣ 行为检测</p>
+<p>长连接<br>频繁通信</p>
+<p>3️⃣ 内存检测</p>
+<p>检测WebShell加载。</p>
+<hr>
+<h1 id="七、WebShell通信原理"><a href="#七、WebShell通信原理" class="headerlink" title="七、WebShell通信原理"></a>七、WebShell通信原理</h1><p>本质就是：</p>
+<blockquote>
+<p><strong>HTTP请求 + 执行系统命令</strong></p>
+</blockquote>
+<p>例如：</p>
+<p>客户端发送：</p>
+<p>cmd=whoami</p>
+<p>服务器执行：</p>
+<p>system(cmd)</p>
+<p>返回结果。</p>
+<hr>
+<h1 id="八、内网横向移动原理"><a href="#八、内网横向移动原理" class="headerlink" title="八、内网横向移动原理"></a>八、内网横向移动原理</h1><p>横向移动就是：</p>
+<blockquote>
+<p><strong>拿下一台机器 → 利用凭证进入其他机器</strong></p>
+</blockquote>
+<p>常见方法：</p>
+<h3 id="1-凭证利用"><a href="#1-凭证利用" class="headerlink" title="1 凭证利用"></a>1 凭证利用</h3><p>例如：</p>
+<p>NTLM hash<br>密码<br>票据</p>
+<hr>
+<h3 id="2-工具"><a href="#2-工具" class="headerlink" title="2 工具"></a>2 工具</h3><p>例如：</p>
+<ul>
+<li><p>mimikatz</p>
+</li>
+<li><p>psexec</p>
+</li>
+<li><p>wmiexec</p>
+</li>
+</ul>
+<hr>
+<h3 id="3-利用协议"><a href="#3-利用协议" class="headerlink" title="3 利用协议"></a>3 利用协议</h3><p>常见协议：</p>
+<p>SMB<br>RDP<br>WMI<br>WinRM</p>
+<hr>
+<h1 id="九、Kerberos认证（面试非常爱问）"><a href="#九、Kerberos认证（面试非常爱问）" class="headerlink" title="九、Kerberos认证（面试非常爱问）"></a>九、Kerberos认证（面试非常爱问）</h1><p>Kerberos是 <strong>域环境认证协议</strong>。</p>
+<p>核心流程：</p>
+<p>1 用户向 <strong>KDC</strong> 请求票据<br>2 KDC返回 <strong>TGT</strong><br>3 用户用TGT申请 <strong>ST票据</strong><br>4 用ST访问服务器</p>
+<p>关键点：</p>
+<p>TGT = Ticket Granting Ticket<br>ST = Service Ticket</p>
+<hr>
+<h1 id="十、面试万能回答结构"><a href="#十、面试万能回答结构" class="headerlink" title="十、面试万能回答结构"></a>十、面试万能回答结构</h1><p>记住这个 <strong>安全回答模板</strong>：</p>
+<p>漏洞产生原因<br>↓<br>攻击利用方式<br>↓<br>安全防御措施</p>
+<p>比如：</p>
+<p>SQL注入：</p>
+<blockquote>
+<p>SQL注入是由于应用程序把用户输入直接拼接到SQL语句中导致攻击者可以控制SQL逻辑。攻击者可以通过构造恶意SQL语句获取数据库数据甚至执行命令。防御方式主要是使用预编译语句、参数化查询以及严格的输入校验。</p>
+</blockquote>
+<p>面试官会觉得你 <strong>逻辑非常清晰</strong>。</p>
+<hr>
+<h1 id="最后给你一个真实建议（很重要）"><a href="#最后给你一个真实建议（很重要）" class="headerlink" title="最后给你一个真实建议（很重要）"></a>最后给你一个真实建议（很重要）</h1><p>你现在的问题不是：</p>
+<p>❌ 不会技术<br>而是</p>
+<p>✔ <strong>没有把经验总结成原理</strong></p>
+<p>只要做到：</p>
+<p>工具 → 原理<br>漏洞 → 攻击链<br>攻击 → 防御</p>
+<p>面试官就不会再说你是 <strong>工具党</strong>。</p>
+<hr>
+<p>如果你愿意，我可以再给你一份 <strong>真正的安全公司面试杀手级资料</strong>：</p>
+<h3 id="《渗透测试面试最容易被问懵的30题（含标准回答）》"><a href="#《渗透测试面试最容易被问懵的30题（含标准回答）》" class="headerlink" title="《渗透测试面试最容易被问懵的30题（含标准回答）》"></a>《渗透测试面试最容易被问懵的30题（含标准回答）》</h3><p>很多人挂面就是因为这些问题，比如：</p>
+<ul>
+<li><p>为什么SQL注入有时跑不出数据</p>
+</li>
+<li><p>冰蝎流量为什么能被识别</p>
+</li>
+<li><p>为什么有WebShell却提不了权</p>
+</li>
+<li><p>为什么拿到机器却进不了域控</p>
+</li>
+</ul>
+<p>这些问题 <strong>90%面试者答不上来</strong>。</p>
+<p>还有我经常被问到这些漏洞都有哪些利用方式和危害和怎呢挖掘的问题，我都回答不上来。</p>
+<p>这个其实是很多做过靶场、CTF的人都会卡住的点：<strong>知道漏洞名字，但一被追问“怎么挖、怎么利用、危害是什么”就断了。</strong><br>解决办法很简单：<strong>每个漏洞按同一个回答框架说</strong>。面试官基本都会满意。</p>
+<p>我先给你一个 <strong>万能回答模板</strong>，然后用几个常见漏洞示范。</p>
+<hr>
+<h1 id="一、漏洞面试万能回答结构（强烈建议背）"><a href="#一、漏洞面试万能回答结构（强烈建议背）" class="headerlink" title="一、漏洞面试万能回答结构（强烈建议背）"></a>一、漏洞面试万能回答结构（强烈建议背）</h1><p>以后任何漏洞都按这 <strong>四步回答</strong>：</p>
+<p><strong>1️⃣ 漏洞产生原因</strong></p>
+<p>为什么会有这个漏洞。</p>
+<p><strong>2️⃣ 挖掘方法</strong></p>
+<p>我是怎么发现这个漏洞的。</p>
+<p><strong>3️⃣ 利用方式</strong></p>
+<p>攻击者可以怎么利用。</p>
+<p><strong>4️⃣ 危害</strong></p>
+<p>最终能造成什么影响。</p>
+<p>口诀：</p>
+<p>原因 → 挖掘 → 利用 → 危害</p>
+<p>这样回答会显得你 <strong>思路特别专业</strong>。</p>
+<hr>
+<h1 id="二、SQL注入（面试必问）"><a href="#二、SQL注入（面试必问）" class="headerlink" title="二、SQL注入（面试必问）"></a>二、SQL注入（面试必问）</h1><h3 id="1-原因"><a href="#1-原因" class="headerlink" title="1 原因"></a>1 原因</h3><p>应用程序把用户输入 <strong>直接拼接到SQL语句</strong> 中，没有做参数化处理。</p>
+<hr>
+<h3 id="2-挖掘方法"><a href="#2-挖掘方法" class="headerlink" title="2 挖掘方法"></a>2 挖掘方法</h3><p>常见发现方式：</p>
+<ol>
+<li>在参数位置输入特殊字符</li>
+</ol>
+<p>'<br>"<br>and 1=1<br>and 1=2</p>
+<ol start="2">
+<li><p>观察页面返回差异</p>
+</li>
+<li><p>使用工具辅助验证（例如sqlmap）</p>
+</li>
+</ol>
+<hr>
+<h3 id="3-利用方式"><a href="#3-利用方式" class="headerlink" title="3 利用方式"></a>3 利用方式</h3><p>常见利用包括：</p>
+<ul>
+<li><p>数据库信息枚举</p>
+</li>
+<li><p>获取表结构</p>
+</li>
+<li><p>获取用户密码</p>
+</li>
+<li><p>写入WebShell</p>
+</li>
+<li><p>执行系统命令</p>
+</li>
+</ul>
+<hr>
+<h3 id="4-危害"><a href="#4-危害" class="headerlink" title="4 危害"></a>4 危害</h3><ul>
+<li><p>数据库数据泄露</p>
+</li>
+<li><p>用户账号被盗</p>
+</li>
+<li><p>服务器被控制</p>
+</li>
+</ul>
+<hr>
+<h1 id="三、XSS漏洞"><a href="#三、XSS漏洞" class="headerlink" title="三、XSS漏洞"></a>三、XSS漏洞</h1><h3 id="1-原因-1"><a href="#1-原因-1" class="headerlink" title="1 原因"></a>1 原因</h3><p>用户输入 <strong>没有做HTML转义</strong>，导致恶意JS被浏览器执行。</p>
+<hr>
+<h3 id="2-挖掘方法-1"><a href="#2-挖掘方法-1" class="headerlink" title="2 挖掘方法"></a>2 挖掘方法</h3><p>常见测试方式：</p>
+<p>在输入点插入payload：</p>
+<script>alert(1)</script>
+
+</p><p>或</p>
+<img src="/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/x" onerror="alert(1)">
+
+<p>如果页面执行JS说明存在XSS。</p>
+<hr>
+<h3 id="3-利用方式-1"><a href="#3-利用方式-1" class="headerlink" title="3 利用方式"></a>3 利用方式</h3><p>攻击者可以：</p>
+<ul>
+<li><p>窃取Cookie</p>
+</li>
+<li><p>劫持用户会话</p>
+</li>
+<li><p>注入恶意脚本</p>
+</li>
+<li><p>钓鱼页面</p>
+</li>
+</ul>
+<hr>
+<h3 id="4-危害-1"><a href="#4-危害-1" class="headerlink" title="4 危害"></a>4 危害</h3><ul>
+<li><p>用户账号被盗</p>
+</li>
+<li><p>管理员权限被获取</p>
+</li>
+<li><p>网站被篡改</p>
+</li>
+</ul>
+<hr>
+<h1 id="四、SSRF漏洞"><a href="#四、SSRF漏洞" class="headerlink" title="四、SSRF漏洞"></a>四、SSRF漏洞</h1><h3 id="1-原因-2"><a href="#1-原因-2" class="headerlink" title="1 原因"></a>1 原因</h3><p>服务器会请求 <strong>用户指定URL</strong>。</p>
+<p>例如：</p>
+<p>curl(url)</p>
+<p>如果url来自用户输入，就可能被利用。</p>
+<hr>
+<h3 id="2-挖掘方法-2"><a href="#2-挖掘方法-2" class="headerlink" title="2 挖掘方法"></a>2 挖掘方法</h3><p>测试参数：</p>
+<p>url=<br>link=<br>image=<br>file=</p>
+<p>尝试访问：</p>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1/">http://127.0.0.1</a></p>
+<p>或者：</p>
+<p><a target="_blank" rel="noopener" href="http://169.254.169.254/">http://169.254.169.254</a></p>
+<p>看服务器是否请求。</p>
+<hr>
+<h3 id="3-利用方式-2"><a href="#3-利用方式-2" class="headerlink" title="3 利用方式"></a>3 利用方式</h3><p>SSRF常见利用：</p>
+<ul>
+<li><p>访问内网服务</p>
+</li>
+<li><p>扫描内网</p>
+</li>
+<li><p>攻击Redis</p>
+</li>
+<li><p>获取云服务器密钥</p>
+</li>
+</ul>
+<hr>
+<h3 id="4-危害-2"><a href="#4-危害-2" class="headerlink" title="4 危害"></a>4 危害</h3><ul>
+<li><p>内网信息泄露</p>
+</li>
+<li><p>服务器被控制</p>
+</li>
+<li><p>云平台权限被窃取</p>
+</li>
+</ul>
+<hr>
+<h1 id="五、文件上传漏洞"><a href="#五、文件上传漏洞" class="headerlink" title="五、文件上传漏洞"></a>五、文件上传漏洞</h1><h3 id="1-原因-3"><a href="#1-原因-3" class="headerlink" title="1 原因"></a>1 原因</h3><p>服务器只检查文件名，没有检查文件内容。</p>
+<hr>
+<h3 id="2-挖掘方法-3"><a href="#2-挖掘方法-3" class="headerlink" title="2 挖掘方法"></a>2 挖掘方法</h3><p>上传测试文件：</p>
+<p>test.php</p>
+<p>如果成功上传并能访问执行，说明存在漏洞。</p>
+<hr>
+<h3 id="3-利用方式-3"><a href="#3-利用方式-3" class="headerlink" title="3 利用方式"></a>3 利用方式</h3><p>攻击者可以上传：</p>
+<ul>
+<li><p>WebShell</p>
+</li>
+<li><p>后门程序</p>
+</li>
+</ul>
+<p>然后执行系统命令。</p>
+<hr>
+<h3 id="4-危害-3"><a href="#4-危害-3" class="headerlink" title="4 危害"></a>4 危害</h3><p>服务器完全被控制。</p>
+<hr>
+<h1 id="六、命令执行漏洞"><a href="#六、命令执行漏洞" class="headerlink" title="六、命令执行漏洞"></a>六、命令执行漏洞</h1><h3 id="1-原因-4"><a href="#1-原因-4" class="headerlink" title="1 原因"></a>1 原因</h3><p>程序调用系统命令时 <strong>拼接用户输入</strong>。</p>
+<p>例如：</p>
+<p>system("ping " + userInput)</p>
+<hr>
+<h3 id="2-挖掘方法-4"><a href="#2-挖掘方法-4" class="headerlink" title="2 挖掘方法"></a>2 挖掘方法</h3><p>测试输入：</p>
+<p>;whoami<br>|whoami<br>&&whoami</p>
+<p>如果返回命令结果说明存在漏洞。</p>
+<hr>
+<h3 id="3-利用方式-4"><a href="#3-利用方式-4" class="headerlink" title="3 利用方式"></a>3 利用方式</h3><p>攻击者可以：</p>
+<ul>
+<li><p>执行系统命令</p>
+</li>
+<li><p>下载后门</p>
+</li>
+<li><p>建立反弹shell</p>
+</li>
+</ul>
+<hr>
+<h3 id="4-危害-4"><a href="#4-危害-4" class="headerlink" title="4 危害"></a>4 危害</h3><p>服务器直接被控制。</p>
+<hr>
+<h1 id="七、文件包含漏洞"><a href="#七、文件包含漏洞" class="headerlink" title="七、文件包含漏洞"></a>七、文件包含漏洞</h1><h3 id="1-原因-5"><a href="#1-原因-5" class="headerlink" title="1 原因"></a>1 原因</h3><p>程序动态加载文件：</p>
+<p>include($_GET['file'])</p>
+<p>如果参数可控，就可能被利用。</p>
+<hr>
+<h3 id="2-挖掘方法-5"><a href="#2-挖掘方法-5" class="headerlink" title="2 挖掘方法"></a>2 挖掘方法</h3><p>尝试读取系统文件：</p>
+<p>../../etc/passwd</p>
+<hr>
+<h3 id="3-利用方式-5"><a href="#3-利用方式-5" class="headerlink" title="3 利用方式"></a>3 利用方式</h3><ul>
+<li><p>读取敏感文件</p>
+</li>
+<li><p>执行远程代码</p>
+</li>
+<li><p>执行WebShell</p>
+</li>
+</ul>
+<hr>
+<h3 id="4-危害-5"><a href="#4-危害-5" class="headerlink" title="4 危害"></a>4 危害</h3><p>服务器信息泄露甚至被控制。</p>
+<hr>
+<h1 id="八、逻辑漏洞（很多面试官喜欢问）"><a href="#八、逻辑漏洞（很多面试官喜欢问）" class="headerlink" title="八、逻辑漏洞（很多面试官喜欢问）"></a>八、逻辑漏洞（很多面试官喜欢问）</h1><h3 id="挖掘思路"><a href="#挖掘思路" class="headerlink" title="挖掘思路"></a>挖掘思路</h3><p>主要是分析业务流程，例如：</p>
+<ul>
+<li><p>支付逻辑</p>
+</li>
+<li><p>权限控制</p>
+</li>
+<li><p>验证流程</p>
+</li>
+</ul>
+<hr>
+<h3 id="常见漏洞"><a href="#常见漏洞" class="headerlink" title="常见漏洞"></a>常见漏洞</h3><p>例如：</p>
+<ul>
+<li><p>越权访问</p>
+</li>
+<li><p>任意订单支付</p>
+</li>
+<li><p>重复领取优惠券</p>
+</li>
+</ul>
+<hr>
+<h3 id="危害-1"><a href="#危害-1" class="headerlink" title="危害"></a>危害</h3><p>通常造成：</p>
+<ul>
+<li><p>资金损失</p>
+</li>
+<li><p>用户数据泄露</p>
+</li>
+<li><p>权限绕过</p>
+</li>
+</ul>
+<hr>
+<h1 id="九、面试时一定要说的一句话（加分）"><a href="#九、面试时一定要说的一句话（加分）" class="headerlink" title="九、面试时一定要说的一句话（加分）"></a>九、面试时一定要说的一句话（加分）</h1><p>很多面试官喜欢听你说：</p>
+<blockquote>
+<p>在实际渗透过程中，我一般先进行信息收集，然后通过参数测试和模糊测试寻找输入点，再结合漏洞特征进行验证，最后评估漏洞的利用方式和危害。</p>
+</blockquote>
+<p>这句话会让你显得 <strong>非常像真实渗透工程师</strong>。</p>
+<hr>
+<p>最后给你一个 <strong>很现实的面试技巧</strong>：</p>
+<p>如果面试官问：</p>
+<blockquote>
+<p>这个漏洞怎么挖？</p>
+</blockquote>
+<p>你可以回答：</p>
+<p>一般会先找用户可控输入点，比如GET、POST参数、文件上传点，<br>然后通过构造测试payload观察返回结果，<br>如果出现异常就进一步验证漏洞类型。</p>
+<p>这基本是 <strong>标准答案</strong>。</p>
+<hr>
+<p>如果你愿意，我可以再帮你整理一份 <strong>《渗透测试面试最常见的10条完整攻击链》</strong>（非常实战）。</p>
+<p>比如：</p>
+<ul>
+<li><p>信息收集 → SQL注入 → 写WebShell → 提权 → 内网横向 → 域控</p>
+</li>
+<li><p>文件上传 → WebShell → 内网代理 → 域渗透</p>
+</li>
+</ul>
+<p>很多面试官会问：</p>
+<blockquote>
+<p>“你拿到WebShell之后下一步怎么打？”</p>
+</blockquote>
+<p>这个 <strong>90%的人答不好</strong>。</p>
+<p>继续怎么回答呢？</p>
+<p>好，这个问题其实是<strong>渗透测试面试里最经典的一道追问</strong>：</p>
+<blockquote>
+<p><strong>“如果你已经拿到 WebShell，下一步怎么做？”</strong></p>
+</blockquote>
+<p>很多人会只说一句“提权”，然后就没了。<br>但面试官真正想听的是：<strong>你有没有完整的攻击链思维</strong>。</p>
+<p>你可以按 <strong>“后渗透五步法”</strong> 来回答。</p>
+<hr>
+<h1 id="一、标准回答结构（强烈建议这样说）"><a href="#一、标准回答结构（强烈建议这样说）" class="headerlink" title="一、标准回答结构（强烈建议这样说）"></a>一、标准回答结构（强烈建议这样说）</h1><p>拿到 WebShell 之后，我一般会做以下几步：</p>
+<p>1️⃣ <strong>信息收集</strong><br>2️⃣ <strong>权限提升</strong><br>3️⃣ <strong>横向移动</strong><br>4️⃣ <strong>敏感信息获取</strong><br>5️⃣ <strong>权限维持</strong></p>
+<p>这样回答会显得你非常有体系。</p>
+<hr>
+<h1 id="二、第一步：信息收集"><a href="#二、第一步：信息收集" class="headerlink" title="二、第一步：信息收集"></a>二、第一步：信息收集</h1><p>首先会确认当前服务器环境。</p>
+<p>例如：</p>
+<ul>
+<li><p>当前用户权限</p>
+</li>
+<li><p>操作系统版本</p>
+</li>
+<li><p>Web服务器类型</p>
+</li>
+<li><p>是否在内网</p>
+</li>
+<li><p>网络结构</p>
+</li>
+</ul>
+<p>常见收集信息包括：</p>
+<p>whoami<br>ipconfig / ifconfig<br>netstat<br>ps</p>
+<p>重点判断：</p>
+<ul>
+<li><p>是否为 <strong>root / administrator</strong></p>
+</li>
+<li><p>是否处在 <strong>内网环境</strong></p>
+</li>
+</ul>
+<hr>
+<h1 id="三、第二步：权限提升"><a href="#三、第二步：权限提升" class="headerlink" title="三、第二步：权限提升"></a>三、第二步：权限提升</h1><p>如果 WebShell 权限较低（比如 www-data），通常需要尝试提权。</p>
+<p>常见提权方向：</p>
+<h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h3><ul>
+<li><p>SUID 提权</p>
+</li>
+<li><p>sudo 配置错误</p>
+</li>
+<li><p>cron 定时任务</p>
+</li>
+<li><p>内核漏洞</p>
+</li>
+</ul>
+<h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3><ul>
+<li><p>服务权限配置错误</p>
+</li>
+<li><p>DLL 劫持</p>
+</li>
+<li><p>UAC绕过</p>
+</li>
+<li><p>内核漏洞</p>
+</li>
+</ul>
+<p>目的就是：</p>
+<blockquote>
+<p>获取 <strong>root 或 administrator 权限</strong></p>
+</blockquote>
+<hr>
+<h1 id="四、第三步：横向移动（内网渗透）"><a href="#四、第三步：横向移动（内网渗透）" class="headerlink" title="四、第三步：横向移动（内网渗透）"></a>四、第三步：横向移动（内网渗透）</h1><p>如果发现机器在内网环境中，就可以尝试横向移动。</p>
+<p>常见步骤：</p>
+<h3 id="1-内网信息收集"><a href="#1-内网信息收集" class="headerlink" title="1 内网信息收集"></a>1 内网信息收集</h3><p>例如：</p>
+<p>arp -a<br>net view</p>
+<p>找出其他主机。</p>
+<hr>
+<h3 id="2-凭证获取"><a href="#2-凭证获取" class="headerlink" title="2 凭证获取"></a>2 凭证获取</h3><p>尝试获取：</p>
+<ul>
+<li><p>明文密码</p>
+</li>
+<li><p>NTLM hash</p>
+</li>
+<li><p>token</p>
+</li>
+</ul>
+<p>例如通过：</p>
+<ul>
+<li><p>浏览器密码</p>
+</li>
+<li><p>配置文件</p>
+</li>
+<li><p>内存凭证</p>
+</li>
+</ul>
+<hr>
+<h3 id="3-横向登录"><a href="#3-横向登录" class="headerlink" title="3 横向登录"></a>3 横向登录</h3><p>常见方式：</p>
+<ul>
+<li><p>SMB</p>
+</li>
+<li><p>RDP</p>
+</li>
+<li><p>WMI</p>
+</li>
+<li><p>WinRM</p>
+</li>
+</ul>
+<p>目的：</p>
+<blockquote>
+<p>从一台机器扩展到多台机器。</p>
+</blockquote>
+<hr>
+<h1 id="五、第四步：敏感信息获取"><a href="#五、第四步：敏感信息获取" class="headerlink" title="五、第四步：敏感信息获取"></a>五、第四步：敏感信息获取</h1><p>渗透测试中通常需要获取目标资产，例如：</p>
+<ul>
+<li><p>数据库数据</p>
+</li>
+<li><p>用户账号密码</p>
+</li>
+<li><p>配置文件</p>
+</li>
+<li><p>内网拓扑</p>
+</li>
+</ul>
+<p>例如：</p>
+<p>config.php<br>.env<br>database.yml</p>
+<p>很多系统会把数据库密码写在配置文件里。</p>
+<hr>
+<h1 id="六、第五步：权限维持"><a href="#六、第五步：权限维持" class="headerlink" title="六、第五步：权限维持"></a>六、第五步：权限维持</h1><p>如果是红队或攻击场景，还会建立持久化访问。</p>
+<p>例如：</p>
+<ul>
+<li><p>添加隐藏用户</p>
+</li>
+<li><p>添加定时任务</p>
+</li>
+<li><p>WebShell持久化</p>
+</li>
+</ul>
+<p>这样即使服务器重启仍然可以进入。</p>
+<hr>
+<h1 id="七、完整回答示例（建议背下来）"><a href="#七、完整回答示例（建议背下来）" class="headerlink" title="七、完整回答示例（建议背下来）"></a>七、完整回答示例（建议背下来）</h1><p>你可以这样回答：</p>
+<blockquote>
+<p>如果我已经获取到 WebShell，首先会进行服务器信息收集，比如确认当前权限、操作系统类型以及网络环境。如果权限较低，我会尝试进行提权获取更高权限。</p>
+<p>如果目标处于内网环境，我会进一步进行内网信息收集，寻找其他主机并尝试利用已有凭证进行横向移动。</p>
+<p>在此过程中会重点寻找数据库配置文件、账号密码等敏感信息。</p>
+<p>最后在必要情况下会建立一定的权限维持方式，以便持续访问目标系统。</p>
+</blockquote>
+<p>这个回答基本 <strong>80%的安全公司都会满意</strong>。</p>
+<hr>
+<h1 id="八、面试官可能继续追问"><a href="#八、面试官可能继续追问" class="headerlink" title="八、面试官可能继续追问"></a>八、面试官可能继续追问</h1><p>他们很可能继续问：</p>
+<h3 id="1"><a href="#1" class="headerlink" title="1"></a>1</h3><p><strong>你怎么判断机器在内网？</strong></p>
+<h3 id="2"><a href="#2" class="headerlink" title="2"></a>2</h3><p><strong>如果拿到的是 Linux WebShell 怎么提权？</strong></p>
+<h3 id="3"><a href="#3" class="headerlink" title="3"></a>3</h3><p><strong>如何获取内网凭证？</strong></p>
+<h3 id="4"><a href="#4" class="headerlink" title="4"></a>4</h3><p><strong>如何判断机器是域成员？</strong></p>
+<h3 id="5"><a href="#5" class="headerlink" title="5"></a>5</h3><p><strong>横向移动常用协议有哪些？</strong></p>
+<h1 id="第一组：WebShell之后的追问（最常见）"><a href="#第一组：WebShell之后的追问（最常见）" class="headerlink" title="第一组：WebShell之后的追问（最常见）"></a>第一组：WebShell之后的追问（最常见）</h1><h3 id="1️⃣-你拿到-WebShell-之后怎么判断权限？"><a href="#1️⃣-你拿到-WebShell-之后怎么判断权限？" class="headerlink" title="1️⃣ 你拿到 WebShell 之后怎么判断权限？"></a>1️⃣ 你拿到 WebShell 之后怎么判断权限？</h3><p><strong>高分回答</strong></p>
+<p>一般先查看当前用户身份和权限，例如确认当前用户是否为系统高权限账号。如果只是 Web 服务账号（例如 Linux 下的 www-data 或 Windows 下的 IIS 用户），说明权限较低，需要尝试提权。</p>
+<p>同时也会确认系统版本、内核版本以及当前运行的服务，为后续提权做准备。</p>
+<hr>
+<h3 id="2️⃣-怎么判断机器是否在内网？"><a href="#2️⃣-怎么判断机器是否在内网？" class="headerlink" title="2️⃣ 怎么判断机器是否在内网？"></a>2️⃣ 怎么判断机器是否在内网？</h3><p><strong>高分回答</strong></p>
+<p>可以通过查看 IP 地址和网卡信息判断。</p>
+<p>如果机器有多个网卡或者存在私有地址段，例如 10.x.x.x、172.16.x.x 或 192.168.x.x，通常说明服务器处于内网环境。</p>
+<p>此外还可以查看 ARP 表或路由信息，判断是否存在其他内网主机。</p>
+<hr>
+<h3 id="3️⃣-如果发现机器在内网，你下一步做什么？"><a href="#3️⃣-如果发现机器在内网，你下一步做什么？" class="headerlink" title="3️⃣ 如果发现机器在内网，你下一步做什么？"></a>3️⃣ 如果发现机器在内网，你下一步做什么？</h3><p><strong>高分回答</strong></p>
+<p>首先会进行内网资产探测，识别内网中存在哪些主机和服务。<br>例如通过 ARP、网络扫描等方式收集信息，然后判断哪些主机可能存在弱口令或可利用服务，尝试进一步横向移动。</p>
+<hr>
+<h1 id="第二组：提权追问"><a href="#第二组：提权追问" class="headerlink" title="第二组：提权追问"></a>第二组：提权追问</h1><h3 id="4️⃣-Linux-提权思路有哪些？"><a href="#4️⃣-Linux-提权思路有哪些？" class="headerlink" title="4️⃣ Linux 提权思路有哪些？"></a>4️⃣ Linux 提权思路有哪些？</h3><p><strong>高分回答</strong></p>
+<p>常见思路包括：</p>
+<ul>
+<li><p>SUID 程序滥用</p>
+</li>
+<li><p>sudo 配置错误</p>
+</li>
+<li><p>cron 定时任务配置问题</p>
+</li>
+<li><p>PATH 环境变量劫持</p>
+</li>
+<li><p>内核漏洞提权</p>
+</li>
+</ul>
+<p>通常会先进行系统信息收集，再针对性寻找可利用点。</p>
+<hr>
+<h3 id="5️⃣-Windows-常见提权方式？"><a href="#5️⃣-Windows-常见提权方式？" class="headerlink" title="5️⃣ Windows 常见提权方式？"></a>5️⃣ Windows 常见提权方式？</h3><p><strong>高分回答</strong></p>
+<p>常见提权包括：</p>
+<ul>
+<li><p>服务权限配置错误</p>
+</li>
+<li><p>DLL 劫持</p>
+</li>
+<li><p>UAC 绕过</p>
+</li>
+<li><p>不安全的计划任务</p>
+</li>
+<li><p>系统漏洞利用</p>
+</li>
+</ul>
+<p>同时还会检查当前用户是否具备某些特殊权限，例如 SeImpersonatePrivilege。</p>
+<hr>
+<h1 id="第三组：凭证获取追问"><a href="#第三组：凭证获取追问" class="headerlink" title="第三组：凭证获取追问"></a>第三组：凭证获取追问</h1><h3 id="6️⃣-提权之后下一步做什么？"><a href="#6️⃣-提权之后下一步做什么？" class="headerlink" title="6️⃣ 提权之后下一步做什么？"></a>6️⃣ 提权之后下一步做什么？</h3><p><strong>高分回答</strong></p>
+<p>提权成功后通常会进行凭证收集，例如寻找系统中保存的账号密码、配置文件中的数据库密码以及浏览器存储的凭证。</p>
+<p>这些信息可以用于进一步横向移动或访问其他系统。</p>
+<hr>
+<h3 id="7️⃣-凭证一般从哪里获取？"><a href="#7️⃣-凭证一般从哪里获取？" class="headerlink" title="7️⃣ 凭证一般从哪里获取？"></a>7️⃣ 凭证一般从哪里获取？</h3><p><strong>高分回答</strong></p>
+<p>常见来源包括：</p>
+<ul>
+<li><p>配置文件</p>
+</li>
+<li><p>浏览器保存密码</p>
+</li>
+<li><p>数据库连接信息</p>
+</li>
+<li><p>系统内存中的认证信息</p>
+</li>
+</ul>
+<p>很多应用会在配置文件中存储数据库账号密码，这是非常常见的信息泄露点。</p>
+<hr>
+<h1 id="第四组：横向移动追问"><a href="#第四组：横向移动追问" class="headerlink" title="第四组：横向移动追问"></a>第四组：横向移动追问</h1><h3 id="8️⃣-什么是横向移动？"><a href="#8️⃣-什么是横向移动？" class="headerlink" title="8️⃣ 什么是横向移动？"></a>8️⃣ 什么是横向移动？</h3><p><strong>高分回答</strong></p>
+<p>横向移动指的是攻击者在获取一台主机权限之后，利用该主机作为跳板进一步访问内网其他主机，从而扩大控制范围。</p>
+<hr>
+<h3 id="9️⃣-常见横向移动方式？"><a href="#9️⃣-常见横向移动方式？" class="headerlink" title="9️⃣ 常见横向移动方式？"></a>9️⃣ 常见横向移动方式？</h3><p><strong>高分回答</strong></p>
+<p>常见方式包括：</p>
+<ul>
+<li><p>SMB</p>
+</li>
+<li><p>RDP</p>
+</li>
+<li><p>WMI</p>
+</li>
+<li><p>WinRM</p>
+</li>
+</ul>
+<p>攻击者通常会结合获取到的账号密码或哈希值进行认证。</p>
+<hr>
+<h3 id="🔟-什么是-Pass-the-Hash？"><a href="#🔟-什么是-Pass-the-Hash？" class="headerlink" title="🔟 什么是 Pass-the-Hash？"></a>🔟 什么是 Pass-the-Hash？</h3><p><strong>高分回答</strong></p>
+<p>Pass-the-Hash 是一种利用 NTLM 哈希值进行身份认证的攻击方式。<br>攻击者不需要知道用户的明文密码，只要获取到密码哈希，就可以在支持 NTLM 认证的协议中进行登录。</p>
+<hr>
+<h1 id="第五组：域环境追问"><a href="#第五组：域环境追问" class="headerlink" title="第五组：域环境追问"></a>第五组：域环境追问</h1><h3 id="1️⃣1️⃣-什么是域控？"><a href="#1️⃣1️⃣-什么是域控？" class="headerlink" title="1️⃣1️⃣ 什么是域控？"></a>1️⃣1️⃣ 什么是域控？</h3><p><strong>高分回答</strong></p>
+<p>域控（Domain Controller）是 Active Directory 环境中的核心服务器，用于管理域用户、计算机和权限认证。</p>
+<hr>
+<h3 id="1️⃣2️⃣-Kerberos-是什么？"><a href="#1️⃣2️⃣-Kerberos-是什么？" class="headerlink" title="1️⃣2️⃣ Kerberos 是什么？"></a>1️⃣2️⃣ Kerberos 是什么？</h3><p><strong>高分回答</strong></p>
+<p>Kerberos 是一种基于票据的网络认证协议，在 Windows 域环境中用于身份认证。</p>
+<p>用户登录后会获取一个票据，然后通过该票据访问其他服务，而不需要再次输入密码。</p>
+<hr>
+<h3 id="1️⃣3️⃣-什么是-Golden-Ticket？"><a href="#1️⃣3️⃣-什么是-Golden-Ticket？" class="headerlink" title="1️⃣3️⃣ 什么是 Golden Ticket？"></a>1️⃣3️⃣ 什么是 Golden Ticket？</h3><p><strong>高分回答</strong></p>
+<p>Golden Ticket 是一种伪造 Kerberos TGT 票据的攻击方式。<br>如果攻击者获取了域的密钥，就可以生成任意用户的票据，从而获得整个域的控制权限。</p>
+<hr>
+<h1 id="第六组：WAF追问"><a href="#第六组：WAF追问" class="headerlink" title="第六组：WAF追问"></a>第六组：WAF追问</h1><h3 id="1️⃣4️⃣-WAF-是如何检测攻击的？"><a href="#1️⃣4️⃣-WAF-是如何检测攻击的？" class="headerlink" title="1️⃣4️⃣ WAF 是如何检测攻击的？"></a>1️⃣4️⃣ WAF 是如何检测攻击的？</h3><p><strong>高分回答</strong></p>
+<p>WAF主要通过以下方式检测攻击流量：</p>
+<ul>
+<li><p>特征匹配</p>
+</li>
+<li><p>正则规则匹配</p>
+</li>
+<li><p>行为分析</p>
+</li>
+<li><p>语义分析</p>
+</li>
+</ul>
+<p>通过对 HTTP 请求进行检测判断是否存在攻击特征。</p>
+<hr>
+<h3 id="1️⃣5️⃣-WAF-怎么绕？"><a href="#1️⃣5️⃣-WAF-怎么绕？" class="headerlink" title="1️⃣5️⃣ WAF 怎么绕？"></a>1️⃣5️⃣ WAF 怎么绕？</h3><p><strong>高分回答</strong></p>
+<p>常见绕过方式包括：</p>
+<ul>
+<li><p>编码绕过</p>
+</li>
+<li><p>关键字混淆</p>
+</li>
+<li><p>大小写变化</p>
+</li>
+<li><p>参数污染</p>
+</li>
+</ul>
+<p>核心思想是改变 payload 的形式，使其不被规则匹配到。</p>
+<hr>
+<h1 id="第七组：WebShell追问"><a href="#第七组：WebShell追问" class="headerlink" title="第七组：WebShell追问"></a>第七组：WebShell追问</h1><h3 id="1️⃣6️⃣-WebShell-是什么？"><a href="#1️⃣6️⃣-WebShell-是什么？" class="headerlink" title="1️⃣6️⃣ WebShell 是什么？"></a>1️⃣6️⃣ WebShell 是什么？</h3><p><strong>高分回答</strong></p>
+<p>WebShell 是一种通过 Web 应用执行系统命令的后门程序。<br>攻击者可以通过 HTTP 请求向服务器发送命令并获取执行结果。</p>
+<hr>
+<h3 id="1️⃣7️⃣-WebShell-怎么检测？"><a href="#1️⃣7️⃣-WebShell-怎么检测？" class="headerlink" title="1️⃣7️⃣ WebShell 怎么检测？"></a>1️⃣7️⃣ WebShell 怎么检测？</h3><p><strong>高分回答</strong></p>
+<p>常见检测方式包括：</p>
+<ul>
+<li><p>文件特征扫描</p>
+</li>
+<li><p>流量特征分析</p>
+</li>
+<li><p>行为监控</p>
+</li>
+</ul>
+<p>例如检测异常的 POST 请求或者可疑脚本文件。</p>
+<hr>
+<h3 id="1️⃣8️⃣-冰蝎流量为什么难检测？"><a href="#1️⃣8️⃣-冰蝎流量为什么难检测？" class="headerlink" title="1️⃣8️⃣ 冰蝎流量为什么难检测？"></a>1️⃣8️⃣ 冰蝎流量为什么难检测？</h3><p><strong>高分回答</strong></p>
+<p>冰蝎通信数据使用加密传输，因此传统基于特征匹配的检测方式很难识别具体命令内容。</p>
+<p>安全设备通常通过流量行为特征或者 WebShell 文件检测来识别。</p>
+<hr>
+<h1 id="第八组：漏洞挖掘追问"><a href="#第八组：漏洞挖掘追问" class="headerlink" title="第八组：漏洞挖掘追问"></a>第八组：漏洞挖掘追问</h1><h3 id="1️⃣9️⃣-你怎么挖漏洞？"><a href="#1️⃣9️⃣-你怎么挖漏洞？" class="headerlink" title="1️⃣9️⃣ 你怎么挖漏洞？"></a>1️⃣9️⃣ 你怎么挖漏洞？</h3><p><strong>高分回答</strong></p>
+<p>一般流程包括：</p>
+<p>1 信息收集<br>2 识别输入点<br>3 构造测试 payload<br>4 根据返回结果验证漏洞类型</p>
+<p>同时会结合自动化工具和手工测试进行验证。</p>
+<hr>
+<h3 id="2️⃣0️⃣-你平时怎么练习漏洞挖掘？"><a href="#2️⃣0️⃣-你平时怎么练习漏洞挖掘？" class="headerlink" title="2️⃣0️⃣ 你平时怎么练习漏洞挖掘？"></a>2️⃣0️⃣ 你平时怎么练习漏洞挖掘？</h3><p><strong>高分回答</strong></p>
+<p>主要通过靶场环境、CTF 以及漏洞复现来提升技术能力，同时也会分析一些真实漏洞案例来理解漏洞产生的原理。</p>
+<hr>
+<h1 id="第九组：最容易挂的追问"><a href="#第九组：最容易挂的追问" class="headerlink" title="第九组：最容易挂的追问"></a>第九组：最容易挂的追问</h1><h3 id="2️⃣1️⃣-为什么有-WebShell-却提不了权？"><a href="#2️⃣1️⃣-为什么有-WebShell-却提不了权？" class="headerlink" title="2️⃣1️⃣ 为什么有 WebShell 却提不了权？"></a>2️⃣1️⃣ 为什么有 WebShell 却提不了权？</h3><p>高分回答：</p>
+<p>因为 WebShell 通常运行在 Web 服务账号权限下，这类账号权限较低，如果系统没有可利用的提权漏洞或配置错误，就无法进一步提升权限。</p>
+<hr>
+<h3 id="2️⃣2️⃣-为什么-SQL-注入有时候跑不出数据？"><a href="#2️⃣2️⃣-为什么-SQL-注入有时候跑不出数据？" class="headerlink" title="2️⃣2️⃣ 为什么 SQL 注入有时候跑不出数据？"></a>2️⃣2️⃣ 为什么 SQL 注入有时候跑不出数据？</h3><p>高分回答：</p>
+<p>可能原因包括：</p>
+<ul>
+<li><p>权限不足</p>
+</li>
+<li><p>WAF 拦截</p>
+</li>
+<li><p>数据库结构复杂</p>
+</li>
+<li><p>使用了参数化查询</p>
+</li>
+</ul>
+<hr>
+<h3 id="2️⃣3️⃣-为什么拿到机器却进不了域？"><a href="#2️⃣3️⃣-为什么拿到机器却进不了域？" class="headerlink" title="2️⃣3️⃣ 为什么拿到机器却进不了域？"></a>2️⃣3️⃣ 为什么拿到机器却进不了域？</h3><p>高分回答：</p>
+<p>因为该机器可能不是域成员，或者当前账号没有域访问权限。</p>
+<hr>
+<h1 id="最后一个非常重要的面试技巧"><a href="#最后一个非常重要的面试技巧" class="headerlink" title="最后一个非常重要的面试技巧"></a>最后一个非常重要的面试技巧</h1><p>如果你被问住，可以用这个回答方式：</p>
+<blockquote>
+<p>在实际渗透过程中，一般需要结合具体环境进行分析，不同系统可能存在不同利用方式。</p>
+</blockquote>
+<p>这句话可以 <strong>避免你直接卡死</strong></p>
+<h1 id="1️⃣-为什么有-SQL-注入却拿不到数据？"><a href="#1️⃣-为什么有-SQL-注入却拿不到数据？" class="headerlink" title="1️⃣ 为什么有 SQL 注入却拿不到数据？"></a>1️⃣ 为什么有 SQL 注入却拿不到数据？</h1><p><strong>高分回答</strong></p>
+<p>可能原因有几种：</p>
+<ul>
+<li><p>当前数据库账号权限较低，无法访问目标表</p>
+</li>
+<li><p>WAF 拦截了部分 payload</p>
+</li>
+<li><p>数据库结构复杂，字段无法直接枚举</p>
+</li>
+<li><p>使用了盲注，需要通过时间或布尔方式慢慢获取数据</p>
+</li>
+</ul>
+<hr>
+<h1 id="2️⃣-为什么-SQL-注入有时工具跑不出来但手工能打？"><a href="#2️⃣-为什么-SQL-注入有时工具跑不出来但手工能打？" class="headerlink" title="2️⃣ 为什么 SQL 注入有时工具跑不出来但手工能打？"></a>2️⃣ 为什么 SQL 注入有时工具跑不出来但手工能打？</h1><p><strong>高分回答</strong></p>
+<p>自动化工具依赖固定规则，如果存在 WAF、参数过滤或编码处理，工具可能无法自动绕过。而手工测试可以灵活构造 payload，因此有时手工更容易成功。</p>
+<hr>
+<h1 id="3️⃣-为什么拿到-WebShell-却执行不了命令？"><a href="#3️⃣-为什么拿到-WebShell-却执行不了命令？" class="headerlink" title="3️⃣ 为什么拿到 WebShell 却执行不了命令？"></a>3️⃣ 为什么拿到 WebShell 却执行不了命令？</h1><p><strong>高分回答</strong></p>
+<p>可能原因包括：</p>
+<ul>
+<li><p>WebShell 所在语言环境限制</p>
+</li>
+<li><p>系统函数被禁用</p>
+</li>
+<li><p>权限不足</p>
+</li>
+<li><p>安全策略限制执行命令</p>
+</li>
+</ul>
+<hr>
+<h1 id="4️⃣-为什么有-WebShell-却提不了权？"><a href="#4️⃣-为什么有-WebShell-却提不了权？" class="headerlink" title="4️⃣ 为什么有 WebShell 却提不了权？"></a>4️⃣ 为什么有 WebShell 却提不了权？</h1><p><strong>高分回答</strong></p>
+<p>WebShell通常运行在 Web 服务用户权限下，如果系统没有提权漏洞或配置错误，攻击者可能无法进一步提升权限。</p>
+<hr>
+<h1 id="5️⃣-为什么有管理员权限却进不了域控？"><a href="#5️⃣-为什么有管理员权限却进不了域控？" class="headerlink" title="5️⃣ 为什么有管理员权限却进不了域控？"></a>5️⃣ 为什么有管理员权限却进不了域控？</h1><p><strong>高分回答</strong></p>
+<p>本地管理员权限并不等于域管理员权限，如果没有域用户凭证或域信任关系，就无法访问域控。</p>
+<hr>
+<h1 id="6️⃣-为什么内网扫描有时扫描不到机器？"><a href="#6️⃣-为什么内网扫描有时扫描不到机器？" class="headerlink" title="6️⃣ 为什么内网扫描有时扫描不到机器？"></a>6️⃣ 为什么内网扫描有时扫描不到机器？</h1><p><strong>高分回答</strong></p>
+<p>可能原因：</p>
+<ul>
+<li><p>防火墙限制</p>
+</li>
+<li><p>ICMP 被禁用</p>
+</li>
+<li><p>网络隔离</p>
+</li>
+<li><p>主机未开放相关端口</p>
+</li>
+</ul>
+<hr>
+<h1 id="7️⃣-为什么有时横向移动失败？"><a href="#7️⃣-为什么有时横向移动失败？" class="headerlink" title="7️⃣ 为什么有时横向移动失败？"></a>7️⃣ 为什么有时横向移动失败？</h1><p><strong>高分回答</strong></p>
+<p>横向移动需要满足认证条件，例如：</p>
+<ul>
+<li><p>账号密码正确</p>
+</li>
+<li><p>目标主机开放相关协议</p>
+</li>
+<li><p>网络通信未被限制</p>
+</li>
+</ul>
+<p>如果其中一个条件不满足就会失败。</p>
+<hr>
+<h1 id="8️⃣-为什么冰蝎流量其实是可以被检测的？"><a href="#8️⃣-为什么冰蝎流量其实是可以被检测的？" class="headerlink" title="8️⃣ 为什么冰蝎流量其实是可以被检测的？"></a>8️⃣ 为什么冰蝎流量其实是可以被检测的？</h1><p><strong>高分回答</strong></p>
+<p>虽然冰蝎通信数据经过加密，但仍然存在流量特征，例如：</p>
+<ul>
+<li><p>固定通信模式</p>
+</li>
+<li><p>请求长度异常</p>
+</li>
+<li><p>高频通信行为</p>
+</li>
+</ul>
+<p>安全设备可以通过行为分析检测这些特征。</p>
+<hr>
+<h1 id="9️⃣-为什么有-XSS-却利用不了？"><a href="#9️⃣-为什么有-XSS-却利用不了？" class="headerlink" title="9️⃣ 为什么有 XSS 却利用不了？"></a>9️⃣ 为什么有 XSS 却利用不了？</h1><p><strong>高分回答</strong></p>
+<p>可能原因：</p>
+<ul>
+<li><p>页面存在 CSP 限制</p>
+</li>
+<li><p>Cookie 设置了 HttpOnly</p>
+</li>
+<li><p>目标用户没有访问触发页面</p>
+</li>
+</ul>
+<hr>
+<h1 id="🔟-为什么-SSRF-有时打不进内网？"><a href="#🔟-为什么-SSRF-有时打不进内网？" class="headerlink" title="🔟 为什么 SSRF 有时打不进内网？"></a>🔟 为什么 SSRF 有时打不进内网？</h1><p><strong>高分回答</strong></p>
+<p>可能原因：</p>
+<ul>
+<li><p>服务器存在访问控制</p>
+</li>
+<li><p>内网服务未开放</p>
+</li>
+<li><p>URL 参数存在过滤</p>
+</li>
+</ul>
+<hr>
+<h1 id="1️⃣1️⃣-为什么上传-WebShell-但访问不了？"><a href="#1️⃣1️⃣-为什么上传-WebShell-但访问不了？" class="headerlink" title="1️⃣1️⃣ 为什么上传 WebShell 但访问不了？"></a>1️⃣1️⃣ 为什么上传 WebShell 但访问不了？</h1><p><strong>高分回答</strong></p>
+<p>可能原因：</p>
+<ul>
+<li><p>上传目录没有执行权限</p>
+</li>
+<li><p>文件被重命名</p>
+</li>
+<li><p>文件被安全设备删除</p>
+</li>
+</ul>
+<hr>
+<h1 id="1️⃣2️⃣-为什么有文件包含却执行不了代码？"><a href="#1️⃣2️⃣-为什么有文件包含却执行不了代码？" class="headerlink" title="1️⃣2️⃣ 为什么有文件包含却执行不了代码？"></a>1️⃣2️⃣ 为什么有文件包含却执行不了代码？</h1><p><strong>高分回答</strong></p>
+<p>如果只是本地文件包含而没有上传能力，可能只能读取文件而不能执行代码。</p>
+<hr>
+<h1 id="1️⃣3️⃣-为什么命令执行有时没有回显？"><a href="#1️⃣3️⃣-为什么命令执行有时没有回显？" class="headerlink" title="1️⃣3️⃣ 为什么命令执行有时没有回显？"></a>1️⃣3️⃣ 为什么命令执行有时没有回显？</h1><p><strong>高分回答</strong></p>
+<p>可能是无回显执行，需要通过其他方式获取结果，例如时间盲注或写入文件。</p>
+<hr>
+<h1 id="1️⃣4️⃣-为什么有-Redis-却没法利用？"><a href="#1️⃣4️⃣-为什么有-Redis-却没法利用？" class="headerlink" title="1️⃣4️⃣ 为什么有 Redis 却没法利用？"></a>1️⃣4️⃣ 为什么有 Redis 却没法利用？</h1><p><strong>高分回答</strong></p>
+<p>如果 Redis 配置了密码或限制访问，就无法直接利用。</p>
+<hr>
+<h1 id="1️⃣5️⃣-为什么扫描器有时扫不到漏洞？"><a href="#1️⃣5️⃣-为什么扫描器有时扫不到漏洞？" class="headerlink" title="1️⃣5️⃣ 为什么扫描器有时扫不到漏洞？"></a>1️⃣5️⃣ 为什么扫描器有时扫不到漏洞？</h1><p><strong>高分回答</strong></p>
+<p>扫描器依赖漏洞规则，如果目标环境特殊或漏洞利用方式复杂，可能无法被扫描器识别。</p>
+<hr>
+<h1 id="1️⃣6️⃣-为什么有弱口令却登录不了？"><a href="#1️⃣6️⃣-为什么有弱口令却登录不了？" class="headerlink" title="1️⃣6️⃣ 为什么有弱口令却登录不了？"></a>1️⃣6️⃣ 为什么有弱口令却登录不了？</h1><p><strong>高分回答</strong></p>
+<p>可能存在：</p>
+<ul>
+<li><p>登录限制</p>
+</li>
+<li><p>多因素认证</p>
+</li>
+<li><p>IP 限制</p>
+</li>
+</ul>
+<hr>
+<h1 id="1️⃣7️⃣-为什么-WebShell-有时被秒删？"><a href="#1️⃣7️⃣-为什么-WebShell-有时被秒删？" class="headerlink" title="1️⃣7️⃣ 为什么 WebShell 有时被秒删？"></a>1️⃣7️⃣ 为什么 WebShell 有时被秒删？</h1><p><strong>高分回答</strong></p>
+<p>可能原因：</p>
+<ul>
+<li><p>安全软件实时检测</p>
+</li>
+<li><p>文件完整性监控</p>
+</li>
+<li><p>WAF 自动清理</p>
+</li>
+</ul>
+<hr>
+<h1 id="1️⃣8️⃣-为什么有数据库权限却拿不到系统权限？"><a href="#1️⃣8️⃣-为什么有数据库权限却拿不到系统权限？" class="headerlink" title="1️⃣8️⃣ 为什么有数据库权限却拿不到系统权限？"></a>1️⃣8️⃣ 为什么有数据库权限却拿不到系统权限？</h1><p><strong>高分回答</strong></p>
+<p>数据库权限和系统权限是不同层级，如果数据库没有配置命令执行功能，就无法直接控制系统。</p>
+<hr>
+<h1 id="1️⃣9️⃣-为什么拿到机器却看不到内网？"><a href="#1️⃣9️⃣-为什么拿到机器却看不到内网？" class="headerlink" title="1️⃣9️⃣ 为什么拿到机器却看不到内网？"></a>1️⃣9️⃣ 为什么拿到机器却看不到内网？</h1><p><strong>高分回答</strong></p>
+<p>可能原因：</p>
+<ul>
+<li><p>机器只有单网卡</p>
+</li>
+<li><p>网络隔离</p>
+</li>
+<li><p>没有路由到其他网段</p>
+</li>
+</ul>
+<hr>
+<h1 id="2️⃣0️⃣-为什么很多漏洞复现环境能打，真实环境却打不了？"><a href="#2️⃣0️⃣-为什么很多漏洞复现环境能打，真实环境却打不了？" class="headerlink" title="2️⃣0️⃣ 为什么很多漏洞复现环境能打，真实环境却打不了？"></a>2️⃣0️⃣ 为什么很多漏洞复现环境能打，真实环境却打不了？</h1><p><strong>高分回答</strong></p>
+<p>真实环境通常存在多种安全防护，例如：</p>
+<ul>
+<li><p>WAF</p>
+</li>
+<li><p>权限控制</p>
+</li>
+<li><p>网络隔离</p>
+</li>
+</ul>
+<p>因此攻击难度会更高。</p>
+<hr>
+<h1 id="最后给你一个非常实用的面试技巧"><a href="#最后给你一个非常实用的面试技巧" class="headerlink" title="最后给你一个非常实用的面试技巧"></a>最后给你一个非常实用的面试技巧</h1><p>如果面试官问：</p>
+<blockquote>
+<p>“你平时是怎么挖漏洞的？”</p>
+</blockquote>
+<p>你可以这样回答（非常标准）：</p>
+<blockquote>
+<p>一般会先进行信息收集，识别系统结构和技术栈，然后寻找用户可控输入点，通过构造不同测试数据观察返回结果。如果发现异常，再进一步验证漏洞类型并评估利用方式和影响范围。</p>
+</blockquote>
+<h3 id="一、-核心-Web-基础与协议"><a href="#一、-核心-Web-基础与协议" class="headerlink" title="一、 核心 Web 基础与协议"></a>一、 核心 Web 基础与协议</h3><p><strong>1. PHP 的 Cookie、Session 以及 <code>$_SERVER</code></strong></p>
+<ul>
+<li><p><strong>Cookie 与 Session 的区别：</strong></p>
+<ul>
+<li><p><strong>存储位置：</strong> Cookie 存在客户端（浏览器），Session 存在服务端。</p>
+</li>
+<li><p><strong>安全性：</strong> Session 更安全，因为数据在服务器端；Cookie 容易被截获或篡改（这也是为什么安全测试中经常有 Cookie 伪造漏洞）。</p>
+</li>
+<li><p><strong>联系：</strong> Session 默认依赖 Cookie 传递 Session ID（<code>PHPSESSID</code>）。如果浏览器禁用 Cookie，可以通过 URL 重写传参。</p>
+</li>
+</ul>
+</li>
+<li><p><strong><code>$_SERVER</code> 变量：</strong></p>
+<ul>
+<li>这是一个包含了诸如头信息、路径、脚本位置等信息的超全局数组。常用来获取客户端 IP（<code>$_SERVER[&#39;REMOTE_ADDR&#39;]</code>）、请求方法（<code>$_SERVER[&#39;REQUEST_METHOD&#39;]</code>）等。</li>
+</ul>
+</li>
+</ul>
+<p><strong>2. HTTP 协议中的 GET 和 POST 的区别</strong> 面试官听腻了“GET 在 URL 里，POST 在 Body 里”这种表面答案，建议用这套话术：</p>
+<blockquote>
+<p>“本质上它们都是 TCP 链接。但在 HTTP 规范和实际应用中：</p>
+<ol>
+<li><p><strong>语义与幂等性：</strong> GET 用于‘获取’资源，是幂等的（多次请求结果一样），可以被浏览器缓存；POST 用于‘提交’数据，非幂等，不会被缓存。</p>
+</li>
+<li><p><strong>数据传输位置与限制：</strong> GET 的参数拼接在 URL 后，受限于浏览器和服务器对 URL 长度的限制（一般 2KB 左右）；POST 数据在请求体（Body）中，理论上无大小限制。</p>
+</li>
+<li><p><strong>安全性：</strong> POST 比 GET 相对隐蔽一点，因为参数不在 URL 中明文显示，不会留存在浏览器历史记录中。但在抓包工具面前，如果不套 HTTPS，两者都是明文传输。”</p>
+</li>
+</ol>
+</blockquote>
+<h3 id="二、-前端基础-CSS-JavaScript"><a href="#二、-前端基础-CSS-JavaScript" class="headerlink" title="二、 前端基础 (CSS & JavaScript)"></a>二、 前端基础 (CSS & JavaScript)</h3><p>你平时写 Vue 项目时，这些底层概念其实都被框架封装好了，面试时需要回归原生：</p>
+<p><strong>1. CSS 的 Div 与盒子模型 (Box Model)</strong></p>
+<ul>
+<li><p><strong>Div 的概念：</strong> <code>div</code> 是一个块级（block-level）元素，它是 HTML 中最常用的容器，用来划分页面结构和布局。</p>
+</li>
+<li><p><strong>盒子模型（重点）：</strong></p>
+<ul>
+<li><p>所有 HTML 元素都可以看作一个盒子。它由内到外分为四个部分：<strong>Content（内容） + Padding（内边距） + Border（边框） + Margin（外边距）</strong>。</p>
+</li>
+<li><p><strong>高阶补充（加分项）：</strong> “在实际应用中，我通常会使用 <code>box-sizing: border-box;</code>（IE 盒子模型），这样设置 width 和 height 就直接包含了 padding 和 border，不容易因为调边距导致页面布局撑破。”</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>2. JavaScript 的使用与 AJAX</strong></p>
+<ul>
+<li><p><strong>AJAX (Asynchronous JavaScript and XML)：</strong></p>
+<ul>
+<li><p><strong>核心概念：</strong> 允许浏览器与服务器进行异步通信，在不重新加载整个页面的情况下，更新部分网页内容（局部刷新）。</p>
+</li>
+<li><p><strong>底层原理：</strong> 原生主要依赖 <code>XMLHttpRequest</code> 对象（现在更流行用 <code>Fetch API</code>）。通过监听 <code>onreadystatechange</code> 事件来获取服务器返回的数据。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="三、-数据库与性能优化"><a href="#三、-数据库与性能优化" class="headerlink" title="三、 数据库与性能优化"></a>三、 数据库与性能优化</h3><p><strong>1. 数据库索引与优化</strong> 这是一道区分度很高的题，要体现出你的实战经验：</p>
+<blockquote>
+<p>“索引的底层数据结构通常是 B+ 树。它能极大加快 <code>SELECT</code> 查询速度，但会牺牲一定的 <code>INSERT</code> 和 <code>UPDATE</code> 性能，因为每次写操作都要维护索引树。 <strong>我的优化思路一般分三步：</strong></p>
+<ol>
+<li><p><strong>建好索引：</strong> 针对经常在 <code>WHERE</code>、<code>ORDER BY</code>、<code>GROUP BY</code> 中出现的字段建立索引。注意避免‘索引失效’的场景（比如对索引列做运算、使用左模糊匹配 <code>LIKE &#39;%abc&#39;</code>）。</p>
+</li>
+<li><p><strong>SQL 语句优化：</strong> 拒绝无脑 <code>SELECT *</code>，只查需要的字段；利用 <code>EXPLAIN</code> 关键字分析查询计划，看是否走到了正确的索引。</p>
+</li>
+<li><p><strong>表结构优化：</strong> 数据量巨大时考虑分库分表，或者引入 Redis 这种内存型数据库做缓存，减轻 MySQL 的直接读写压力。”</p>
+</li>
+</ol>
+</blockquote>
+<h3 id="四、-算法手撕题：PHP-日志提取"><a href="#四、-算法手撕题：PHP-日志提取" class="headerlink" title="四、 算法手撕题：PHP 日志提取"></a>四、 算法手撕题：PHP 日志提取</h3><blockquote>
+<p><strong>题目：</strong> 有 mail.log 文档，内容为若干邮件地址，用空格分隔。要求从中挑选出 sina.com 的邮件地址。</p>
+</blockquote>
+<p>这道题考察文件 I/O、字符串处理和正则表达式。作为搞安全的，正则应该是拿手好戏。</p>
+<p><strong>PHP 标准解法：</strong></p>
+<p>PHP</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">// 1. 从文件中读取整个内容</span><br><span class="line">$logContent = file_get_contents(&#x27;mail.log&#x27;);</span><br><span class="line"></span><br><span class="line">// 2. 使用正则表达式匹配所有以 @sina.com 结尾的邮箱</span><br><span class="line">// 假设前面的用户名由字母、数字、下划线、点等组成</span><br><span class="line">$pattern = &#x27;/[a-zA-Z0-9._%+-]+@sina\.com/&#x27;;</span><br><span class="line"></span><br><span class="line">// 3. 执行过滤匹配</span><br><span class="line">if (preg_match_all($pattern, $logContent, $matches)) &#123;</span><br><span class="line">    // 4. 列印出来</span><br><span class="line">    echo &quot;找到的 sina.com 邮箱地址如下：\n&quot;;</span><br><span class="line">    foreach ($matches[0] as $email) &#123;</span><br><span class="line">        echo $email . &quot;\n&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    echo &quot;未找到匹配的邮箱地址。&quot;;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><em>解题思路说明：</em> <code>file_get_contents</code> 读取效率高，<code>preg_match_all</code> 结合正则提取最为精准，避免了用 <code>explode</code> 空格分割后再去判断后缀时遇到换行符或脏数据的尴尬情况。</p>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/toux.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/%E6%B8%97%E9%80%8F/OSCP%E9%9D%B6%E5%9C%BA%E8%AE%AD%E7%BB%83(hackmyvm)/gigachad%20-%20suid/" title="gigachad - suid"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">gigachad - suid</div></div><div class="info-2"><div class="info-item-1">         gigachad easy ftp利用、google反图搜索、 suid提权、s-nail 提权   主机发现12┌──(kali㉿kali)-[~/桌面/OSCP]└─$ sudo netdiscover -i eth0 -r 192.168.44.138/24  服务探测12345┌──(kali㉿kali)-[~/桌面/OSCP]└─$ sudo nmap -sV -A -T 4 -p- 192.168.44.138 |_/kingchad.html 开放了21，22，80访问http://192.168.44.138//kingchad.html是一张带字的图，翻译 123456HELL0? IS IT MI5 OR MI6?他是谁？是军情五处还是军情六处？WHATEVER, SOMEONE IS TRYINGTO HACK US不管怎么说，有人想黑我们  目录扫描123456┌──(kali㉿kali)-[~/桌面/OSCP]└─$ gobuster dir -u http://192.168.44.138/ -w /usr/share/wordlis...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE%E9%A2%98%E5%BA%93%EF%BC%8850%E9%A2%98%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">渗透测试面试必问题库（50题）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%BD%91%E7%BB%9C%E4%B8%8E%E5%8E%9F%E7%90%86%EF%BC%888%E9%A2%98%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">一、基础网络与原理（8题）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%EF%BC%888%E9%A2%98%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">二、信息收集（8题）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Web%E6%BC%8F%E6%B4%9E%EF%BC%8812%E9%A2%98%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">三、Web漏洞（12题）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%B3%BB%E7%BB%9F%E4%B8%8E%E6%8F%90%E6%9D%83%EF%BC%888%E9%A2%98%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">四、系统与提权（8题）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%90%8E%E6%B8%97%E9%80%8F%E4%B8%8E%E5%86%85%E7%BD%91%EF%BC%887%E9%A2%98%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">五、后渗透与内网（7题）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%9F%9F%E7%8E%AF%E5%A2%83%E4%B8%8EAD%E6%94%BB%E5%87%BB%EF%BC%887%E9%A2%98%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">六、域环境与AD攻击（7题）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%A0%E7%8E%B0%E5%9C%A8%E6%9C%80%E8%AF%A5%E8%A1%A5%E7%9A%84%E5%85%B6%E5%AE%9E%E6%98%AF%E8%BF%994%E4%B8%AA%E7%9F%A5%E8%AF%86"><span class="toc-number">8.</span> <span class="toc-text">你现在最该补的其实是这4个知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-Kerberos%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B"><span class="toc-number">8.0.1.</span> <span class="toc-text">1️⃣ Kerberos认证流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-Pass-the-Hash"><span class="toc-number">8.0.2.</span> <span class="toc-text">2️⃣ Pass-the-Hash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-mimikatz"><span class="toc-number">8.0.3.</span> <span class="toc-text">3️⃣ mimikatz</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-%E5%9F%9F%E6%8E%A7%E6%9D%83%E9%99%90"><span class="toc-number">8.0.4.</span> <span class="toc-text">4️⃣ 域控权限</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%A2%E8%AF%95%E6%97%B6%E4%B8%8D%E4%BC%9A%E5%9B%9E%E7%AD%94%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="toc-number">9.</span> <span class="toc-text">面试时不会回答怎么办</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%BD%91%E7%BB%9C%E4%B8%8E%E5%8E%9F%E7%90%86%EF%BC%881%E2%80%938%EF%BC%89"><span class="toc-number">10.</span> <span class="toc-text">一、基础网络与原理（1–8）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-HTTP-%E5%92%8C-HTTPS-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">10.0.1.</span> <span class="toc-text">1. HTTP 和 HTTPS 的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-TLS-%E6%8F%A1%E6%89%8B%E6%B5%81%E7%A8%8B"><span class="toc-number">10.0.2.</span> <span class="toc-text">2. TLS 握手流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="toc-number">10.0.3.</span> <span class="toc-text">3. 什么是三次握手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%B8%B8%E8%A7%81%E7%AB%AF%E5%8F%A3"><span class="toc-number">10.0.4.</span> <span class="toc-text">4. 常见端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-DNS%E8%A7%A3%E6%9E%90%E6%B5%81%E7%A8%8B"><span class="toc-number">10.0.5.</span> <span class="toc-text">5. DNS解析流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-CDN%E4%BD%9C%E7%94%A8"><span class="toc-number">10.0.6.</span> <span class="toc-text">6. CDN作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">10.0.7.</span> <span class="toc-text">7. 什么是反向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E4%BB%80%E4%B9%88%E6%98%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">10.0.8.</span> <span class="toc-text">8. 什么是负载均衡</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%EF%BC%889%E2%80%9316%EF%BC%89"><span class="toc-number">11.</span> <span class="toc-text">二、信息收集（9–16）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E6%98%AF%E7%AC%AC%E4%B8%80%E6%AD%A5"><span class="toc-number">11.0.1.</span> <span class="toc-text">9. 为什么信息收集是第一步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E5%AD%90%E5%9F%9F%E5%90%8D%E6%9E%9A%E4%B8%BE%E6%96%B9%E6%B3%95"><span class="toc-number">11.0.2.</span> <span class="toc-text">10. 子域名枚举方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-%E5%A6%82%E4%BD%95%E8%AF%86%E5%88%ABCMS"><span class="toc-number">11.0.3.</span> <span class="toc-text">11. 如何识别CMS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-%E5%B8%B8%E8%A7%81%E8%B5%84%E4%BA%A7%E6%B5%8B%E7%BB%98%E5%B9%B3%E5%8F%B0"><span class="toc-number">11.0.4.</span> <span class="toc-text">12. 常见资产测绘平台</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#13-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E9%9A%90%E8%97%8F%E7%9B%AE%E5%BD%95"><span class="toc-number">11.0.5.</span> <span class="toc-text">13. 如何寻找隐藏目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14-%E5%A6%82%E4%BD%95%E8%AF%86%E5%88%ABWeb%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">11.0.6.</span> <span class="toc-text">14. 如何识别Web服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#15-%E4%BB%80%E4%B9%88%E6%98%AF%E6%97%81%E7%AB%99"><span class="toc-number">11.0.7.</span> <span class="toc-text">15. 什么是旁站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#16-%E4%BB%80%E4%B9%88%E6%98%AFC%E6%AE%B5%E6%89%AB%E6%8F%8F"><span class="toc-number">11.0.8.</span> <span class="toc-text">16. 什么是C段扫描</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Web%E6%BC%8F%E6%B4%9E%EF%BC%8817%E2%80%9328%EF%BC%89"><span class="toc-number">12.</span> <span class="toc-text">三、Web漏洞（17–28）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#17-SQL%E6%B3%A8%E5%85%A5%E5%8E%9F%E7%90%86"><span class="toc-number">12.0.1.</span> <span class="toc-text">17. SQL注入原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#18-SQL%E6%B3%A8%E5%85%A5%E7%B1%BB%E5%9E%8B"><span class="toc-number">12.0.2.</span> <span class="toc-text">18. SQL注入类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#19-%E4%BB%80%E4%B9%88%E6%98%AFXSS"><span class="toc-number">12.0.3.</span> <span class="toc-text">19. 什么是XSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#20-CSRF%E5%8E%9F%E7%90%86"><span class="toc-number">12.0.4.</span> <span class="toc-text">20. CSRF原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E"><span class="toc-number">12.0.5.</span> <span class="toc-text">21. 文件上传漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#22-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E"><span class="toc-number">12.0.6.</span> <span class="toc-text">22. 文件包含漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#23-SSRF"><span class="toc-number">12.0.7.</span> <span class="toc-text">23. SSRF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#24-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E"><span class="toc-number">12.0.8.</span> <span class="toc-text">24. 反序列化漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#25-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E"><span class="toc-number">12.0.9.</span> <span class="toc-text">25. 命令执行漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#26-%E4%BB%80%E4%B9%88%E6%98%AF%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E"><span class="toc-number">12.0.10.</span> <span class="toc-text">26. 什么是逻辑漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#27-SQL%E6%B3%A8%E5%85%A5%E9%98%B2%E5%BE%A1"><span class="toc-number">12.0.11.</span> <span class="toc-text">27. SQL注入防御</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#28-WAF%E6%A3%80%E6%B5%8B%E6%96%B9%E5%BC%8F"><span class="toc-number">12.0.12.</span> <span class="toc-text">28. WAF检测方式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%B3%BB%E7%BB%9F%E4%B8%8E%E6%8F%90%E6%9D%83%EF%BC%8829%E2%80%9336%EF%BC%89"><span class="toc-number">13.</span> <span class="toc-text">四、系统与提权（29–36）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#29-Linux%E6%8F%90%E6%9D%83%E6%96%B9%E5%BC%8F"><span class="toc-number">13.0.1.</span> <span class="toc-text">29. Linux提权方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#30-SUID%E6%8F%90%E6%9D%83"><span class="toc-number">13.0.2.</span> <span class="toc-text">30. SUID提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#31-Cron%E6%8F%90%E6%9D%83"><span class="toc-number">13.0.3.</span> <span class="toc-text">31. Cron提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#32-Windows%E6%8F%90%E6%9D%83%E6%80%9D%E8%B7%AF"><span class="toc-number">13.0.4.</span> <span class="toc-text">32. Windows提权思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#33-DLL%E5%8A%AB%E6%8C%81"><span class="toc-number">13.0.5.</span> <span class="toc-text">33. DLL劫持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#34-PATH%E5%8A%AB%E6%8C%81"><span class="toc-number">13.0.6.</span> <span class="toc-text">34. PATH劫持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#35-%E5%86%85%E6%A0%B8%E6%8F%90%E6%9D%83"><span class="toc-number">13.0.7.</span> <span class="toc-text">35. 内核提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#36-%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%94%BB%E5%87%BB"><span class="toc-number">13.0.8.</span> <span class="toc-text">36. 弱口令攻击</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%90%8E%E6%B8%97%E9%80%8F%E4%B8%8E%E5%86%85%E7%BD%91%EF%BC%8837%E2%80%9343%EF%BC%89"><span class="toc-number">14.</span> <span class="toc-text">五、后渗透与内网（37–43）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#37-%E4%BB%80%E4%B9%88%E6%98%AFWebShell"><span class="toc-number">14.0.1.</span> <span class="toc-text">37. 什么是WebShell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#38-WebShell%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">14.0.2.</span> <span class="toc-text">38. WebShell持久化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#39-%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8"><span class="toc-number">14.0.3.</span> <span class="toc-text">39. 横向移动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#40-Pass-the-Hash"><span class="toc-number">14.0.4.</span> <span class="toc-text">40. Pass-the-Hash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#41-Pass-the-Ticket"><span class="toc-number">14.0.5.</span> <span class="toc-text">41. Pass-the-Ticket</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#42-mimikatz%E4%BD%9C%E7%94%A8"><span class="toc-number">14.0.6.</span> <span class="toc-text">42. mimikatz作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#43-%E5%A6%82%E4%BD%95%E8%BF%9B%E5%85%A5%E5%86%85%E7%BD%91"><span class="toc-number">14.0.7.</span> <span class="toc-text">43. 如何进入内网</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%9F%9F%E7%8E%AF%E5%A2%83%EF%BC%8844%E2%80%9350%EF%BC%89"><span class="toc-number">15.</span> <span class="toc-text">六、域环境（44–50）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#44-%E4%BB%80%E4%B9%88%E6%98%AFAD"><span class="toc-number">15.0.1.</span> <span class="toc-text">44. 什么是AD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#45-%E4%BB%80%E4%B9%88%E6%98%AF%E5%9F%9F%E6%8E%A7"><span class="toc-number">15.0.2.</span> <span class="toc-text">45. 什么是域控</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#46-Kerberos%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B"><span class="toc-number">15.0.3.</span> <span class="toc-text">46. Kerberos认证流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#47-Kerberoasting"><span class="toc-number">15.0.4.</span> <span class="toc-text">47. Kerberoasting</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#48-Golden-Ticket"><span class="toc-number">15.0.5.</span> <span class="toc-text">48. Golden Ticket</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#49-Silver-Ticket"><span class="toc-number">15.0.6.</span> <span class="toc-text">49. Silver Ticket</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#50-%E5%9F%9F%E6%B8%97%E9%80%8F%E6%B5%81%E7%A8%8B"><span class="toc-number">15.0.7.</span> <span class="toc-text">50. 域渗透流程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8A%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E6%9C%80%E6%AF%92%E7%9A%8420%E4%B8%AA%E9%97%AE%E9%A2%98%E3%80%8B"><span class="toc-number">16.</span> <span class="toc-text">《渗透测试面试最毒的20个问题》</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Web%E6%BC%8F%E6%B4%9E%E6%B7%B1%E6%8C%96%EF%BC%881%E2%80%936%EF%BC%89"><span class="toc-number">17.</span> <span class="toc-text">一、Web漏洞深挖（1–6）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-SQL%E6%B3%A8%E5%85%A5%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E4%BA%A7%E7%94%9F%EF%BC%9F"><span class="toc-number">17.0.1.</span> <span class="toc-text">1. SQL注入为什么会产生？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-SQL%E6%B3%A8%E5%85%A5%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E6%97%B6%E5%80%99%E6%B2%A1%E6%9C%89%E5%9B%9E%E6%98%BE%EF%BC%9F"><span class="toc-number">17.0.2.</span> <span class="toc-text">2. SQL注入为什么有时候没有回显？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-XSS%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E8%AF%BB%E5%8F%96Cookie%EF%BC%9F"><span class="toc-number">17.0.3.</span> <span class="toc-text">3. XSS为什么可以读取Cookie？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89XSS%E4%BD%86%E6%8B%BF%E4%B8%8D%E5%88%B0Cookie%EF%BC%9F"><span class="toc-number">17.0.4.</span> <span class="toc-text">4. 为什么有XSS但拿不到Cookie？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E4%BA%A7%E7%94%9F%EF%BC%9F"><span class="toc-number">17.0.5.</span> <span class="toc-text">5. 文件上传漏洞为什么会产生？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E9%93%BE%EF%BC%9F"><span class="toc-number">17.0.6.</span> <span class="toc-text">6. 什么是反序列化漏洞利用链？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81WAF%E7%BB%95%E8%BF%87%EF%BC%887%E2%80%939%EF%BC%89"><span class="toc-number">18.</span> <span class="toc-text">二、WAF绕过（7–9）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-WAF%E5%B8%B8%E8%A7%81%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="toc-number">18.0.1.</span> <span class="toc-text">7. WAF常见绕过方式？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-WAF%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E8%A2%AB%E7%BB%95%E8%BF%87%EF%BC%9F"><span class="toc-number">18.0.2.</span> <span class="toc-text">8. WAF为什么会被绕过？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E5%A6%82%E6%9E%9CSQLmap%E8%A2%ABWAF%E6%8B%A6%E6%88%AA%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="toc-number">18.0.3.</span> <span class="toc-text">9. 如果SQLmap被WAF拦截怎么办？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%EF%BC%8810%E2%80%9312%EF%BC%89"><span class="toc-number">19.</span> <span class="toc-text">三、信息收集（10–12）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%81%9A%E5%AD%90%E5%9F%9F%E5%90%8D%E6%94%B6%E9%9B%86%EF%BC%9F"><span class="toc-number">19.0.1.</span> <span class="toc-text">10. 渗透测试为什么要做子域名收集？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%81%E7%AB%99%E6%9C%89%E4%BB%B7%E5%80%BC%EF%BC%9F"><span class="toc-number">19.0.2.</span> <span class="toc-text">11. 为什么旁站有价值？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%89%AB%E6%8F%8FC%E6%AE%B5%EF%BC%9F"><span class="toc-number">19.0.3.</span> <span class="toc-text">12. 为什么要扫描C段？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%B3%BB%E7%BB%9F%E6%8F%90%E6%9D%83%EF%BC%8813%E2%80%9315%EF%BC%89"><span class="toc-number">20.</span> <span class="toc-text">四、系统提权（13–15）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#13-Linux%E6%8F%90%E6%9D%83%E6%80%9D%E8%B7%AF%EF%BC%9F"><span class="toc-number">20.0.1.</span> <span class="toc-text">13. Linux提权思路？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14-sudo-l%E4%B8%BA%E4%BB%80%E4%B9%88%E9%87%8D%E8%A6%81%EF%BC%9F"><span class="toc-number">20.0.2.</span> <span class="toc-text">14. sudo -l为什么重要？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#15-%E4%B8%BA%E4%BB%80%E4%B9%88SUID%E4%BC%9A%E5%AF%BC%E8%87%B4%E6%8F%90%E6%9D%83%EF%BC%9F"><span class="toc-number">20.0.3.</span> <span class="toc-text">15. 为什么SUID会导致提权？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%90%8E%E6%B8%97%E9%80%8F%EF%BC%8816%E2%80%9317%EF%BC%89"><span class="toc-number">21.</span> <span class="toc-text">五、后渗透（16–17）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#16-%E6%8B%BF%E5%88%B0WebShell%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%81%9A%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">21.0.1.</span> <span class="toc-text">16. 拿到WebShell下一步做什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#17-%E4%B8%BA%E4%BB%80%E4%B9%88WebShell%E6%B5%81%E9%87%8F%E5%AE%B9%E6%98%93%E8%A2%AB%E5%8F%91%E7%8E%B0%EF%BC%9F"><span class="toc-number">21.0.2.</span> <span class="toc-text">17. 为什么WebShell流量容易被发现？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%86%85%E7%BD%91%E4%B8%8E%E5%9F%9F%E7%8E%AF%E5%A2%83%EF%BC%8818%E2%80%9320%EF%BC%89"><span class="toc-number">22.</span> <span class="toc-text">六、内网与域环境（18–20）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#18-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81Dump%E5%87%AD%E8%AF%81%EF%BC%9F"><span class="toc-number">22.0.1.</span> <span class="toc-text">18. 为什么要Dump凭证？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#19-Pass-the-Hash%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="toc-number">22.0.2.</span> <span class="toc-text">19. Pass-the-Hash原理？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#20-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9F%9F%E6%8E%A7%E4%B8%80%E6%97%A6%E8%A2%AB%E6%94%BB%E7%A0%B4%E5%B0%B1%E5%BE%88%E5%8D%B1%E9%99%A9%EF%BC%9F"><span class="toc-number">22.0.3.</span> <span class="toc-text">20. 为什么域控一旦被攻破就很危险？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%A2%E8%AF%95%E6%9C%80%E5%AE%B9%E6%98%93%E8%BF%BD%E9%97%AE%E7%9A%845%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-number">23.</span> <span class="toc-text">面试最容易追问的5个问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-SQL%E6%B3%A8%E5%85%A5%E6%80%8E%E4%B9%88%E7%BB%95WAF"><span class="toc-number">23.0.1.</span> <span class="toc-text">1️⃣ SQL注入怎么绕WAF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-WebShell%E6%80%8E%E4%B9%88%E7%BB%B4%E6%8C%81%E6%9D%83%E9%99%90"><span class="toc-number">23.0.2.</span> <span class="toc-text">2️⃣ WebShell怎么维持权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-Linux%E6%8F%90%E6%9D%83%E6%AD%A5%E9%AA%A4"><span class="toc-number">23.0.3.</span> <span class="toc-text">3️⃣ Linux提权步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E6%96%B9%E6%B3%95"><span class="toc-number">23.0.4.</span> <span class="toc-text">4️⃣ 内网横向移动方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%EF%B8%8F%E2%83%A3-Kerberos%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B"><span class="toc-number">23.0.5.</span> <span class="toc-text">5️⃣ Kerberos认证流程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%88%91%E7%BB%99%E4%BD%A0%E4%B8%80%E4%B8%AA%E9%9D%9E%E5%B8%B8%E5%AE%9E%E7%94%A8%E7%9A%84%E9%9D%A2%E8%AF%95%E6%8A%80%E5%B7%A7"><span class="toc-number">24.</span> <span class="toc-text">我给你一个非常实用的面试技巧</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%EF%BC%881%E2%80%9310%EF%BC%89"><span class="toc-number">25.</span> <span class="toc-text">一、网络基础（1–10）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%EF%BC%8811%E2%80%9320%EF%BC%89"><span class="toc-number">26.</span> <span class="toc-text">二、信息收集（11–20）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Web%E6%BC%8F%E6%B4%9E%EF%BC%8821%E2%80%9340%EF%BC%89"><span class="toc-number">27.</span> <span class="toc-text">三、Web漏洞（21–40）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81WAF%E4%B8%8E%E7%BB%95%E8%BF%87%EF%BC%8841%E2%80%9348%EF%BC%89"><span class="toc-number">28.</span> <span class="toc-text">四、WAF与绕过（41–48）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E7%B3%BB%E7%BB%9F%E6%8F%90%E6%9D%83%EF%BC%8849%E2%80%9360%EF%BC%89"><span class="toc-number">29.</span> <span class="toc-text">五、系统提权（49–60）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%90%8E%E6%B8%97%E9%80%8F%EF%BC%8861%E2%80%9370%EF%BC%89"><span class="toc-number">30.</span> <span class="toc-text">六、后渗透（61–70）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%EF%BC%8871%E2%80%9385%EF%BC%89"><span class="toc-number">31.</span> <span class="toc-text">七、内网渗透（71–85）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%9F%9F%E6%B8%97%E9%80%8F%EF%BC%8886%E2%80%93100%EF%BC%89"><span class="toc-number">32.</span> <span class="toc-text">八、域渗透（86–100）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%A2%E8%AF%95%E5%AE%98%E6%9C%80%E5%96%9C%E6%AC%A2%E8%BF%BD%E9%97%AE%E7%9A%8410%E9%A2%98"><span class="toc-number">33.</span> <span class="toc-text">面试官最喜欢追问的10题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%99%E4%BD%A0%E4%B8%80%E4%B8%AA%E9%9D%A2%E8%AF%95%E5%9B%9E%E7%AD%94%E5%85%AC%E5%BC%8F%EF%BC%88%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">34.</span> <span class="toc-text">给你一个面试回答公式（非常重要）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81SQL%E6%B3%A8%E5%85%A5%E5%8E%9F%E7%90%86%EF%BC%88%E6%9C%80%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="toc-number">35.</span> <span class="toc-text">一、SQL注入原理（最核心）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">35.0.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">35.0.2.</span> <span class="toc-text">利用流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1"><span class="toc-number">35.0.3.</span> <span class="toc-text">防御</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81XSS%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">36.</span> <span class="toc-text">二、XSS漏洞原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86-1"><span class="toc-number">36.0.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS%E5%88%86%E7%B1%BB"><span class="toc-number">36.0.2.</span> <span class="toc-text">XSS分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-1"><span class="toc-number">36.0.3.</span> <span class="toc-text">3 利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%8D%B1%E5%AE%B3-1"><span class="toc-number">36.0.4.</span> <span class="toc-text">4 危害</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81SSRF%E6%BC%8F%E6%B4%9E"><span class="toc-number">37.</span> <span class="toc-text">四、SSRF漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8E%9F%E5%9B%A0-2"><span class="toc-number">37.0.1.</span> <span class="toc-text">1 原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8C%96%E6%8E%98%E6%96%B9%E6%B3%95-2"><span class="toc-number">37.0.2.</span> <span class="toc-text">2 挖掘方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-2"><span class="toc-number">37.0.3.</span> <span class="toc-text">3 利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%8D%B1%E5%AE%B3-2"><span class="toc-number">37.0.4.</span> <span class="toc-text">4 危害</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E"><span class="toc-number">38.</span> <span class="toc-text">五、文件上传漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8E%9F%E5%9B%A0-3"><span class="toc-number">38.0.1.</span> <span class="toc-text">1 原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8C%96%E6%8E%98%E6%96%B9%E6%B3%95-3"><span class="toc-number">38.0.2.</span> <span class="toc-text">2 挖掘方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-3"><span class="toc-number">38.0.3.</span> <span class="toc-text">3 利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%8D%B1%E5%AE%B3-3"><span class="toc-number">38.0.4.</span> <span class="toc-text">4 危害</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E"><span class="toc-number">39.</span> <span class="toc-text">六、命令执行漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8E%9F%E5%9B%A0-4"><span class="toc-number">39.0.1.</span> <span class="toc-text">1 原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8C%96%E6%8E%98%E6%96%B9%E6%B3%95-4"><span class="toc-number">39.0.2.</span> <span class="toc-text">2 挖掘方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-4"><span class="toc-number">39.0.3.</span> <span class="toc-text">3 利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%8D%B1%E5%AE%B3-4"><span class="toc-number">39.0.4.</span> <span class="toc-text">4 危害</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E"><span class="toc-number">40.</span> <span class="toc-text">七、文件包含漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8E%9F%E5%9B%A0-5"><span class="toc-number">40.0.1.</span> <span class="toc-text">1 原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8C%96%E6%8E%98%E6%96%B9%E6%B3%95-5"><span class="toc-number">40.0.2.</span> <span class="toc-text">2 挖掘方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F-5"><span class="toc-number">40.0.3.</span> <span class="toc-text">3 利用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%8D%B1%E5%AE%B3-5"><span class="toc-number">40.0.4.</span> <span class="toc-text">4 危害</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E%EF%BC%88%E5%BE%88%E5%A4%9A%E9%9D%A2%E8%AF%95%E5%AE%98%E5%96%9C%E6%AC%A2%E9%97%AE%EF%BC%89"><span class="toc-number">41.</span> <span class="toc-text">八、逻辑漏洞（很多面试官喜欢问）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%96%E6%8E%98%E6%80%9D%E8%B7%AF"><span class="toc-number">41.0.1.</span> <span class="toc-text">挖掘思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E"><span class="toc-number">41.0.2.</span> <span class="toc-text">常见漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%B1%E5%AE%B3-1"><span class="toc-number">41.0.3.</span> <span class="toc-text">危害</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E9%9D%A2%E8%AF%95%E6%97%B6%E4%B8%80%E5%AE%9A%E8%A6%81%E8%AF%B4%E7%9A%84%E4%B8%80%E5%8F%A5%E8%AF%9D%EF%BC%88%E5%8A%A0%E5%88%86%EF%BC%89"><span class="toc-number">42.</span> <span class="toc-text">九、面试时一定要说的一句话（加分）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A0%87%E5%87%86%E5%9B%9E%E7%AD%94%E7%BB%93%E6%9E%84%EF%BC%88%E5%BC%BA%E7%83%88%E5%BB%BA%E8%AE%AE%E8%BF%99%E6%A0%B7%E8%AF%B4%EF%BC%89"><span class="toc-number">43.</span> <span class="toc-text">一、标准回答结构（强烈建议这样说）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">44.</span> <span class="toc-text">二、第一步：信息收集</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">45.</span> <span class="toc-text">三、第二步：权限提升</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux"><span class="toc-number">45.0.1.</span> <span class="toc-text">Linux</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows"><span class="toc-number">45.0.2.</span> <span class="toc-text">Windows</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%EF%BC%88%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%EF%BC%89"><span class="toc-number">46.</span> <span class="toc-text">四、第三步：横向移动（内网渗透）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">46.0.1.</span> <span class="toc-text">1 内网信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%87%AD%E8%AF%81%E8%8E%B7%E5%8F%96"><span class="toc-number">46.0.2.</span> <span class="toc-text">2 凭证获取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A8%AA%E5%90%91%E7%99%BB%E5%BD%95"><span class="toc-number">46.0.3.</span> <span class="toc-text">3 横向登录</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9A%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E8%8E%B7%E5%8F%96"><span class="toc-number">47.</span> <span class="toc-text">五、第四步：敏感信息获取</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E7%AC%AC%E4%BA%94%E6%AD%A5%EF%BC%9A%E6%9D%83%E9%99%90%E7%BB%B4%E6%8C%81"><span class="toc-number">48.</span> <span class="toc-text">六、第五步：权限维持</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%AE%8C%E6%95%B4%E5%9B%9E%E7%AD%94%E7%A4%BA%E4%BE%8B%EF%BC%88%E5%BB%BA%E8%AE%AE%E8%83%8C%E4%B8%8B%E6%9D%A5%EF%BC%89"><span class="toc-number">49.</span> <span class="toc-text">七、完整回答示例（建议背下来）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E9%9D%A2%E8%AF%95%E5%AE%98%E5%8F%AF%E8%83%BD%E7%BB%A7%E7%BB%AD%E8%BF%BD%E9%97%AE"><span class="toc-number">50.</span> <span class="toc-text">八、面试官可能继续追问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1"><span class="toc-number">50.0.1.</span> <span class="toc-text">1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2"><span class="toc-number">50.0.2.</span> <span class="toc-text">2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3"><span class="toc-number">50.0.3.</span> <span class="toc-text">3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4"><span class="toc-number">50.0.4.</span> <span class="toc-text">4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5"><span class="toc-number">50.0.5.</span> <span class="toc-text">5</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%BB%84%EF%BC%9AWebShell%E4%B9%8B%E5%90%8E%E7%9A%84%E8%BF%BD%E9%97%AE%EF%BC%88%E6%9C%80%E5%B8%B8%E8%A7%81%EF%BC%89"><span class="toc-number">51.</span> <span class="toc-text">第一组：WebShell之后的追问（最常见）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-%E4%BD%A0%E6%8B%BF%E5%88%B0-WebShell-%E4%B9%8B%E5%90%8E%E6%80%8E%E4%B9%88%E5%88%A4%E6%96%AD%E6%9D%83%E9%99%90%EF%BC%9F"><span class="toc-number">51.0.1.</span> <span class="toc-text">1️⃣ 你拿到 WebShell 之后怎么判断权限？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-%E6%80%8E%E4%B9%88%E5%88%A4%E6%96%AD%E6%9C%BA%E5%99%A8%E6%98%AF%E5%90%A6%E5%9C%A8%E5%86%85%E7%BD%91%EF%BC%9F"><span class="toc-number">51.0.2.</span> <span class="toc-text">2️⃣ 怎么判断机器是否在内网？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-%E5%A6%82%E6%9E%9C%E5%8F%91%E7%8E%B0%E6%9C%BA%E5%99%A8%E5%9C%A8%E5%86%85%E7%BD%91%EF%BC%8C%E4%BD%A0%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%81%9A%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">51.0.3.</span> <span class="toc-text">3️⃣ 如果发现机器在内网，你下一步做什么？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%BB%84%EF%BC%9A%E6%8F%90%E6%9D%83%E8%BF%BD%E9%97%AE"><span class="toc-number">52.</span> <span class="toc-text">第二组：提权追问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-Linux-%E6%8F%90%E6%9D%83%E6%80%9D%E8%B7%AF%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="toc-number">52.0.1.</span> <span class="toc-text">4️⃣ Linux 提权思路有哪些？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%EF%B8%8F%E2%83%A3-Windows-%E5%B8%B8%E8%A7%81%E6%8F%90%E6%9D%83%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="toc-number">52.0.2.</span> <span class="toc-text">5️⃣ Windows 常见提权方式？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%BB%84%EF%BC%9A%E5%87%AD%E8%AF%81%E8%8E%B7%E5%8F%96%E8%BF%BD%E9%97%AE"><span class="toc-number">53.</span> <span class="toc-text">第三组：凭证获取追问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6%EF%B8%8F%E2%83%A3-%E6%8F%90%E6%9D%83%E4%B9%8B%E5%90%8E%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%81%9A%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">53.0.1.</span> <span class="toc-text">6️⃣ 提权之后下一步做什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7%EF%B8%8F%E2%83%A3-%E5%87%AD%E8%AF%81%E4%B8%80%E8%88%AC%E4%BB%8E%E5%93%AA%E9%87%8C%E8%8E%B7%E5%8F%96%EF%BC%9F"><span class="toc-number">53.0.2.</span> <span class="toc-text">7️⃣ 凭证一般从哪里获取？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%BB%84%EF%BC%9A%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E8%BF%BD%E9%97%AE"><span class="toc-number">54.</span> <span class="toc-text">第四组：横向移动追问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8%EF%B8%8F%E2%83%A3-%E4%BB%80%E4%B9%88%E6%98%AF%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%EF%BC%9F"><span class="toc-number">54.0.1.</span> <span class="toc-text">8️⃣ 什么是横向移动？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9%EF%B8%8F%E2%83%A3-%E5%B8%B8%E8%A7%81%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="toc-number">54.0.2.</span> <span class="toc-text">9️⃣ 常见横向移动方式？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%9F-%E4%BB%80%E4%B9%88%E6%98%AF-Pass-the-Hash%EF%BC%9F"><span class="toc-number">54.0.3.</span> <span class="toc-text">🔟 什么是 Pass-the-Hash？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%BB%84%EF%BC%9A%E5%9F%9F%E7%8E%AF%E5%A2%83%E8%BF%BD%E9%97%AE"><span class="toc-number">55.</span> <span class="toc-text">第五组：域环境追问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A31%EF%B8%8F%E2%83%A3-%E4%BB%80%E4%B9%88%E6%98%AF%E5%9F%9F%E6%8E%A7%EF%BC%9F"><span class="toc-number">55.0.1.</span> <span class="toc-text">1️⃣1️⃣ 什么是域控？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A32%EF%B8%8F%E2%83%A3-Kerberos-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">55.0.2.</span> <span class="toc-text">1️⃣2️⃣ Kerberos 是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A33%EF%B8%8F%E2%83%A3-%E4%BB%80%E4%B9%88%E6%98%AF-Golden-Ticket%EF%BC%9F"><span class="toc-number">55.0.3.</span> <span class="toc-text">1️⃣3️⃣ 什么是 Golden Ticket？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%BB%84%EF%BC%9AWAF%E8%BF%BD%E9%97%AE"><span class="toc-number">56.</span> <span class="toc-text">第六组：WAF追问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A34%EF%B8%8F%E2%83%A3-WAF-%E6%98%AF%E5%A6%82%E4%BD%95%E6%A3%80%E6%B5%8B%E6%94%BB%E5%87%BB%E7%9A%84%EF%BC%9F"><span class="toc-number">56.0.1.</span> <span class="toc-text">1️⃣4️⃣ WAF 是如何检测攻击的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A35%EF%B8%8F%E2%83%A3-WAF-%E6%80%8E%E4%B9%88%E7%BB%95%EF%BC%9F"><span class="toc-number">56.0.2.</span> <span class="toc-text">1️⃣5️⃣ WAF 怎么绕？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E7%BB%84%EF%BC%9AWebShell%E8%BF%BD%E9%97%AE"><span class="toc-number">57.</span> <span class="toc-text">第七组：WebShell追问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A36%EF%B8%8F%E2%83%A3-WebShell-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">57.0.1.</span> <span class="toc-text">1️⃣6️⃣ WebShell 是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A37%EF%B8%8F%E2%83%A3-WebShell-%E6%80%8E%E4%B9%88%E6%A3%80%E6%B5%8B%EF%BC%9F"><span class="toc-number">57.0.2.</span> <span class="toc-text">1️⃣7️⃣ WebShell 怎么检测？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A38%EF%B8%8F%E2%83%A3-%E5%86%B0%E8%9D%8E%E6%B5%81%E9%87%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9A%BE%E6%A3%80%E6%B5%8B%EF%BC%9F"><span class="toc-number">57.0.3.</span> <span class="toc-text">1️⃣8️⃣ 冰蝎流量为什么难检测？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AB%E7%BB%84%EF%BC%9A%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E8%BF%BD%E9%97%AE"><span class="toc-number">58.</span> <span class="toc-text">第八组：漏洞挖掘追问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A39%EF%B8%8F%E2%83%A3-%E4%BD%A0%E6%80%8E%E4%B9%88%E6%8C%96%E6%BC%8F%E6%B4%9E%EF%BC%9F"><span class="toc-number">58.0.1.</span> <span class="toc-text">1️⃣9️⃣ 你怎么挖漏洞？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A30%EF%B8%8F%E2%83%A3-%E4%BD%A0%E5%B9%B3%E6%97%B6%E6%80%8E%E4%B9%88%E7%BB%83%E4%B9%A0%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%EF%BC%9F"><span class="toc-number">58.0.2.</span> <span class="toc-text">2️⃣0️⃣ 你平时怎么练习漏洞挖掘？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B9%9D%E7%BB%84%EF%BC%9A%E6%9C%80%E5%AE%B9%E6%98%93%E6%8C%82%E7%9A%84%E8%BF%BD%E9%97%AE"><span class="toc-number">59.</span> <span class="toc-text">第九组：最容易挂的追问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A31%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89-WebShell-%E5%8D%B4%E6%8F%90%E4%B8%8D%E4%BA%86%E6%9D%83%EF%BC%9F"><span class="toc-number">59.0.1.</span> <span class="toc-text">2️⃣1️⃣ 为什么有 WebShell 却提不了权？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A32%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88-SQL-%E6%B3%A8%E5%85%A5%E6%9C%89%E6%97%B6%E5%80%99%E8%B7%91%E4%B8%8D%E5%87%BA%E6%95%B0%E6%8D%AE%EF%BC%9F"><span class="toc-number">59.0.2.</span> <span class="toc-text">2️⃣2️⃣ 为什么 SQL 注入有时候跑不出数据？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A33%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8B%BF%E5%88%B0%E6%9C%BA%E5%99%A8%E5%8D%B4%E8%BF%9B%E4%B8%8D%E4%BA%86%E5%9F%9F%EF%BC%9F"><span class="toc-number">59.0.3.</span> <span class="toc-text">2️⃣3️⃣ 为什么拿到机器却进不了域？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81%E7%9A%84%E9%9D%A2%E8%AF%95%E6%8A%80%E5%B7%A7"><span class="toc-number">60.</span> <span class="toc-text">最后一个非常重要的面试技巧</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89-SQL-%E6%B3%A8%E5%85%A5%E5%8D%B4%E6%8B%BF%E4%B8%8D%E5%88%B0%E6%95%B0%E6%8D%AE%EF%BC%9F"><span class="toc-number">61.</span> <span class="toc-text">1️⃣ 为什么有 SQL 注入却拿不到数据？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88-SQL-%E6%B3%A8%E5%85%A5%E6%9C%89%E6%97%B6%E5%B7%A5%E5%85%B7%E8%B7%91%E4%B8%8D%E5%87%BA%E6%9D%A5%E4%BD%86%E6%89%8B%E5%B7%A5%E8%83%BD%E6%89%93%EF%BC%9F"><span class="toc-number">62.</span> <span class="toc-text">2️⃣ 为什么 SQL 注入有时工具跑不出来但手工能打？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8B%BF%E5%88%B0-WebShell-%E5%8D%B4%E6%89%A7%E8%A1%8C%E4%B8%8D%E4%BA%86%E5%91%BD%E4%BB%A4%EF%BC%9F"><span class="toc-number">63.</span> <span class="toc-text">3️⃣ 为什么拿到 WebShell 却执行不了命令？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89-WebShell-%E5%8D%B4%E6%8F%90%E4%B8%8D%E4%BA%86%E6%9D%83%EF%BC%9F"><span class="toc-number">64.</span> <span class="toc-text">4️⃣ 为什么有 WebShell 却提不了权？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E7%AE%A1%E7%90%86%E5%91%98%E6%9D%83%E9%99%90%E5%8D%B4%E8%BF%9B%E4%B8%8D%E4%BA%86%E5%9F%9F%E6%8E%A7%EF%BC%9F"><span class="toc-number">65.</span> <span class="toc-text">5️⃣ 为什么有管理员权限却进不了域控？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%86%85%E7%BD%91%E6%89%AB%E6%8F%8F%E6%9C%89%E6%97%B6%E6%89%AB%E6%8F%8F%E4%B8%8D%E5%88%B0%E6%9C%BA%E5%99%A8%EF%BC%9F"><span class="toc-number">66.</span> <span class="toc-text">6️⃣ 为什么内网扫描有时扫描不到机器？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E6%97%B6%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E5%A4%B1%E8%B4%A5%EF%BC%9F"><span class="toc-number">67.</span> <span class="toc-text">7️⃣ 为什么有时横向移动失败？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%86%B0%E8%9D%8E%E6%B5%81%E9%87%8F%E5%85%B6%E5%AE%9E%E6%98%AF%E5%8F%AF%E4%BB%A5%E8%A2%AB%E6%A3%80%E6%B5%8B%E7%9A%84%EF%BC%9F"><span class="toc-number">68.</span> <span class="toc-text">8️⃣ 为什么冰蝎流量其实是可以被检测的？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89-XSS-%E5%8D%B4%E5%88%A9%E7%94%A8%E4%B8%8D%E4%BA%86%EF%BC%9F"><span class="toc-number">69.</span> <span class="toc-text">9️⃣ 为什么有 XSS 却利用不了？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%F0%9F%94%9F-%E4%B8%BA%E4%BB%80%E4%B9%88-SSRF-%E6%9C%89%E6%97%B6%E6%89%93%E4%B8%8D%E8%BF%9B%E5%86%85%E7%BD%91%EF%BC%9F"><span class="toc-number">70.</span> <span class="toc-text">🔟 为什么 SSRF 有时打不进内网？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A31%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8A%E4%BC%A0-WebShell-%E4%BD%86%E8%AE%BF%E9%97%AE%E4%B8%8D%E4%BA%86%EF%BC%9F"><span class="toc-number">71.</span> <span class="toc-text">1️⃣1️⃣ 为什么上传 WebShell 但访问不了？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A32%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%8D%B4%E6%89%A7%E8%A1%8C%E4%B8%8D%E4%BA%86%E4%BB%A3%E7%A0%81%EF%BC%9F"><span class="toc-number">72.</span> <span class="toc-text">1️⃣2️⃣ 为什么有文件包含却执行不了代码？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A33%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%9C%89%E6%97%B6%E6%B2%A1%E6%9C%89%E5%9B%9E%E6%98%BE%EF%BC%9F"><span class="toc-number">73.</span> <span class="toc-text">1️⃣3️⃣ 为什么命令执行有时没有回显？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A34%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89-Redis-%E5%8D%B4%E6%B2%A1%E6%B3%95%E5%88%A9%E7%94%A8%EF%BC%9F"><span class="toc-number">74.</span> <span class="toc-text">1️⃣4️⃣ 为什么有 Redis 却没法利用？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A35%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%89%AB%E6%8F%8F%E5%99%A8%E6%9C%89%E6%97%B6%E6%89%AB%E4%B8%8D%E5%88%B0%E6%BC%8F%E6%B4%9E%EF%BC%9F"><span class="toc-number">75.</span> <span class="toc-text">1️⃣5️⃣ 为什么扫描器有时扫不到漏洞？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A36%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E5%BC%B1%E5%8F%A3%E4%BB%A4%E5%8D%B4%E7%99%BB%E5%BD%95%E4%B8%8D%E4%BA%86%EF%BC%9F"><span class="toc-number">76.</span> <span class="toc-text">1️⃣6️⃣ 为什么有弱口令却登录不了？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A37%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88-WebShell-%E6%9C%89%E6%97%B6%E8%A2%AB%E7%A7%92%E5%88%A0%EF%BC%9F"><span class="toc-number">77.</span> <span class="toc-text">1️⃣7️⃣ 为什么 WebShell 有时被秒删？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A38%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9D%83%E9%99%90%E5%8D%B4%E6%8B%BF%E4%B8%8D%E5%88%B0%E7%B3%BB%E7%BB%9F%E6%9D%83%E9%99%90%EF%BC%9F"><span class="toc-number">78.</span> <span class="toc-text">1️⃣8️⃣ 为什么有数据库权限却拿不到系统权限？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A39%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8B%BF%E5%88%B0%E6%9C%BA%E5%99%A8%E5%8D%B4%E7%9C%8B%E4%B8%8D%E5%88%B0%E5%86%85%E7%BD%91%EF%BC%9F"><span class="toc-number">79.</span> <span class="toc-text">1️⃣9️⃣ 为什么拿到机器却看不到内网？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A30%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BE%88%E5%A4%9A%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E7%8E%AF%E5%A2%83%E8%83%BD%E6%89%93%EF%BC%8C%E7%9C%9F%E5%AE%9E%E7%8E%AF%E5%A2%83%E5%8D%B4%E6%89%93%E4%B8%8D%E4%BA%86%EF%BC%9F"><span class="toc-number">80.</span> <span class="toc-text">2️⃣0️⃣ 为什么很多漏洞复现环境能打，真实环境却打不了？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E7%BB%99%E4%BD%A0%E4%B8%80%E4%B8%AA%E9%9D%9E%E5%B8%B8%E5%AE%9E%E7%94%A8%E7%9A%84%E9%9D%A2%E8%AF%95%E6%8A%80%E5%B7%A7"><span class="toc-number">81.</span> <span class="toc-text">最后给你一个非常实用的面试技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E6%A0%B8%E5%BF%83-Web-%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%8D%8F%E8%AE%AE"><span class="toc-number">81.0.1.</span> <span class="toc-text">一、 核心 Web 基础与协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80-CSS-JavaScript"><span class="toc-number">81.0.2.</span> <span class="toc-text">二、 前端基础 (CSS &amp; JavaScript)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">81.0.3.</span> <span class="toc-text">三、 数据库与性能优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81-%E7%AE%97%E6%B3%95%E6%89%8B%E6%92%95%E9%A2%98%EF%BC%9APHP-%E6%97%A5%E5%BF%97%E6%8F%90%E5%8F%96"><span class="toc-number">81.0.4.</span> <span class="toc-text">四、 算法手撕题：PHP 日志提取</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

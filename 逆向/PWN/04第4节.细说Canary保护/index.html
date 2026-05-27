@@ -1,0 +1,663 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>04第4节.细说Canary保护 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一.canary保护： 在第二节课已经提到过，这里我们再把它引用过来复习： CANARY (栈保护) 这个选项表示栈保护功能是否开启 栈溢出保护是一种缓冲区溢出攻击缓冲手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shsellcode能够得到执行。当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="04第4节.细说Canary保护">
+<meta property="og:url" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="一.canary保护： 在第二节课已经提到过，这里我们再把它引用过来复习： CANARY (栈保护) 这个选项表示栈保护功能是否开启 栈溢出保护是一种缓冲区溢出攻击缓冲手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shsellcode能够得到执行。当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps59.jpg">
+<meta property="article:published_time" content="2026-05-27T16:29:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:50.092Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps59.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "04第4节.细说Canary保护",
+  "url": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/",
+  "image": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps59.jpg",
+  "datePublished": "2026-05-27T16:29:48.000Z",
+  "dateModified": "2026-05-27T17:42:50.092Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '04第4节.细说Canary保护',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps59.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">04第4节.细说Canary保护</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">04第4节.细说Canary保护</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T16:29:48.000Z" title="发表于 2026-05-28 00:29:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:50.092Z" title="更新于 2026-05-28 01:42:50">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/PWN/">PWN</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>一.canary保护：</strong></p>
+<p>在第二节课已经提到过，这里我们再把它引用过来复习：</p>
+<p>CANARY (栈保护)</p>
+<p>这个选项表示栈保护功能是否开启</p>
+<p>栈溢出保护是一种缓冲区溢出攻击缓冲手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shsellcode能够得到执行。<strong>当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就会停止程序运行</strong>。攻击者在覆盖返回地址的时候往往也会将cookie信息覆盖掉，导致栈保护检查失败而阻止shellcode的执行。在Linux中我们将cookie信息称为canary。</p>
+<p>canary最后是00【小端序存储，低位在低位，00是代表截断了之前上面的数据】</p>
+<p>为了更加直观，画出有无canary保护的堆栈图对比一下：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无canary保护</td>
+<td>有canary保护</td>
+</tr>
+<tr>
+<td>局部变量</td>
+<td>局部变量</td>
+</tr>
+<tr>
+<td>EBP</td>
+<td>Cookie信息</td>
+</tr>
+<tr>
+<td>RET</td>
+<td>EBP</td>
+</tr>
+<tr>
+<td>参数</td>
+<td>RET</td>
+</tr>
+<tr>
+<td></td>
+<td>参数</td>
+</tr>
+</tbody></table>
+<p><strong>二.实例程序解读</strong></p>
+<p>root用户环境：</p>
+<p>编写代码：  vi canary.c</p>
+<p>#include&lt;stdio.h&gt;</p>
+<p>int main(int argc, char const *argv[])</p>
+<p>{</p>
+<p>        char *name &#x3D; “zhongyuwen”;</p>
+<p>        printf(“My name is %s\n”);</p>
+<p>        return 0;</p>
+<p>}</p>
+<p>保存    :wq</p>
+<p><strong>1.无canary保护：</strong></p>
+<p>编译，不开启canary保护：gcc -no-pie -fno-stack-protector -m32 -o canary canary.c</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps59.jpg" alt="wps59"> </p>
+<p>编译成功出现一把小锁，权限不足，</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps60.jpg" alt="wps60"> </p>
+<p>提权：chmod 777 canary</p>
+<p>这就没限制了：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps61.jpg" alt="wps61"> </p>
+<p>运行调试器打开canary：  gdb canary</p>
+<p>先查看mian函数代码段：disass main</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps62.jpg" alt="wps62"> </p>
+<p>查看有什么断点：i b</p>
+<p>删除断点：d 断点编号</p>
+<p>加断点：b *地址</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps63.jpg" alt="wps63"> </p>
+<p>运行：run</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps64.jpg" alt="wps64"> </p>
+<p>可以看到这就运行到了我们加的断点的地方，也就是main函数入口处吧EP!</p>
+<p>单步执行：next</p>
+<p>分析代码：</p>
+<p>第1行，把esp+4地址保存到ecx</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps65.jpg" alt="wps65"> </p>
+<p>+4行，内存对齐：</p>
+<p>主流编译器规则规定“程序访问的地址必须向16字节对齐（被16整除的数）”内存对齐后可以提高访问效率。</p>
+<p>我认为这就相当于最近流行的硬盘4K对齐吧！</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps66.jpg" alt="wps66"> </p>
+<p>原来3c往上推了3行到30，刚好16字节</p>
+<p>+7行，把mian函数的返回地址压栈</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps67.jpg" alt="wps67"> </p>
+<p>+10行就开始第二节课讲的正常操作，压入栈帧了等等。</p>
+<p>退出：q</p>
+<p><strong>2.有canary保护</strong></p>
+<p>重新覆盖编译：</p>
+<p>开启canary保护，为所有函数插入保护：gcc -no-pie -fstack-protector-all -m32 -o canary canary.c</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps68.jpg" alt="wps68"> </p>
+<p>记得提权：chmod 777 canary</p>
+<p>调试：gdb canary</p>
+<p>查看main函数：disass main</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps69.jpg" alt="wps69"> </p>
+<p>可以看到正如定义红字可知，如上画线部分，向堆栈传入了gs段的一个参数，后面还做对比，决定是否需要跳转！</p>
+<p>加断点到加保护处：b *0x080484af</p>
+<p>再运行：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps70.jpg" alt="wps70"> </p>
+<p>+41行，把待验证数据保存到ebx</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps71.jpg" alt="wps71"> </p>
+<p>+41就是把数据转存到堆栈了</p>
+<p>一直单步执行到+90，这里进行异或运算，对吧堆栈哪个位置的数据是否还和ebx一样</p>
+<p>查看全部寄存器：i r</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps72.jpg" alt="wps72"> </p>
+<p>0x286转化成二进制数后对照eip寄存器表：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps73.jpg" alt="wps73"> </p>
+<p>je指令看的时ZF位，其实也可以知道【】号里面写出来的都是置1的标识位了</p>
+<p>+90运行：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps74.jpg" alt="wps74"> </p>
+<p>此时ZF位置1了，je达成跳转条件</p>
+<p>然后就可以正常之执行了。这就是canary保护的原理吧。</p>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/%E9%80%86%E5%90%91/PWN/04%E7%AC%AC4%E8%8A%82.%E7%BB%86%E8%AF%B4Canary%E4%BF%9D%E6%8A%A4/wps59.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E9%80%86%E5%90%91/PWN/05%E7%AC%AC5%E8%8A%82.printf%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0%E5%92%8C%E8%B0%83%E8%AF%95/" title="05第5节.printf漏洞概述和调试"><img class="cover" src="/%E9%80%86%E5%90%91/PWN/05%E7%AC%AC5%E8%8A%82.printf%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0%E5%92%8C%E8%B0%83%E8%AF%95/wps75.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">05第5节.printf漏洞概述和调试</div></div><div class="info-2"><div class="info-item-1">一.Format String介绍 在C语言中，我们常用的输出函数有pritnf、fprintf、vprintf、vfprintf、sprintf等。对于这些输出函数，Format String是其第一个参数，我们一般称为格式化字符串。 简单介绍格式化字符串如何在输出函数进行解析： printf接受变长的参数，其第一个参数位格式化字符串，后面的参数在实际运行时将于格式化字符串中特定的子字符串对应，将格式化字符串中的特定子串解析为相应的参数值。 二.格式化字符串漏洞 我们知道printf函数在执行时，首先进行格式化字符串的解析–从栈（或寄存器）获取参数并于符号说明进行匹配，比如参数个数少于符号声明个数时，就有可能造成泄露。 三.实例程序1canary.c 先使用上节课用到的源程序看看，这里注意一个细节：printf函数里面没有参数！   老方法运行：gdb canary 直接先运行：   调试再运行： 查看main函数：disass mian 上节课我们分析的时canary保护，这次在后面加断点跳过canary保护：b *0x080484bb 执行：run   +65行，把eax ...</div></div></div></a><a class="pagination-related" href="/%E9%80%86%E5%90%91/PWN/03%E7%AC%AC3%E8%8A%82.%E8%BF%9C%E7%A8%8BPWN/" title="03第3节.远程PWN"><img class="cover" src="/%E9%80%86%E5%90%91/PWN/03%E7%AC%AC3%E8%8A%82.%E8%BF%9C%E7%A8%8BPWN/wps52.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">03第3节.远程PWN</div></div><div class="info-2"><div class="info-item-1">远程例题： 还是上一节课的read 在学逆向论坛，找到pwn-02 开启动态靶机，注意靶机地址：     编写exp2.py from pwn import * p&#x3D;remote(‘xuenixiang.cn’,20149)&#x2F;&#x2F;远线程链接，不用加协议，要加端口号     &#x2F;&#x2F;或者ip地址：49.51.250.244         offset &#x3D; 0x28 + 0x4 payload &#x3D; b’a’*offset + p32(0x08048456) &#x2F;&#x2F;python3 字节类型前加个b,才能保证加号前后连接才是字节类型 p.sendline(payload) p.interactive() python3 运行即可！ 最后：cat flag 查看libc版本： ldd –version   顺便搭建一下python3.10.0 先去官网下载压缩包，放到环境下，然后解压：   切换到python3.10.0的目录下：cd python3.10.0 .&#x2F;configure   最后开始...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">乙太</div><div class="author-info-description">道也者，至精也，不可为形，不可为名，强为之名，谓之乙太。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/unique-Elven"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/unique-Elven" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://space.bilibili.com/2098810443" target="_blank" title="Bilibili"><i class="fab fa-bilibili" style="color: #00a1d6;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">期待各位给这篇博客项目点点 star：<a target="_blank" rel="noopener" href="https://github.com/unique-Elven/unique-Elven.github.io">unique-Elven.github.io</a><br>如果有问题可以反馈到项目里，持续改进，知识共享。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/" title="渗透测试面试问题">渗透测试面试问题</a><time datetime="2026-05-27T17:42:48.000Z" title="发表于 2026-05-28 01:42:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%B8%97%E9%80%8F/OSCP%E9%9D%B6%E5%9C%BA%E8%AE%AD%E7%BB%83(hackmyvm)/gigachad%20-%20suid/" title="gigachad - suid">gigachad - suid</a><time datetime="2026-05-27T17:41:48.000Z" title="发表于 2026-05-28 01:41:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96%E7%BB%B4%E5%BA%A6%E5%8E%9F%E7%90%86/" title="特征提取维度原理">特征提取维度原理</a><time datetime="2026-05-27T17:40:48.000Z" title="发表于 2026-05-28 01:40:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/AI/LightBGM/Day%201.LightGBM%E7%AE%97%E6%B3%95%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/" title="Day 1.LightGBM算法基本原理">Day 1.LightGBM算法基本原理</a><time datetime="2026-05-27T17:39:48.000Z" title="发表于 2026-05-28 01:39:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/01%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E5%87%86%E5%A4%87/" title="01环境安装准备">01环境安装准备</a><time datetime="2026-05-27T17:38:48.000Z" title="发表于 2026-05-28 01:38:48">2026-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

@@ -1,0 +1,668 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>01第一节.基础知识篇 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一.什么是溢出？ 1.概念：在计算机中，当要表示的数据超出计算机所使用的数据的表示范围时，则产生数据溢出 2.产生的原因：   使用非安全类型（non -type-safe)的语言如C&#x2F;C++等  以不可靠的方式存取或者复制内存缓冲区  编译器设置的内存缓冲区太靠近关键数据结构； 二.什么是PWN？ 概念：           在计算机中，当要表示的数据超出计算机所使用的数据表示范围时，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="01第一节.基础知识篇">
+<meta property="og:url" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="一.什么是溢出？ 1.概念：在计算机中，当要表示的数据超出计算机所使用的数据的表示范围时，则产生数据溢出 2.产生的原因：   使用非安全类型（non -type-safe)的语言如C&#x2F;C++等  以不可靠的方式存取或者复制内存缓冲区  编译器设置的内存缓冲区太靠近关键数据结构； 二.什么是PWN？ 概念：           在计算机中，当要表示的数据超出计算机所使用的数据表示范围时，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps1.jpg">
+<meta property="article:published_time" content="2026-05-27T16:22:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:50.291Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps1.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "01第一节.基础知识篇",
+  "url": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/",
+  "image": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps1.jpg",
+  "datePublished": "2026-05-27T16:22:48.000Z",
+  "dateModified": "2026-05-27T17:42:50.291Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '01第一节.基础知识篇',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">01第一节.基础知识篇</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">01第一节.基础知识篇</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T16:22:48.000Z" title="发表于 2026-05-28 00:22:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:50.291Z" title="更新于 2026-05-28 01:42:50">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/PWN/">PWN</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>一.什么是溢出？</strong></p>
+<p>1.概念：在计算机中，当要表示的数据超出计算机所使用的数据的表示范围时，则产生数据溢出</p>
+<p>2.产生的原因：</p>
+<p>  使用非安全类型（non -type-safe)的语言如C&#x2F;C++等</p>
+<p> 以不可靠的方式存取或者复制内存缓冲区</p>
+<p> 编译器设置的内存缓冲区太靠近关键数据结构；</p>
+<p><strong>二.什么是PWN？</strong></p>
+<p>概念：</p>
+<p>          在计算机中，当要表示的数据超出计算机所使用的数据表示范围时，则产生数据的溢出。</p>
+<p>“pwn”是一个黑客语法的俚语词，是指攻破设备或者系统。发音类似“砰”，对于黑客而言，这就是成功实施黑客攻击的声音—-砰的一声，被“黑”的电脑或手机就被操控。</p>
+<p><strong>三.复习寄存器</strong></p>
+<p>ESP: 用来储存函数调用得的栈顶指针，在压栈和退栈时发生变化</p>
+<p>EBP: 用来存储当前函数状态的基地址，在函数运行时不变，可以用来索引确定函数参数或局部变量的位置</p>
+<p>EIP: 用来储存即将执行的程序指令的地址</p>
+<p><strong>四.复习汇编</strong></p>
+<p> 32位x86架构下汇编指令有两种格式intel与AT&amp;T</p>
+<p> Intel：寄存器名称和数值前无符号     AT&amp;T：寄存器名称前加”%“，数值前加”$”</p>
+<p> 在.gdbinit配置文件中可以配置：set disassembly-flavor intel</p>
+<p><strong>五.栈帧</strong></p>
+<p>栈帧就是一个函数执行的环境：函数参数、局部变量、函数执行后返回到哪里等等。每一个栈帧代表的就是一个未执行完的函数</p>
+<p>ps: <code>[ebp - xx]一般都是局部变量</code></p>
+<p>     [ebp + xx]一般都是参数</p>
+<p><strong>六.分析函数执行时堆栈变化</strong></p>
+<p> <strong>在linux的控制台编译C文件</strong></p>
+<p>要求：熟悉Linux常用命令和Vi编辑器</p>
+<p>首先进入root用户模式 sudo su：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps1.jpg" alt="wps1"> </p>
+<p>ls 命令 显示文件目录：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps2.jpg" alt="wps2"> </p>
+<p>命令cd  切换到指定目录：</p>
+<p>cd 桌面</p>
+<p>命令mkdir 创建目录：</p>
+<p>mkdir PWN</p>
+<p>命令chmod 修改文件或目录权限：</p>
+<p>chmod 777                                      最高权限</p>
+<p>命令touch 创建相关文件：</p>
+<p>touch heilo.c</p>
+<p>进入Vi编辑器打开文本：</p>
+<p>vi hello.c</p>
+<p>之后按下 i 才能进行编辑，输入以下代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">test</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b)</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> c=a+b;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> d=test(<span class="number">1</span>,<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>然后按Esc后输入 :wq 才能保存并且退出！</p>
+<p>命令gcc 编译.c文件：</p>
+<p>gcc -m32 -o hello hello.c</p>
+<p><strong>2. 运行gdb</strong></p>
+<p>gdb hello</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps3.jpg" alt="wps3"> </p>
+<p>disass main                                              反汇编查看main函数</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps4.jpg" alt="wps4"> </p>
+<p>disass test                                                           查看test函数</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps5.jpg" alt="wps5"> </p>
+<p>b *0x565554ed                                          加断点</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps6.jpg" alt="wps6"> </p>
+<p>run                                                              运行</p>
+<p>r是运行</p>
+<p>n是单步执行，next遇到函数不会进入函数内部</p>
+<p>info breakpoint：查看所有断点</p>
+<p>si是步入，step会执行到函数内部c是继续运行，调试时，使用continue命令继续执行程序。程序遇到断电后再次暂停执行；如果没有断点，就会一直执行到结束</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps7.jpg" alt="wps7"> </p>
+<p>这里即使到了我们的断点。</p>
+<p>然后按 n 单步执行，注意观察堆栈变化：</p>
+<p>push ebp就是把寄存器ebp的值，也就是ebp的地址压入堆栈中</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps8.jpg" alt="wps8"> </p>
+<p>mov ebp，esp就是把esp的地址传给epd，因ebp会上移动到esp所在的位置</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps9.jpg" alt="wps9"> </p>
+<p>sub esp，0x10就是把esp的地址减去了16字节，外观上看就是把esp上移了4行</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps10.jpg" alt="wps10"> </p>
+<p>call   __x86.get_pc_thunk.ax   这个就先不管啦</p>
+<p>add    eax, 0x1ae4 也是先不管</p>
+<p>mov    edx, dword ptr [ebp + 8] 这个其实就是esp寻址，把参数1放到edx</p>
+<p>mov    eax, dword ptr [ebp + 0xc]   这个其实也是，把参数2放到eax</p>
+<p>此时看的该是寄存器：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps11.jpg" alt="wps11"> </p>
+<p>add    eax, edx       把edx的值和eax相加后保存到eax</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps12.jpg" alt="wps12"> </p>
+<p>此时堆栈都还没发生变化，主要是在实现函数的主要功能1</p>
+<p>mov    dword ptr [ebp - 4], eax    就是把eax存储的最后计算结果转存到堆栈中</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps13.jpg" alt="wps13"> </p>
+<p>mov    eax, dword ptr [ebp - 4]   又把计算结果返回给EAX</p>
+<p>leave是汇编语言中用来关闭栈帧的指令名，通常用于函数末尾</p>
+<p>在16位汇编下相当于:</p>
+<p>mov sp,bp</p>
+<p>pop bp</p>
+<p>在32位汇编下相当于:</p>
+<p>mov esp,ebp;</p>
+<p>&#x2F;&#x2F;将ebp指向（ebp内部应当保存一个地址，所谓指向即这个地址对应的空间）的值赋给esp</p>
+<p>pop ebp </p>
+<p>&#x2F;* leave指令将EBP寄存器的内容复制到ESP寄存器中，</p>
+<p>以释放分配给该过程的所有堆栈空间。然后，它从堆栈恢复EBP寄存器的旧值。*&#x2F;</p>
+<p>enter有时在函数开头，正好相反,相当于：</p>
+<p>push ebp</p>
+<p>mov ebp,esp</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps14.jpg" alt="wps14"> </p>
+<p>ret 返回，把当前栈顶的值放入EIP，并且使栈顶指针加地址4默认，可以看到上面，esp储存的就是main函数内存地址</p>
+<p>代码块跳转变化：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps15.jpg" alt="wps15"> </p>
+<p>堆栈变化：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps16.jpg" alt="wps16"> </p>
+<p>add    esp, 8   平衡堆栈，esp+8，就是esp地址下移动8字节，两行</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps17.jpg" alt="wps17"> </p>
+<p>mov    dword ptr [ebp - 4], eax   又是把eax的数据转存到堆栈</p>
+<p>mov    eax, 0    把eax清零</p>
+<p>leave</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps18.jpg" alt="wps18"> </p>
+<p>ret 从main函数再返回就到结束阶段了，后面不解释</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps19.jpg" alt="wps19"> </p>
+<p>delete     最后删除所有断点</p>
+<p>掌握函数调用的流程，以及函数调用约定，就像今天的例子压入1，2，3，用高级语言进行汇编，所以压入栈内就是321了，了解栈的特性：先进后出。栈的生长方向 ，堆栈平衡的操作。要继续熟悉掌握汇编语言，会看x86的汇编指令，了解eflag标志寄存器的变化。了解掌握gdb调试（pwndbg，peda）的使用，和相关指令。</p>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps1.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E9%80%86%E5%90%91/PWN/15%E7%AC%AC15%E8%8A%82.ROP-ret2lib%E6%A6%82%E8%BF%B0/" title="15第15节.ROP-ret2lib概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">15第15节.ROP-ret2lib概述</div></div><div class="info-2"><div class="info-item-1">一.Linux延迟绑定机制 Linux延迟绑定机制定义： 动态链接的程序调用了libc的库函数，但是libc在运行才被加载到内存中。调用libc函数时，才解析出函数在内存中的地址   Linux延迟绑定的实现： 所有程序调用libc函数都有对应的PLT表和GOT表，其位置固定 PRT表：1.调用函数call puts@plt    2. PRT表中存放着指令：jmp [puts_got] GOT表：解析函数真实地址放入GOT表中存储   延迟绑定对我们的作用 GOT表： 一个绝佳的攻击目标 包含Libc函数真实地址，用于泄露地址 覆盖新地址到GOT表，劫持函数流程   PLT表： 不用知道libc函数真实地址，使用PLT地址即可调用函数   什么是Libc? Libc就是Linux下的C函数库 Libc中包含各种各样的函数，在程序执行时才被加载到内存中 Libc一定可执行，跳转到Libc中函数可以绕过NX保护   那Libc函数在哪里？ ASLR地址随机化 系统开启 &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;randomize_va_space 0...</div></div></div></a><a class="pagination-related" href="/%E7%AE%80%E5%8E%86/PWN%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/" title="PWN面试问题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">PWN面试问题</div></div><div class="info-2"><div class="info-item-1">那有没有pwn的面试题总结？ 有的，而且 PWN 面试其实非常有套路。很多安全公司问的题目都集中在 栈 &#x2F; 堆 &#x2F; libc &#x2F; 利用思路这几块。我给你整理一份 《PWN 面试高频 40 题 + 简洁回答思路》，基本覆盖面试常问内容。 我知道你平时也用 pwntools 做题，所以很多回答我按 CTF + 面试视角来讲。  一、PWN基础（10题）1 什么是缓冲区溢出面试回答：  缓冲区溢出是由于程序没有对输入长度进行检查，导致数据覆盖相邻内存区域，从而改变程序执行流程。   2 栈溢出原理结构： buffersaved ebpreturn address 回答：  当输入数据超过 buffer 长度时会覆盖返回地址，从而控制程序执行流程。   3 什么是 shellcode回答：  shellcode 是一段用于获取 shell 或执行恶意操作的机器代码，通常在漏洞利用中注入执行。   4 什么是 ret2libc回答：  ret2libc 是通过覆盖返回地址调用 libc 中已有函数，比如 system(“&#x2F;bin&#x2F;sh”) ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">乙太</div><div class="author-info-description">道也者，至精也，不可为形，不可为名，强为之名，谓之乙太。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/unique-Elven"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/unique-Elven" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://space.bilibili.com/2098810443" target="_blank" title="Bilibili"><i class="fab fa-bilibili" style="color: #00a1d6;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">期待各位给这篇博客项目点点 star：<a target="_blank" rel="noopener" href="https://github.com/unique-Elven/unique-Elven.github.io">unique-Elven.github.io</a><br>如果有问题可以反馈到项目里，持续改进，知识共享。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/" title="渗透测试面试问题">渗透测试面试问题</a><time datetime="2026-05-27T17:42:48.000Z" title="发表于 2026-05-28 01:42:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%B8%97%E9%80%8F/OSCP%E9%9D%B6%E5%9C%BA%E8%AE%AD%E7%BB%83(hackmyvm)/gigachad%20-%20suid/" title="gigachad - suid">gigachad - suid</a><time datetime="2026-05-27T17:41:48.000Z" title="发表于 2026-05-28 01:41:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96%E7%BB%B4%E5%BA%A6%E5%8E%9F%E7%90%86/" title="特征提取维度原理">特征提取维度原理</a><time datetime="2026-05-27T17:40:48.000Z" title="发表于 2026-05-28 01:40:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/AI/LightBGM/Day%201.LightGBM%E7%AE%97%E6%B3%95%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/" title="Day 1.LightGBM算法基本原理">Day 1.LightGBM算法基本原理</a><time datetime="2026-05-27T17:39:48.000Z" title="发表于 2026-05-28 01:39:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/01%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E5%87%86%E5%A4%87/" title="01环境安装准备">01环境安装准备</a><time datetime="2026-05-27T17:38:48.000Z" title="发表于 2026-05-28 01:38:48">2026-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

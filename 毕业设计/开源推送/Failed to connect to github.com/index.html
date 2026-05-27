@@ -1,0 +1,615 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Failed to connect to github.com | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="123456789101112131415161718192021222324然后再次尝试推送。---### 3. 修改 Hosts 文件（“直连”应急方案）如果不想用代理，可以通过修改本地 Hosts 文件，直接将 &#96;github.com&#96; 指向目前响应最快的 IP 地址。1. **查找当前最快 IP：** 访问 [https:&#x2F;&#x2F;stock.hostmonit.com&#x2F;hosts](https">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Failed to connect to github.com">
+<meta property="og:url" content="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/Failed%20to%20connect%20to%20github.com/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="123456789101112131415161718192021222324然后再次尝试推送。---### 3. 修改 Hosts 文件（“直连”应急方案）如果不想用代理，可以通过修改本地 Hosts 文件，直接将 &#96;github.com&#96; 指向目前响应最快的 IP 地址。1. **查找当前最快 IP：** 访问 [https:&#x2F;&#x2F;stock.hostmonit.com&#x2F;hosts](https">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/img/toux.jpg">
+<meta property="article:published_time" content="2026-05-27T17:30:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:48.983Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/img/toux.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Failed to connect to github.com",
+  "url": "https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/Failed%20to%20connect%20to%20github.com/",
+  "image": "https://blog.oisec.cn/img/toux.jpg",
+  "datePublished": "2026-05-27T17:30:48.000Z",
+  "dateModified": "2026-05-27T17:42:48.983Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/Failed%20to%20connect%20to%20github.com/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Failed to connect to github.com',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/753197.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">Failed to connect to github.com</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Failed to connect to github.com</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T17:30:48.000Z" title="发表于 2026-05-28 01:30:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:48.983Z" title="更新于 2026-05-28 01:42:48">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/">毕业设计</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/">开源推送</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">然后再次尝试推送。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### 3. 修改 Hosts 文件（“直连”应急方案）</span><br><span class="line">如果不想用代理，可以通过修改本地 Hosts 文件，直接将 `github.com` 指向目前响应最快的 IP 地址。</span><br><span class="line"></span><br><span class="line">1. **查找当前最快 IP：** 访问 [https://stock.hostmonit.com/hosts](https://stock.hostmonit.com/hosts) 搜索 `github.com`。</span><br><span class="line">2. **修改 Hosts：** </span><br><span class="line">   - 打开 `C:\Windows\System32\drivers\etc\hosts`（需要管理员权限）。</span><br><span class="line">   - 在末尾添加一行，例如：`140.82.113.3 github.com`（具体 IP 请以查询到的为准）。</span><br><span class="line">3. **刷新 DNS：** 在 CMD 中输入 `ipconfig /flushdns`。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">### 4. 终极稳定方案：使用 SSH 协议</span><br><span class="line">HTTPS 协议在 Windows 环境下经常受到各种安全软件或网络环境的干扰。切换到 SSH 协议通常更稳定：</span><br><span class="line"></span><br><span class="line">1. **检查是否有 SSH Key：** 查看 `C:\Users\YourName\.ssh` 下是否有 `id_rsa.pub`。</span><br><span class="line">2. **若没有则生成：** `ssh-keygen -t rsa -C &quot;your_email@example.com&quot;`（一路回车即可）。</span><br><span class="line">3. **添加到 GitHub：** 将 `id_rsa.pub` 的内容复制到 GitHub 设置里的 [SSH keys](https://github.com/settings/keys) 中。</span><br><span class="line">4. **修改项目的远程地址：**</span><br><span class="line">   ```bash</span><br><span class="line">   git remote set-url origin git@github.com:unique-Elven/XSAN.git</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li><strong>再次推送：</strong> <code>git push -u origin main</code></li>
+</ol>
+<h3 id="⚠️-注意事项"><a href="#⚠️-注意事项" class="headerlink" title="⚠️ 注意事项"></a>⚠️ 注意事项</h3><p>对于你的 <strong>XSCAN</strong> 项目，如果里面包含较大的机器学习模型（如 <code>LightGBM</code> 或 <code>EMBER</code> 相关的大文件），单次推送可能会这个报错 <code>Failed to connect to github.com port 443</code> 是典型的<strong>网络超时</strong>问题。这说明你的网络无法直接触达 GitHub 的服务器，或者请求在半路被拦截了。</p>
+<p>鉴于你正在开发安全相关的毕业项目 <strong>XSCAN</strong>，且当前网络环境访问 GitHub 不稳定，请尝试以下几个最有效的解决方案：</p>
+<h3 id="1-设置-Git-代理（针对有“加速器”的情况）"><a href="#1-设置-Git-代理（针对有“加速器”的情况）" class="headerlink" title="1. 设置 Git 代理（针对有“加速器”的情况）"></a>1. 设置 Git 代理（针对有“加速器”的情况）</h3><p>如果你电脑上开着代理工具，Git 默认可能并没有走代理。你需要手动告诉 Git 代理的端口。</p>
+<p><strong>操作步骤：</strong></p>
+<ol>
+<li><p>确认你代理工具的端口（通常是 <code>7890</code>, <code>1080</code>, 或 <code>10809</code>）。</p>
+</li>
+<li><p>在终端执行以下命令（以 7890 为例）：</p>
+<p> Bash</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.proxy [http://127.0.0.1:7890](http://127.0.0.1:7890)</span><br><span class="line">git config --global https.proxy [http://127.0.0.1:7890](http://127.0.0.1:7890)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>再次尝试 <code>git push</code>。</p>
+</li>
+</ol>
+<hr>
+<h3 id="2-取消代理（针对没有代理或代理失效的情况）"><a href="#2-取消代理（针对没有代理或代理失效的情况）" class="headerlink" title="2. 取消代理（针对没有代理或代理失效的情况）"></a>2. 取消代理（针对没有代理或代理失效的情况）</h3><p>如果你<strong>没有</strong>使用任何代理工具，但 Git 之前被设置过代理，这会导致连接失败。请执行以下命令清除配置：</p>
+<p>Bash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global --unset http.proxy</span><br><span class="line">git config --global --unset https.proxy</span><br></pre></td></tr></table></figure>
+
+<p>然后再次尝试推送。</p>
+<hr>
+<h3 id="3-修改-Hosts-文件（“直连”应急方案）"><a href="#3-修改-Hosts-文件（“直连”应急方案）" class="headerlink" title="3. 修改 Hosts 文件（“直连”应急方案）"></a>3. 修改 Hosts 文件（“直连”应急方案）</h3><p>如果不想用代理，可以通过修改本地 Hosts 文件，直接将 <code>github.com</code> 指向目前响应最快的 IP 地址。</p>
+<ol>
+<li><p><strong>查找当前最快 IP：</strong> 访问 <a target="_blank" rel="noopener" href="https://stock.hostmonit.com/hosts">https://stock.hostmonit.com/hosts</a> 搜索 <code>github.com</code>。</p>
+</li>
+<li><p><strong>修改 Hosts：</strong></p>
+<ul>
+<li><p>打开 <code>C:\Windows\System32\drivers\etc\hosts</code>（需要管理员权限）。</p>
+</li>
+<li><p>在末尾添加一行，例如：<code>140.82.113.3 github.com</code>（具体 IP 请以查询到的为准）。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>刷新 DNS：</strong> 在 CMD 中输入 <code>ipconfig /flushdns</code>。</p>
+</li>
+</ol>
+<hr>
+<h3 id="4-终极稳定方案：使用-SSH-协议"><a href="#4-终极稳定方案：使用-SSH-协议" class="headerlink" title="4. 终极稳定方案：使用 SSH 协议"></a>4. 终极稳定方案：使用 SSH 协议</h3><p>HTTPS 协议在 Windows 环境下经常受到各种安全软件或网络环境的干扰。切换到 SSH 协议通常更稳定：</p>
+<ol>
+<li><p><strong>检查是否有 SSH Key：</strong> 查看 <code>C:\Users\YourName\.ssh</code> 下是否有 <code>id_rsa.pub</code>。</p>
+</li>
+<li><p><strong>若没有则生成：</strong> <code>ssh-keygen -t rsa -C &quot;your_email@example.com&quot;</code>（一路回车即可）。</p>
+</li>
+<li><p><strong>添加到 GitHub：</strong> 将 <code>id_rsa.pub</code> 的内容复制到 GitHub 设置里的 <a target="_blank" rel="noopener" href="https://github.com/settings/keys">SSH keys</a> 中。</p>
+</li>
+<li><p><strong>修改项目的远程地址：</strong></p>
+<p> Bash</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote set-url origin git@github.com:unique-Elven/XSAN.git</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>再次推送：</strong> <code>git push -u origin main</code></p>
+</li>
+</ol>
+<h3 id="⚠️-注意事项-1"><a href="#⚠️-注意事项-1" class="headerlink" title="⚠️ 注意事项"></a>⚠️ 注意事项</h3><p>对于你的 <strong>XSCAN</strong> 项目，如果里面包含较大的机器学习模型（如 <code>LightGBM</code> 或 <code>EMBER</code> 相关的大文件），单次推送可能会因为文件过大导致连接再次中断。<strong>请务必确认 <code>.gitignore</code> 中已经忽略了这些数据文件夹</strong>，只推送代码逻辑。</p>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/toux.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/%E4%B8%BA%E4%BB%80%E4%B9%88%E7%86%B5%E5%80%BC%E6%98%AF%200~8%EF%BC%9F/" title="为什么熵值是 0~8？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">为什么熵值是 0~8？</div></div><div class="info-2"><div class="info-item-1">为什么熵值是 0~8？（详细通俗解释 + 美化公式） 这是你问的 GeneralFileInfo 和 ByteEntropyHistogram 里出现的 Shannon 熵（Shannon Entropy） 的取值范围问题。 我一步步给你讲清楚。  1. 先看公式（美化版）Shannon 熵的定义（信息论里的核心公式）： $$ H &#x3D; -\sum_{i&#x3D;0}^{255} p_i \log_2 (p_i) $$  $H$ ：熵值（我们计算出来的那个数字） $p_i$ ​：第 $i$  种情况出现的概率 $\log_2$ ​：以 2 为底的对数（信息论里固定用 2） 负号是为了让结果为正数   2. 为什么字节数据的熵最大是 8？因为 一个字节 &#x3D; 8 个比特（bit）。  一个字节可以表示 256 种不同值（0 ~ 255）。 如果文件里的每个字节值（0~255）出现的概率完全一样（即  $p_i &#x3D; \frac{1}{256}$ )，这时信息最“随机”、最不可预测，熵值达到最大。  我们来算一下这个最大值： $$H_{\max} &#x3D...</div></div></div></a><a class="pagination-related" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/%E4%B8%A4%E8%BE%B9%E7%89%88%E6%9C%AC%E8%AE%B0%E5%BD%95%E4%B8%8D%E4%B8%80%E8%87%B4%E8%A7%A3%E5%86%B3/" title="两边版本记录不一致解决"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">两边版本记录不一致解决</div></div><div class="info-2"><div class="info-item-1">这个错误 [rejected] main -&gt; main (fetch first) 是因为你的 GitHub 远程仓库里已经存在一些文件（比如你创建仓库时勾选生成的 README.md 或 LICENSE），而这些文件在你本地的项目目录里没有，导致两边版本记录不一致。 既然你现在是第一次把本地代码（你的 XSCAN 项目）推送到一个新的仓库，可以按照以下步骤解决： 方案一：强制推送（最简单，适用于新仓库）如果你确定 GitHub 远程仓库里没有重要的代码（只有系统生成的 README 等），直接用“强制覆盖”的方式把本地代码推上去。这是最快的方法： Bash 1git push -u origin main -f  注意：-f (force) 会覆盖远程仓库的所有内容，以你本地的为准。  方案二：先合并远程再推送（最规范）如果你想保留远程仓库的文件（比如已经在 GitHub 网页端改过东西），可以按以下步骤操作：  拉取远程更改：  Bash  1git pull origin main --allow-unrelated-histories  --allow-unrel...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%A0%EF%B8%8F-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">1.</span> <span class="toc-text">⚠️ 注意事项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AE%BE%E7%BD%AE-Git-%E4%BB%A3%E7%90%86%EF%BC%88%E9%92%88%E5%AF%B9%E6%9C%89%E2%80%9C%E5%8A%A0%E9%80%9F%E5%99%A8%E2%80%9D%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">1. 设置 Git 代理（针对有“加速器”的情况）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8F%96%E6%B6%88%E4%BB%A3%E7%90%86%EF%BC%88%E9%92%88%E5%AF%B9%E6%B2%A1%E6%9C%89%E4%BB%A3%E7%90%86%E6%88%96%E4%BB%A3%E7%90%86%E5%A4%B1%E6%95%88%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">2. 取消代理（针对没有代理或代理失效的情况）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BF%AE%E6%94%B9-Hosts-%E6%96%87%E4%BB%B6%EF%BC%88%E2%80%9C%E7%9B%B4%E8%BF%9E%E2%80%9D%E5%BA%94%E6%80%A5%E6%96%B9%E6%A1%88%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">3. 修改 Hosts 文件（“直连”应急方案）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%BB%88%E6%9E%81%E7%A8%B3%E5%AE%9A%E6%96%B9%E6%A1%88%EF%BC%9A%E4%BD%BF%E7%94%A8-SSH-%E5%8D%8F%E8%AE%AE"><span class="toc-number">5.</span> <span class="toc-text">4. 终极稳定方案：使用 SSH 协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%A0%EF%B8%8F-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-1"><span class="toc-number">6.</span> <span class="toc-text">⚠️ 注意事项</span></a></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

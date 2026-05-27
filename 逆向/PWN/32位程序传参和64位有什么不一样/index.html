@@ -1,0 +1,641 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>32位程序传参和64位有什么不一样 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="32位程序传参和64位有什么不一样 ChatGPT 说：ChatGPT 32位和64位程序的传参方式有显著的不同，主要体现在函数调用约定（calling conventions）和寄存器的使用上。不同的操作系统和平台（如 Windows、Linux）可能会有不同的调用约定，但我们可以讨论一些常见的约定，尤其是在 x86 和 x86-64 架构上。 32位程序（x86）传参：在 32 位架构下，函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="32位程序传参和64位有什么不一样">
+<meta property="og:url" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/32%E4%BD%8D%E7%A8%8B%E5%BA%8F%E4%BC%A0%E5%8F%82%E5%92%8C64%E4%BD%8D%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E4%B8%80%E6%A0%B7/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="32位程序传参和64位有什么不一样 ChatGPT 说：ChatGPT 32位和64位程序的传参方式有显著的不同，主要体现在函数调用约定（calling conventions）和寄存器的使用上。不同的操作系统和平台（如 Windows、Linux）可能会有不同的调用约定，但我们可以讨论一些常见的约定，尤其是在 x86 和 x86-64 架构上。 32位程序（x86）传参：在 32 位架构下，函数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/img/toux.jpg">
+<meta property="article:published_time" content="2026-05-27T15:56:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:50.710Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/img/toux.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "32位程序传参和64位有什么不一样",
+  "url": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/32%E4%BD%8D%E7%A8%8B%E5%BA%8F%E4%BC%A0%E5%8F%82%E5%92%8C64%E4%BD%8D%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E4%B8%80%E6%A0%B7/",
+  "image": "https://blog.oisec.cn/img/toux.jpg",
+  "datePublished": "2026-05-27T15:56:48.000Z",
+  "dateModified": "2026-05-27T17:42:50.710Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/32%E4%BD%8D%E7%A8%8B%E5%BA%8F%E4%BC%A0%E5%8F%82%E5%92%8C64%E4%BD%8D%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E4%B8%80%E6%A0%B7/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '32位程序传参和64位有什么不一样',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/753197.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">32位程序传参和64位有什么不一样</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">32位程序传参和64位有什么不一样</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T15:56:48.000Z" title="发表于 2026-05-27 23:56:48">2026-05-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:50.710Z" title="更新于 2026-05-28 01:42:50">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/PWN/">PWN</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>32位程序传参和64位有什么不一样</p>
+<h6 id="ChatGPT-说："><a href="#ChatGPT-说：" class="headerlink" title="ChatGPT 说："></a>ChatGPT 说：</h6><p>ChatGPT</p>
+<p>32位和64位程序的传参方式有显著的不同，主要体现在函数调用约定（calling conventions）和寄存器的使用上。不同的操作系统和平台（如 Windows、Linux）可能会有不同的调用约定，但我们可以讨论一些常见的约定，尤其是在 x86 和 x86-64 架构上。</p>
+<h3 id="32位程序（x86）传参："><a href="#32位程序（x86）传参：" class="headerlink" title="32位程序（x86）传参："></a>32位程序（x86）传参：</h3><p>在 32 位架构下，函数参数通常通过 <strong>栈</strong> 来传递。调用约定决定了参数如何传递，以及函数返回值的处理方式。以下是一些常见的调用约定：</p>
+<h4 id="1-使用栈传参"><a href="#1-使用栈传参" class="headerlink" title="1. 使用栈传参"></a>1. <strong>使用栈传参</strong></h4><ul>
+<li><strong>栈顺序</strong>：参数从右到左推入栈中（即 <strong>右到左传参</strong>）。</li>
+<li>当调用函数时，栈会被调整，参数被压入栈中，函数执行完成后，栈会恢复到原来的状态。</li>
+</ul>
+<p>例如，如果有一个函数 <code>foo(int a, int b)</code>，在调用时参数会按如下方式压入栈：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">asm</span>复制代码push b   ; b 压栈</span><br><span class="line">push a   ; a 压栈</span><br><span class="line">call foo ; 调用函数</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-函数返回值"><a href="#2-函数返回值" class="headerlink" title="2. 函数返回值"></a>2. <strong>函数返回值</strong></h4><ul>
+<li>在 32 位程序中，函数的返回值通常会放在 <strong>EAX</strong> 寄存器中。如果返回值是一个整数类型，返回值会存放在 <strong>EAX</strong> 寄存器中；如果是浮点数，则使用 <strong>ST0</strong> 寄存器。</li>
+</ul>
+<h3 id="64位程序（x86-64）传参："><a href="#64位程序（x86-64）传参：" class="headerlink" title="64位程序（x86-64）传参："></a>64位程序（x86-64）传参：</h3><p>在 64 位架构下，函数参数传递的方式有所不同。主要区别在于 <strong>寄存器传参</strong> 的增加和 <strong>栈传参</strong> 的优化。</p>
+<h4 id="1-使用寄存器传参"><a href="#1-使用寄存器传参" class="headerlink" title="1. 使用寄存器传参"></a>1. <strong>使用寄存器传参</strong></h4><ul>
+<li><p>在 64 位架构上，操作系统通常采用更高效的方式，通过 <strong>寄存器</strong> 传递参数。比如，x86-64 架构中的 <strong>System V AMD64</strong> 调用约定，定义了以下规则：</p>
+<ul>
+<li><p>前六个整型或指针类型的参数直接通过寄存器传递。</p>
+<ul>
+<li>第一个参数通过 <strong>RDI</strong> 寄存器传递。</li>
+<li>第二个参数通过 <strong>RSI</strong> 寄存器传递。</li>
+<li>第三个参数通过 <strong>RDX</strong> 寄存器传递。</li>
+<li>第四个参数通过 <strong>RCX</strong> 寄存器传递。</li>
+<li>第五个参数通过 <strong>R8</strong> 寄存器传递。</li>
+<li>第六个参数通过 <strong>R9</strong> 寄存器传递。</li>
+</ul>
+</li>
+<li><p>如果参数超过六个，则剩余的参数通过栈传递。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>例如，如果调用函数 <code>foo(int a, int b, int c, int d, int e, int f)</code>，参数传递方式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">asm复制代码mov rdi, a  ; 第一个参数传递给 RDI</span><br><span class="line">mov rsi, b  ; 第二个参数传递给 RSI</span><br><span class="line">mov rdx, c  ; 第三个参数传递给 RDX</span><br><span class="line">mov rcx, d  ; 第四个参数传递给 RCX</span><br><span class="line">mov r8, e   ; 第五个参数传递给 R8</span><br><span class="line">mov r9, f   ; 第六个参数传递给 R9</span><br><span class="line">call foo    ; 调用函数</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果有更多的参数，剩下的参数将被压入栈中。</p>
+<h4 id="2-函数返回值-1"><a href="#2-函数返回值-1" class="headerlink" title="2. 函数返回值"></a>2. <strong>函数返回值</strong></h4><ul>
+<li>在 64 位架构下，函数的返回值通常会通过 <strong>RAX</strong> 寄存器返回。如果返回值是指针或整型值，返回值会通过 <strong>RAX</strong> 寄存器返回；如果是浮点数，返回值则存储在 <strong>XMM0</strong> 寄存器中。</li>
+</ul>
+<h4 id="3-栈的使用"><a href="#3-栈的使用" class="headerlink" title="3. 栈的使用"></a>3. <strong>栈的使用</strong></h4><ul>
+<li>在 64 位架构中，栈依然被用于传递超出寄存器数量的参数，同时也用于保存局部变量、函数的返回地址以及保存旧的基址指针（RBP）。</li>
+<li>栈空间的管理方式更加灵活，通常 <strong>栈的对齐</strong> 被要求是 16 字节对齐，以便符合调用约定的要求。</li>
+</ul>
+<h3 id="主要区别总结："><a href="#主要区别总结：" class="headerlink" title="主要区别总结："></a>主要区别总结：</h3><table>
+<thead>
+<tr>
+<th align="left"><strong>特征</strong></th>
+<th align="left"><strong>32 位（x86）</strong></th>
+<th align="left"><strong>64 位（x86-64）</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>寄存器传参</strong></td>
+<td align="left">使用栈传参，所有参数通过栈传递</td>
+<td align="left">前六个参数通过寄存器传递（RDI, RSI, RDX, RCX, R8, R9），超过六个参数通过栈传递</td>
+</tr>
+<tr>
+<td align="left"><strong>栈传参</strong></td>
+<td align="left">所有参数通过栈传递</td>
+<td align="left">超过六个参数通过栈传递</td>
+</tr>
+<tr>
+<td align="left"><strong>返回值</strong></td>
+<td align="left">返回值通过 <strong>EAX</strong> 寄存器返回</td>
+<td align="left">返回值通过 <strong>RAX</strong> 寄存器返回</td>
+</tr>
+<tr>
+<td align="left"><strong>栈对齐</strong></td>
+<td align="left">栈不强制对齐</td>
+<td align="left">栈强制对齐为 16 字节</td>
+</tr>
+</tbody></table>
+<h3 id="例子对比："><a href="#例子对比：" class="headerlink" title="例子对比："></a>例子对比：</h3><p>假设有如下的 C 函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">c复制代码int sum(int a, int b, int c) &#123;</span><br><span class="line">    return a + b + c;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="32位传参（x86）："><a href="#32位传参（x86）：" class="headerlink" title="32位传参（x86）："></a>32位传参（x86）：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">asm复制代码push c        ; 压栈 c</span><br><span class="line">push b        ; 压栈 b</span><br><span class="line">push a        ; 压栈 a</span><br><span class="line">call sum      ; 调用函数</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="64位传参（x86-64）："><a href="#64位传参（x86-64）：" class="headerlink" title="64位传参（x86-64）："></a>64位传参（x86-64）：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">asm复制代码mov rdi, a    ; 第一个参数传递给 RDI</span><br><span class="line">mov rsi, b    ; 第二个参数传递给 RSI</span><br><span class="line">mov rdx, c    ; 第三个参数传递给 RDX</span><br><span class="line">call sum      ; 调用函数</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><ul>
+<li>在 64 位架构中，函数传参的效率更高，因为大部分参数通过寄存器传递，而不是通过栈。</li>
+<li>在 32 位架构中，所有参数都通过栈传递，这可能导致一些性能开销，特别是在有多个参数时。</li>
+</ul>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/toux.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E9%80%86%E5%90%91/NEW%20Carck%20ME%20NOTE/002-abexcm5%20%E7%9A%84%20write%20up/" title="002-abexcm5 的 write up"><img class="cover" src="/%E9%80%86%E5%90%91/NEW%20Carck%20ME%20NOTE/002-abexcm5%20%E7%9A%84%20write%20up/image-20220924200510330.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">002-abexcm5 的 write up</div></div><div class="info-2"><div class="info-item-1">002-abexcm5 的 write up1. 执行程序测试 可以看到这是一个输入注册码然后进行检测的问题，可见我们并不知道正确的注册码是合适是什么呢？但是根据它的提示信息要敏感，可以知道后面可以用来查找字符串。 1. 程序查壳 可见程序Not packed，这是没有壳的，所以可以直接进行调试。（TASM是Borland公司推出的汇编编译器。MASM宏汇编程序。FASM是一个x86体系处理器下的汇编语言编译器。） 2. 静态调试 首先将程序拖入32位IDA后先点击View(查看)——&gt;Open subviews——&gt;Strings，结果如下图：    解释：在这些关键字符串中既可以看到刚才的提示信息，还可以看到两个硬编码，可以猜测这很可能和注册码有关系。  查看输入表，点击View——&gt;Open subviews——&gt;Imports，结果如下：   解释：函数wsprintf [1]  ()将一系列的字符和数值输入到缓冲区。 ​            GetVolumeInformationA获取磁盘卷标 ​            GetDlgItemT...</div></div></div></a><a class="pagination-related" href="/%E7%AE%80%E5%8E%86/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AE%80%E5%8E%86/" title="逆向工程师简历"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">逆向工程师简历</div></div><div class="info-2"><div class="info-item-1">逆向工程师简历写作指南必备信息 个人概况：姓名&#x2F;联系方式&#x2F;城市（可接受远程或出差范围）、到岗时间。 技术摘要：3-5 行概述，突出逆向方向（恶意代码分析&#x2F;游戏反作弊&#x2F;漏洞挖掘&#x2F;移动安全&#x2F;协议逆向等）与年限、核心工具栈。 关键词标签：IDA&#x2F;Ghidra&#x2F;x64dbg&#x2F;WinDbg&#x2F;Frida&#x2F;Unpack&#x2F;Hook&#x2F;Kernel&#x2F;PE&#x2F;ELF&#x2F;加壳&#x2F;脱壳&#x2F;补丁&#x2F;静态+动态分析。  能力版块 语言与平台：C&#x2F;C++、Python、汇编（x86&#x2F;x64&#x2F;ARM&#x2F;Thumb），熟悉 Windows&#x2F;Linux&#x2F;Android&#x2F;iOS 的可执行文件格式与调用约定。 调试与分析：IDA&#x2F;Ghidra&#x2F;Hex-Rays、x64dbg&#x2F;WinDbg&#x2F;LLDB、Process Monitor&#x2F...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#ChatGPT-%E8%AF%B4%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">ChatGPT 说：</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#32%E4%BD%8D%E7%A8%8B%E5%BA%8F%EF%BC%88x86%EF%BC%89%E4%BC%A0%E5%8F%82%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">32位程序（x86）传参：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BD%BF%E7%94%A8%E6%A0%88%E4%BC%A0%E5%8F%82"><span class="toc-number"></span> <span class="toc-text">1. 使用栈传参</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-number"></span> <span class="toc-text">2. 函数返回值</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#64%E4%BD%8D%E7%A8%8B%E5%BA%8F%EF%BC%88x86-64%EF%BC%89%E4%BC%A0%E5%8F%82%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">64位程序（x86-64）传参：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BD%BF%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8%E4%BC%A0%E5%8F%82"><span class="toc-number"></span> <span class="toc-text">1. 使用寄存器传参</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC-1"><span class="toc-number"></span> <span class="toc-text">2. 函数返回值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E6%A0%88%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number"></span> <span class="toc-text">3. 栈的使用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">主要区别总结：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90%E5%AF%B9%E6%AF%94%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">例子对比：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#32%E4%BD%8D%E4%BC%A0%E5%8F%82%EF%BC%88x86%EF%BC%89%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">32位传参（x86）：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#64%E4%BD%8D%E4%BC%A0%E5%8F%82%EF%BC%88x86-64%EF%BC%89%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">64位传参（x86-64）：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">总结：</span></a></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

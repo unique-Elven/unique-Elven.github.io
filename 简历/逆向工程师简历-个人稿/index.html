@@ -1,0 +1,637 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>逆向工程师简历-个人稿 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="逆向工程师简历（基于现有笔记） 请按真实情况填入姓名 &#x2F; 联系方式 &#x2F; 城市 &#x2F; 到岗时间，再做删改。  概述 方向：Windows 平台逆向与调试，课程&#x2F;练习型经验（滴水逆向破解实战班第一、二期）。 核心技能：x86&#x2F;x64 汇编阅读，IDA&#x2F;OllyDbg&#x2F;x64dbg 静态+动态分析，补丁与脱壳基础，DLL 注入与 JIT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="逆向工程师简历-个人稿">
+<meta property="og:url" content="https://blog.oisec.cn/%E7%AE%80%E5%8E%86/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AE%80%E5%8E%86-%E4%B8%AA%E4%BA%BA%E7%A8%BF/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="逆向工程师简历（基于现有笔记） 请按真实情况填入姓名 &#x2F; 联系方式 &#x2F; 城市 &#x2F; 到岗时间，再做删改。  概述 方向：Windows 平台逆向与调试，课程&#x2F;练习型经验（滴水逆向破解实战班第一、二期）。 核心技能：x86&#x2F;x64 汇编阅读，IDA&#x2F;OllyDbg&#x2F;x64dbg 静态+动态分析，补丁与脱壳基础，DLL 注入与 JIT">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/img/toux.jpg">
+<meta property="article:published_time" content="2026-05-27T16:15:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:50.374Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/img/toux.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "逆向工程师简历-个人稿",
+  "url": "https://blog.oisec.cn/%E7%AE%80%E5%8E%86/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AE%80%E5%8E%86-%E4%B8%AA%E4%BA%BA%E7%A8%BF/",
+  "image": "https://blog.oisec.cn/img/toux.jpg",
+  "datePublished": "2026-05-27T16:15:48.000Z",
+  "dateModified": "2026-05-27T17:42:50.374Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E7%AE%80%E5%8E%86/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AE%80%E5%8E%86-%E4%B8%AA%E4%BA%BA%E7%A8%BF/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '逆向工程师简历-个人稿',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/753197.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">逆向工程师简历-个人稿</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">逆向工程师简历-个人稿</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T16:15:48.000Z" title="发表于 2026-05-28 00:15:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:50.374Z" title="更新于 2026-05-28 01:42:50">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AE%80%E5%8E%86/">简历</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="逆向工程师简历（基于现有笔记）"><a href="#逆向工程师简历（基于现有笔记）" class="headerlink" title="逆向工程师简历（基于现有笔记）"></a>逆向工程师简历（基于现有笔记）</h1><blockquote>
+<p>请按真实情况填入姓名 &#x2F; 联系方式 &#x2F; 城市 &#x2F; 到岗时间，再做删改。</p>
+</blockquote>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li>方向：Windows 平台逆向与调试，课程&#x2F;练习型经验（滴水逆向破解实战班第一、二期）。</li>
+<li>核心技能：x86&#x2F;x64 汇编阅读，IDA&#x2F;OllyDbg&#x2F;x64dbg 静态+动态分析，补丁与脱壳基础，DLL 注入与 JIT 调试配置。</li>
+<li>语言&#x2F;工具：C&#x2F;C++、易语言、Visual Studio，IDA 6.8&#x2F;7.x、OllyDbg(StrongOD)、x64dbg、CFF Explorer、dumpbin&#x2F;depends。</li>
+</ul>
+<h2 id="技能要点"><a href="#技能要点" class="headerlink" title="技能要点"></a>技能要点</h2><ul>
+<li>逆向分析：熟悉注册机&#x2F;校验流程定位（字符串搜索、交叉引用、条件&#x2F;内存断点），JCC&#x2F;JMP 补丁，ASLR&#x2F;TLS 回调定位与对抗。</li>
+<li>动态调试：掌握 OllyDbg&#x2F;x64dbg 的条件&#x2F;硬件&#x2F;内存断点、栈平衡检查，JIT 调试配置（AeDebug），多线程断点处理。</li>
+<li>注入与对抗：使用 VirtualAlloc&#x2F;VirtualAllocEx+WriteProcessMemory 远程线程注入 DLL；对常见反调试（定时器、VMProtect、反虚拟机）有课堂实操。</li>
+<li>工具脚本：能为 IDA 修复 JMPOUT、sp-analysis failed 等伪控制流；了解 FLIRT 签名生成流程（pcf&#x2F;sigmake）并在 IDA&#x2F;OD 侧加载 MAP&#x2F;SIG。</li>
+<li>插件入门：完成 x64dbg&#x2F;OllyDbg 插件编写练习（菜单项、记录 JCC 指令、事件回调导出）。</li>
+<li>语言基础：C&#x2F;C++ 与汇编调用约定理解；易语言用于小工具&#x2F;界面（枚举进程&#x2F;模块、注入器）。</li>
+</ul>
+<h2 id="项目与练习（课程-x2F-自研）"><a href="#项目与练习（课程-x2F-自研）" class="headerlink" title="项目与练习（课程&#x2F;自研）"></a>项目与练习（课程&#x2F;自研）</h2><ul>
+<li><p>Windows 注册校验逆向与补丁  </p>
+<ul>
+<li>工具：IDA、OllyDbg、StrongOD、CFF Explorer  </li>
+<li>动作：通过字符串&#x2F;交叉引用锁定 MessageBox 校验点，设置条件断点快速命中关键 JCC，手工修改跳转并在 IDA 生成补丁；调整 DLLCharacteristics 关闭 ASLR 便于定位。  </li>
+<li>结果：生成可运行补丁文件，完成校验绕过流程文档。</li>
+</ul>
+</li>
+<li><p>DLL 注入与 JIT 调试实践  </p>
+<ul>
+<li>工具：易语言、WriteProcessMemory&#x2F;VirtualAllocEx&#x2F;RemoteThread、OD JIT 设置  </li>
+<li>动作：编写进程枚举+模块查看 UI，支持选择目标进程注入 DLL；配置 AeDebug 让 OD 接管异常，验证注入后模块可被调试与导出调用。  </li>
+<li>结果：可稳定注入&#x2F;卸载测试 DLL，掌握 JIT 调试路径。</li>
+</ul>
+</li>
+<li><p>IDA 伪控制流修复与签名制作  </p>
+<ul>
+<li>工具：IDA 6.8&#x2F;7.x、flair 工具链（pcf&#x2F;sigmake）、dumpbin&#x2F;depends  </li>
+<li>动作：修复 JMPOUT、FakeRetValue、sp-analysis failed 等问题，手工合并函数；为 VS&#x2F;易语言库生成 SIG&#x2F;MAP 并在 IDA&#x2F;OD 侧加载，补全函数名。  </li>
+<li>结果：提升反编译可读性，减少误判的栈&#x2F;返回值。</li>
+</ul>
+</li>
+<li><p>PWN 课程练习（Linux 32&#x2F;64 位）  </p>
+<ul>
+<li>范围：栈溢出基础、Canary&#x2F;NX&#x2F;PIE 对抗、远程调试、格式化字符串、stack migration、ret2text&#x2F;ret2libc&#x2F;ret2syscall、手写 shellcode、pwntools 入门。  </li>
+<li>动作：完成多节实验（远程 PWN、IDA 远程调试、libc 版本切换、页对齐绕过 PIE、栈迁移等），整理实验笔记与利用链。  </li>
+<li>结果：能复现典型栈溢出利用流程，并根据保护策略调整利用思路。</li>
+</ul>
+</li>
+<li><p>CTF 逆向&#x2F;CrackMe 练习  </p>
+<ul>
+<li>BUUCTF 逆向题：完成 easyre&#x2F;level1&#x2F;xor&#x2F;login&#x2F;UPX 脱壳（level2）、Maze、Cr0ssfu、rome 等题目，输出 docx 版 WP。  </li>
+<li>CrackMe：完成 abexcm5 write-up（NEW Crack ME NOTE），用 OD&#x2F;IDA&#x2F;补丁流程记录关键跳转与校验逻辑。  </li>
+<li>结果：熟悉 CTF 逆向题的字符串&#x2F;流程定位、脱壳补丁与脚本化求解步骤。</li>
+</ul>
+</li>
+<li><p>脱壳实战（ketu.md 系列）  </p>
+<ul>
+<li>场景：手工脱壳与 IAT 修复，涵盖 UPX、MEW、exPressor、FSG、WinUpacx 等压缩&#x2F;加壳样本。  </li>
+<li>动作：PEiD&#x2F;Exeinfo 初探，OD 结合栈平衡&#x2F;硬件断点定位 OEP，插件 dump；LordPE 清理节表与修复 BaseOfCode，ImportREC 自动搜索并修正 IAT（裁剪非法 thunks、调整 RVA&#x2F;Size）；根据保护情况选择是否重建导入表。  </li>
+<li>结果：可从常见壳中定位 OEP 并修复可执行文件至可调试&#x2F;可运行状态，为后续静态分析提供干净样本。</li>
+</ul>
+</li>
+<li><p>x64dbg&#x2F;OllyDbg 插件练习  </p>
+<ul>
+<li>工具：x64dbg&#x2F;OllyDbg SDK、Visual Studio、C&#x2F;C++  </li>
+<li>动作：实现插件导出 ODBG_Plugindata&#x2F;Plugininit&#x2F;Menu&#x2F;Action，添加主菜单项，记录&#x2F;暂停 JCC 指令；练习调用 x64dbg API 做简单静态&#x2F;动态信息收集。  </li>
+<li>结果：具备定制调试器插件的入门能力，可扩展常用调试动作。</li>
+</ul>
+</li>
+</ul>
+<h2 id="学习经历"><a href="#学习经历" class="headerlink" title="学习经历"></a>学习经历</h2><ul>
+<li>滴水逆向破解实战班（第一期、第二期）—— 完成课程笔记与实操（注册机破解、脱壳对抗、DLL 注入、插件开发、VMProtect 示例恢复）。</li>
+</ul>
+<h2 id="个人技能速记"><a href="#个人技能速记" class="headerlink" title="个人技能速记"></a>个人技能速记</h2><ul>
+<li>技术：Windows 逆向调试（x86&#x2F;x64）、补丁&#x2F;脱壳与 IAT 修复、CTF 逆向与 PWN 栈溢出利用、协议&#x2F;校验逻辑还原、插件二次开发入门。</li>
+<li>工具：IDA 6.8&#x2F;7.x、OllyDbg&#x2F;StrongOD、x64dbg、LordPE、ImportREC、PEiD&#x2F;Exeinfo、CFF Explorer、VS、Python&#x2F;pwntools。</li>
+<li>兴趣：逆向对抗与壳分析、CTF 逆向&#x2F;PWN、自动化脚本化调试、插件&#x2F;小工具开发。</li>
+</ul>
+<h2 id="期望与补充"><a href="#期望与补充" class="headerlink" title="期望与补充"></a>期望与补充</h2><ul>
+<li>期望岗位：逆向工程师&#x2F;安全研究实习或初级岗位，Windows 桌面方向优先。  </li>
+<li>可提供的材料：课程笔记摘要、示例补丁&#x2F;注入器源码（自研练习）。  </li>
+<li>待补充：真实项目&#x2F;漏洞案例可按岗位要求补充；若无公开成果，建议附上代码仓库或实验报告。</li>
+</ul>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/toux.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E9%80%86%E5%90%91/Win32%E7%BC%96%E7%A8%8B/%E8%BF%9C%E7%A8%8B%E7%BA%BF%E7%A8%8B/" title="远程线程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">远程线程</div></div><div class="info-2"><div class="info-item-1">进程A(MessageBoxA) 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667#include &lt;Windows.h&gt;#include &lt;stdio.h&gt;#include &lt;string.h&gt;/*int main()&#123;TCHAR stzTitle[] = TEXT(&quot;标题&quot;);TCHAR stzContent[] = TEXT(&quot;欢迎&quot;);MessageBox(0,stzContent,stzTitle,MB_OK);return 0;&#125;*/              //远程线程void Fun()&#123;for(int i=0 ;i&lt;10;i++)&#123;Sleep(1000);printf(&quot;Fun()......\n&quot;);&#125;&#12...</div></div></div></a><a class="pagination-related" href="/%E9%80%86%E5%90%91/%E8%84%B1%E5%A3%B3%E7%AF%87/ketu/" title="ketu"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">ketu</div></div><div class="info-2"><div class="info-item-1"> title: 程序脱壳篇date: 1779898488000tags: [‘程序壳’,’程序脱壳篇’]categories: [‘程序壳’,’程序脱壳篇’]excerpt: 壳是最早出现的专用加密软件技术！程序的壳可以是开发者未来保护自己的代码不被借鉴、破解、逆向；也可用来病毒、木马、蠕虫隐藏恶意代码，不被杀毒如软件查杀！所以我们每次逆向破解的时候遇到带壳程序会非常头疼，这篇文章主要是有关程序脱壳的技术的讲解，内容详细，深入学习者一定不能错过，带你深入研究程序脱壳技术，一定有所收获！  点击文章标题进入阅读模式！ 尊重知识产权，引用注明出处！谢谢合作！有问题请在B站私信！链接欢迎大家关注我的Bilibli感谢一键三连哦~ 一· 什么是壳？1 . 初步认识壳历史：壳是最早出现的专用加密软件技术！ 作用：可以是开发者未来保护自己的代码不被借鉴、破解、逆向；也可用来病毒、木马、蠕虫隐藏恶意代码，不被杀毒如软件查杀！ 预习：vmp纯虚拟机壳，目前公认认为公认最强。 温馨提示：脱壳上瘾，可不要随意传播哦! 2 . 壳的执行过程加壳压缩，壳先执行，还原源程序，执行源程序 3 . OEP(...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AE%80%E5%8E%86%EF%BC%88%E5%9F%BA%E4%BA%8E%E7%8E%B0%E6%9C%89%E7%AC%94%E8%AE%B0%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">逆向工程师简历（基于现有笔记）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E8%83%BD%E8%A6%81%E7%82%B9"><span class="toc-number">1.2.</span> <span class="toc-text">技能要点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%8E%E7%BB%83%E4%B9%A0%EF%BC%88%E8%AF%BE%E7%A8%8B-x2F-%E8%87%AA%E7%A0%94%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">项目与练习（课程&#x2F;自研）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%BB%8F%E5%8E%86"><span class="toc-number">1.4.</span> <span class="toc-text">学习经历</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E6%8A%80%E8%83%BD%E9%80%9F%E8%AE%B0"><span class="toc-number">1.5.</span> <span class="toc-text">个人技能速记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%9F%E6%9C%9B%E4%B8%8E%E8%A1%A5%E5%85%85"><span class="toc-number">1.6.</span> <span class="toc-text">期望与补充</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

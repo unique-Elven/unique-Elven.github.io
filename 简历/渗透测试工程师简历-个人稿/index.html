@@ -1,0 +1,628 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>渗透测试工程师简历-个人稿 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="渗透测试工程师简历（基于现有笔记） 请按真实情况填入姓名 &#x2F; 联系方式 &#x2F; 城市 &#x2F; 到岗时间，并对项目细节&#x2F;数据做真实补充。  概述 方向：渗透测试与红队实操，侧重信息收集、弱口令&#x2F;爆破、漏洞验证与提权、自动化批量刷洞。 经验来源：自建笔记与靶场实战（HackMyVM&#x2F;OSCP 风格、VulnHub、暗月&#x2F;红日等），CTF 逆">
+<meta property="og:type" content="article">
+<meta property="og:title" content="渗透测试工程师简历-个人稿">
+<meta property="og:url" content="https://blog.oisec.cn/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AE%80%E5%8E%86-%E4%B8%AA%E4%BA%BA%E7%A8%BF/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="渗透测试工程师简历（基于现有笔记） 请按真实情况填入姓名 &#x2F; 联系方式 &#x2F; 城市 &#x2F; 到岗时间，并对项目细节&#x2F;数据做真实补充。  概述 方向：渗透测试与红队实操，侧重信息收集、弱口令&#x2F;爆破、漏洞验证与提权、自动化批量刷洞。 经验来源：自建笔记与靶场实战（HackMyVM&#x2F;OSCP 风格、VulnHub、暗月&#x2F;红日等），CTF 逆">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/img/toux.jpg">
+<meta property="article:published_time" content="2026-05-27T16:20:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:50.293Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/img/toux.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "渗透测试工程师简历-个人稿",
+  "url": "https://blog.oisec.cn/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AE%80%E5%8E%86-%E4%B8%AA%E4%BA%BA%E7%A8%BF/",
+  "image": "https://blog.oisec.cn/img/toux.jpg",
+  "datePublished": "2026-05-27T16:20:48.000Z",
+  "dateModified": "2026-05-27T17:42:50.293Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AE%80%E5%8E%86-%E4%B8%AA%E4%BA%BA%E7%A8%BF/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '渗透测试工程师简历-个人稿',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/753197.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">渗透测试工程师简历-个人稿</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">渗透测试工程师简历-个人稿</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T16:20:48.000Z" title="发表于 2026-05-28 00:20:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:50.293Z" title="更新于 2026-05-28 01:42:50">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AE%80%E5%8E%86/">简历</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="渗透测试工程师简历（基于现有笔记）"><a href="#渗透测试工程师简历（基于现有笔记）" class="headerlink" title="渗透测试工程师简历（基于现有笔记）"></a>渗透测试工程师简历（基于现有笔记）</h1><blockquote>
+<p>请按真实情况填入姓名 &#x2F; 联系方式 &#x2F; 城市 &#x2F; 到岗时间，并对项目细节&#x2F;数据做真实补充。</p>
+</blockquote>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li>方向：渗透测试与红队实操，侧重信息收集、弱口令&#x2F;爆破、漏洞验证与提权、自动化批量刷洞。</li>
+<li>经验来源：自建笔记与靶场实战（HackMyVM&#x2F;OSCP 风格、VulnHub、暗月&#x2F;红日等），CTF 逆向&#x2F;PWN 辅助。</li>
+</ul>
+<h2 id="技能与工具"><a href="#技能与工具" class="headerlink" title="技能与工具"></a>技能与工具</h2><ul>
+<li>技术：渗透全流程（资产&#x2F;子域&#x2F;端口&#x2F;目录、CMS 识别、漏洞扫描、弱口令爆破、Web&#x2F;系统提权、后渗透持久化）、常见中间件&#x2F;框架漏洞验证，Windows&#x2F;Linux 提权路径（SUID&#x2F;库劫持&#x2F;配置错误&#x2F;溢出绕 ASLR）。</li>
+<li>工具：nmap、gobuster&#x2F;dirbuster、Sublist3r&#x2F;ksudomain&#x2F;InsightScan&#x2F;ARL、hydra&#x2F;medusa&#x2F;cheetah、searchsploit、fofa_view+rad+xray、goby、Cobalt Strike、Metasploit、mimikatz、john&#x2F;unshadow、proxifier、pwntools。</li>
+<li>体系化笔记：信息收集（CDN 旁站、主机发现、子域&#x2F;WHOIS、目录&#x2F;敏感信息、移动端）、穷举与弱口令（协议端口、验证码识别爆破）、后渗透 TIPS（hashdump、kiwi&#x2F;mimikatz、RDP 启用、键盘记录）。</li>
+</ul>
+<h2 id="项目与实操"><a href="#项目与实操" class="headerlink" title="项目与实操"></a>项目与实操</h2><ul>
+<li><p>靶场实战（HackMyVM&#x2F;OSCP + VulnHub&#x2F;暗月&#x2F;红日 + 域场景）  </p>
+<ul>
+<li>技术栈：全端口扫描&#x2F;指纹枚举 + 目录&#x2F;子域扫描，searchsploit&#x2F;POC 验证；Web 利用（上传&#x2F;LFI&#x2F;SQLi&#x2F;RCE）、弱口令&#x2F;爆破；Linux SUID&#x2F;库劫持&#x2F;cron&#x2F;配置错配提权，Windows 域场景下票据滥用、权限提升、横向移动。  </li>
+<li>动作（项目描述）：  <ul>
+<li>单机 boot2root：nmap 全端口 + 指纹、目录&#x2F;子域扫描 → searchsploit&#x2F;POC 验证 → Web 利用（上传&#x2F;LFI&#x2F;SQLi&#x2F;RCE）、弱口令爆破 → Linux 提权（SUID&#x2F;库劫持&#x2F;cron&#x2F;配置错配）。  </li>
+<li>域&#x2F;内网题：收集凭证与票据，滥用域权限，横向移动拿下域控&#x2F;高权节点。  </li>
+<li>代表性链路：ApPHP MicroBlog RCE→缓冲区溢出（gdb 调试）、phtml 上传、LFI、passwd&#x2F;写入提权、sudo -l 滥用、Hydra 爆破。</li>
+</ul>
+</li>
+<li>结果：多台靶机拿到 root&#x2F;域管，沉淀提权&#x2F;横移操作手册和利用链，形成常见提权&#x2F;横移备忘（SUID、Cron、弱口令、配置劫持、脚本提权）。</li>
+</ul>
+</li>
+<li><p>批量刷洞与自动化  </p>
+<ul>
+<li>流程：fofa_view 资产 → rad 爬虫 → xray 代理扫描（自定义 POC），或 goby 红队版批量导入 POC。  </li>
+<li>结果：形成可复用的“一键资产 + 被动&#x2F;主动扫描”流水线，适合外网快速摸排。</li>
+</ul>
+</li>
+<li><p>脱壳与逆向&#x2F;PWN 辅助（CTF）  </p>
+<ul>
+<li>价值：用于样本分析&#x2F;漏洞复现的逆向能力（UPX&#x2F;MEW&#x2F;exPressor&#x2F;FSG&#x2F;WinUpacx 脱壳，IAT 修复；栈溢出&#x2F;Canary&#x2F;PIE 绕过、pwntools 利用）。  </li>
+<li>结果：可在拿到可疑样本或自编组件时快速静态&#x2F;动态分析。</li>
+</ul>
+</li>
+<li><p>护网与重保值守  </p>
+<ul>
+<li>国家级护网行动：蓝队初级成员，负责资产梳理、风险排查、入侵检测与溯源分析。  </li>
+<li>天津银行重保：系统安全值守，流量审计、日志分析、横向渗透排查与应急响应。  </li>
+<li>天津市护网攻防演练：为中信天津金融科技服务有限公司制定防护策略与应急处置演练，模拟攻击应对。</li>
+</ul>
+</li>
+<li><p>政务平台攻防与 CNVD 提交  </p>
+<ul>
+<li>市级政务平台攻防（天津市大数据管理中心、天津市医疗保障局）：红队攻击方，渗透与漏洞利用验证防护能力，输出风险评估与加固建议。  </li>
+<li>CNVD 归档漏洞：  <ul>
+<li>CNVD-2025-08766：天津市城市建设档案馆系统 SQL 注入，敏感数据库泄露风险。  </li>
+<li>CNVD-2025-08843：天津市肿瘤医院网站任意文件读取，可读取配置与敏感日志。  </li>
+<li>CNVD-2024-36245：天津市劳动经济学校系统信息泄露，超 1000 条学生隐私数据暴露。  </li>
+<li>CNVD-C-2024-16669：绍兴平正评估系统 SQL 注入，可构造 Payload 获取后台数据。</li>
+</ul>
+</li>
+<li>技术栈与方法：Burp Suite 抓包&#x2F;调试，SQLmap 自动化注入识别，dirsearch&#x2F;OneForAll&#x2F;FOFA 资产探测，手工路径穿越&#x2F;LFI 验证，按 CNVD 模板撰写漏洞分析报告。  </li>
+<li>结果：所有提交均通过 CNVD 审核公开，沉淀了信息收集、POC 构造、逻辑绕过、数据审计的实战经验，并熟悉国家级漏洞平台提交流程。</li>
+</ul>
+</li>
+<li><p>网络架构与内网穿透（PVE 私有云，负责人，2024.07-2024.08）  </p>
+<ul>
+<li>技术：PVE 虚拟化、OpenWrt&#x2F;iStoreOS 旁路网关、Docker、DDNS、WireGuard&#x2F;Tailscale、Nginx 反代。  </li>
+<li>动作：设计隔离的虚拟化网络，云端 WireGuard 组网实现异地 VLAN 共享；Nginx 反代暴露本地站点&#x2F;NAS&#x2F;NVR；部署“流影”流量回溯平台+DPI，对内网异常连接实时告警。  </li>
+<li>价值：熟悉隧道&#x2F;反代的安全暴露、访问控制与流量监测，可将私有化服务安全上线并持续审计。</li>
+</ul>
+</li>
+</ul>
+<h2 id="个人技能速记（渗透向）"><a href="#个人技能速记（渗透向）" class="headerlink" title="个人技能速记（渗透向）"></a>个人技能速记（渗透向）</h2><ul>
+<li>技术：资产测绘与信息收集、弱口令&#x2F;爆破、Web 漏洞验证、系统提权、后渗透维持&#x2F;取证、PWN&#x2F;逆向辅助。  </li>
+<li>工具：nmap、gobuster&#x2F;dirbuster、Sublist3r&#x2F;ksudomain&#x2F;ARL、hydra&#x2F;medusa、searchsploit、rad+xray&#x2F;goby、CS&#x2F;MSF、mimikatz、john、proxifier。  </li>
+<li>兴趣：自动化刷洞、靶场复现与提权技巧沉淀、红队链路编排。</li>
+</ul>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/toux.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E7%AE%80%E5%8E%86/PWN%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/" title="PWN面试问题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">PWN面试问题</div></div><div class="info-2"><div class="info-item-1">那有没有pwn的面试题总结？ 有的，而且 PWN 面试其实非常有套路。很多安全公司问的题目都集中在 栈 &#x2F; 堆 &#x2F; libc &#x2F; 利用思路这几块。我给你整理一份 《PWN 面试高频 40 题 + 简洁回答思路》，基本覆盖面试常问内容。 我知道你平时也用 pwntools 做题，所以很多回答我按 CTF + 面试视角来讲。  一、PWN基础（10题）1 什么是缓冲区溢出面试回答：  缓冲区溢出是由于程序没有对输入长度进行检查，导致数据覆盖相邻内存区域，从而改变程序执行流程。   2 栈溢出原理结构： buffersaved ebpreturn address 回答：  当输入数据超过 buffer 长度时会覆盖返回地址，从而控制程序执行流程。   3 什么是 shellcode回答：  shellcode 是一段用于获取 shell 或执行恶意操作的机器代码，通常在漏洞利用中注入执行。   4 什么是 ret2libc回答：  ret2libc 是通过覆盖返回地址调用 libc 中已有函数，比如 system(“&#x2F;bin&#x2F;sh”) ...</div></div></div></a><a class="pagination-related" href="/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/" title="后渗透TIPS"><img class="cover" src="/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/%E5%90%8E%E6%B8%97%E9%80%8FTIPS/Pasted%20image%2020240318142344.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">后渗透TIPS</div></div><div class="info-2"><div class="info-item-1">linux密码爆破john test.txt –format&#x3D;crypt  john爆破出现Using default input encoding: UTF-8 No password hashes loaded (see FAQ) 我以为是  在Vim中直接进行转换文件编码,比如将一个文件转换成utf-8格式:set fileencoding=utf-8查看文件格式:set fileformat?设置文件格式为 unix:set fileformat=unix  结果不是 出现这个提示不是说明破解失败了，而是这个hash以前被你破解过，可以使用以下命令查看破解出的密码是什么。使用下面这条命令即可解决john –show password.txt msf永恒之蓝命令执行后：hashdump得到的值拿到最后32位字母数字组合可以在下图,注意类型是NTLM  unshadow命令基本上会结合&#x2F;etc&#x2F;passwd的数据和&#x2F;etc&#x2F;shadow的数据，创建1个含有用户名和密码详细信息的文件unshadow &#x2F;etc&#x2F...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AE%80%E5%8E%86%EF%BC%88%E5%9F%BA%E4%BA%8E%E7%8E%B0%E6%9C%89%E7%AC%94%E8%AE%B0%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">渗透测试工程师简历（基于现有笔记）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E8%83%BD%E4%B8%8E%E5%B7%A5%E5%85%B7"><span class="toc-number">1.2.</span> <span class="toc-text">技能与工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%8E%E5%AE%9E%E6%93%8D"><span class="toc-number">1.3.</span> <span class="toc-text">项目与实操</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E6%8A%80%E8%83%BD%E9%80%9F%E8%AE%B0%EF%BC%88%E6%B8%97%E9%80%8F%E5%90%91%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">个人技能速记（渗透向）</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

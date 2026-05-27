@@ -1,0 +1,661 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>16第16节.Linux延迟绑定与安全防护机制 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Linux延迟绑定与安全防护机制2021-09-29   摘抄网址在上时间部分 readelf https:&#x2F;&#x2F;wangchujiang.com&#x2F;linux-command&#x2F;c&#x2F;readelf.html 0.ELF文件格式0-1.概述ELF（Executable and Linkable Format）文件是Linux环境中的一种二进制可执行文件。 elf的基本信息存在于elf的头部信息中，这些信">
+<meta property="og:type" content="article">
+<meta property="og:title" content="16第16节.Linux延迟绑定与安全防护机制">
+<meta property="og:url" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="Linux延迟绑定与安全防护机制2021-09-29   摘抄网址在上时间部分 readelf https:&#x2F;&#x2F;wangchujiang.com&#x2F;linux-command&#x2F;c&#x2F;readelf.html 0.ELF文件格式0-1.概述ELF（Executable and Linkable Format）文件是Linux环境中的一种二进制可执行文件。 elf的基本信息存在于elf的头部信息中，这些信">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps212.jpg">
+<meta property="article:published_time" content="2026-05-27T16:26:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:50.191Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps212.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "16第16节.Linux延迟绑定与安全防护机制",
+  "url": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/",
+  "image": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps212.jpg",
+  "datePublished": "2026-05-27T16:26:48.000Z",
+  "dateModified": "2026-05-27T17:42:50.191Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '16第16节.Linux延迟绑定与安全防护机制',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps212.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">16第16节.Linux延迟绑定与安全防护机制</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">16第16节.Linux延迟绑定与安全防护机制</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T16:26:48.000Z" title="发表于 2026-05-28 00:26:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:50.191Z" title="更新于 2026-05-28 01:42:50">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/PWN/">PWN</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>Linux延迟绑定与安全防护机制</strong><a target="_blank" rel="noopener" href="https://detlfy.github.io/2021/09/29/Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/">2021-09-29</a></p>
+<p> </p>
+<p>摘抄网址在上时间部分</p>
+<p>readelf</p>
+<p><a target="_blank" rel="noopener" href="https://wangchujiang.com/linux-command/c/readelf.html">https://wangchujiang.com/linux-command/c/readelf.html</a></p>
+<h1 id="0-ELF文件格式"><a href="#0-ELF文件格式" class="headerlink" title="0.ELF文件格式"></a>0.ELF文件格式</h1><h2 id="0-1-概述"><a href="#0-1-概述" class="headerlink" title="0-1.概述"></a>0-1.概述</h2><p>ELF（Executable and Linkable Format）文件是Linux环境中的一种二进制可执行文件。</p>
+<p>elf的基本信息存在于elf的头部信息中，这些信息包括指令的运行框架、程序入口等，可以通过 <code>readelf -h &lt;elf_name&gt; </code>来查看头部信息。</p>
+<p>elf文件中包含许多节（section），各个节中存放不同的数据，这些节的信息存放在节头表中，可用 <code>readelf -S &lt;file&gt;</code> 查看，主要包括：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps212.jpg" alt="wps212"> </p>
+<h2 id="0-2-elf文件被加载到内存中的布局"><a href="#0-2-elf文件被加载到内存中的布局" class="headerlink" title="0-2.elf文件被加载到内存中的布局"></a>0-2.elf文件被加载到内存中的布局</h2><p>elf文件在加载进内存时，elf文件的节会被映射到内存中的<strong>段（segment），这一映射过程遵循的机制是根据</strong>各个节的权限<strong>来进行映射的。</strong>可读可写的节被映射入一个段，只读的节被映射入一个一个段。**</p>
+<p>如下图所示：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps213.jpg" alt="wps213"> </p>
+<p><strong>1.编译与链接</strong></p>
+<p>1-1.动态链接库</p>
+<p>一般来说，在程序的开发过程中都会用到一些系统函数。这些系统函数不需要我们实现，只需调用即可，而<strong>存放这些函数的库文件就是动态链接库。</strong></p>
+<p><strong><em>通常情况下，我们在pwn题接触到的动态链接库就是libc.so文件。</em></strong></p>
+<p>1-2.静态编译与动态编译</p>
+<p>一个程序在运行的过程中可能会调用许许多多的库函数，这些库函数在一次运行中无法保证被全部调用。</p>
+<p><strong>静态编译</strong>的思路是将所有可能运行到的库函数一同编译到可执行文件中。</p>
+<p>这一方式的<strong>优点是在程序运行中不需要依赖动态链接库。</strong>适用的场合是本地编译的程序需要的动态链接库版本比较特殊，在别的地方运行可能会因为对方的动态链接库版本不一样而出错。</p>
+<p><strong>缺点是编译后的程序体积大、编译速度慢。</strong></p>
+<p><strong>动态编译</strong>的思路是遇到需要调用库函数的时候再去动态链接库中寻找。**<em>（逢山开路、遇水架桥）</em>**</p>
+<p>其<strong>优点是一方面缩小了可执行文件本身的体积，另一方面是加快了编译的速度，节省了系统资源。</strong></p>
+<p><strong>缺点一是即便是很简单的程序，只要用到了链接库中的命令，也需要一个相对庞大的链接库；二是如果其它计算机上没有安装对应的运行库，则用动态编译的可执行文件就无法运行。</strong></p>
+<p><strong>2.延迟绑定</strong></p>
+<p>got表全称Global Offset Table，即全局 偏移量表。</p>
+<p>在程序开始运行时，got表并不保存库函数的地址，只有<strong>在第一次调用后</strong>，程序才将这一地址保存在got表中。</p>
+<p><strong>GOT（Global Offset Table，全局偏移表）</strong>是数据段用于地址无关码的Linux ELF文件中确定全局变量和外部函数地址的表。ELF中有.got和.got.plt两个GOT表。.got表用于全局变量的引用地址，.got.plt用于保存函数引用的地址。</p>
+<p><strong>PLT（Procedure Linkage Table，程序链接表）</strong>是Linux ELF文件中用于延迟绑定的表。无论是第几次调用外部函数，程序真正调用的其实是plt表。**<em>plt表其实是由一段段汇编指令构成的。</em>**</p>
+<p>在第一次调用外部函数时，plt表首先会跳到相应的got表项中。</p>
+<p>由于没有被调用过，此时的got表存储的不是目标函数的地址，而是plt表中的一段指令的地址，其作用就是准备一些参数，进行动态解析。</p>
+<p>跳回到plt表后，plt表又会跳转回plt的表头，表头内容就是调用动态解析函数，将目标函数地址存放入got表中。</p>
+<p>如下图所示：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps214.jpg" alt="wps214"> </p>
+<p>之后第二次及以上的调用后，程序已经完成了延迟绑定，got表中已经存储了目标函数地址，直接跳转即可。</p>
+<p>如下图所示：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps215.jpg" alt="wps215"> </p>
+<p> </p>
+<p> </p>
+<p>第一次：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps216.jpg" alt="wps216"> </p>
+<p><strong>3.保护机制</strong></p>
+<p>Linux中常见的保护机制有<strong>CANARY、NX、ASLR、PIE、RELRO</strong>。</p>
+<p><strong><em>我们知道，栈的作用是存储函数调用相关信息以及函数的局部变量。这些局部变量通常为数组或着输入的缓冲区（buf）。而函数调用相关的信息主要是返回地址和栈底指针（rbp）。</em></strong></p>
+<p> CANARYcanary中文翻译为金丝雀，源于科技不发达时，矿工会在下井工作时带一只金丝雀，用于判断地下环境有没有煤气之类的毒气泄漏。若金丝雀没事，则大家继续干活；若金丝雀死了，大家赶紧逃跑。在Linux中，canary的作用如同它引用的一样，用来判断程序的执行环境，主要是针对检测栈溢出。canary是一个开头字节为\x00的一段长度为八字节的随机数，这个随机数本体存放于fs段偏移为0x28的区域。在每次函数调用中，程序都会将这段随机数存放于栈底，每次运行结束返回时，都会将这一随机数与他的本体进行比对。（如果这个值被改变，意味着发生了栈溢出，程序直接退出，程序直接退出；若没改变则程序继续执行。）由于canary开头字节为\x00，所以在通常情况下不能被打印出来。（通常情况下，程序如果开启了canary保护，大概率说明此题不是栈溢出题目。但也要具体情况具体分析。）绕过的主要方法是修改canary或者泄露canary。</p>
+<p> NXNX即Not Executable，开启这个保护后，程序中的栈、堆、bss段等可写的段就不可以执行了。这意味着如果开启了NX保护，通常情况下我们就不能执行自己编写的shellcode了。绕过的方式通常是用mprotect函数来改写段的权限，NX保护对于rop或者劫持got表利用方式不影响。</p>
+<p> PIE &amp; ASLR在我们编写ROP或者shellcode时，有一个问题无法绕开，那就是找到函数的地址。</p>
+<p><strong>PIE</strong>指的是<strong>程序内存加载基地址随机化，</strong>意味着我们不能很快确定程序的基地址。</p>
+<p>ASLR与其大同小异，<strong>ASLR</strong>是<strong>程序运行动态链接库、栈等地址随机化。</strong></p>
+<p>绕过方式是<strong>泄露函数地址，然后通过函数的偏移来确定基地址。</strong></p>
+<p><strong><em>（通常来说，CTF中的PWN题这两种保护出现频率最高。）</em></strong></p>
+<p> RELRO这个保护主要针对延迟保护机制，即got表这种和函数动态链接相关的内存地址，对于用户是只读的。开启了这个保护，意味着我们不能劫持got表中的函数指针。</p>
+<p> </p>
+<p> </p>
+<p><strong>二.延迟绑定实例跟踪</strong></p>
+<p>原理图：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps217.jpg" alt="wps217"> </p>
+<p> </p>
+<p>实例：</p>
+<p>gdb运行后查看函数，main函数里面调用了vul函数，里面以gets()函数为例：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps218.jpg" alt="wps218"> </p>
+<p> </p>
+<p>加入断点：b *0x08048470</p>
+<p>运行，就断到了gets()函数，接下来就是第一次运行了，对照原理图第1步：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps219.jpg" alt="wps219"> </p>
+<p> </p>
+<p>进入call：si</p>
+<p>对照原理图第2步：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps220.jpg" alt="wps220"> </p>
+<p> </p>
+<p>单步：n</p>
+<p>这里没有经过第三步，直接对照原理图第4步：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps221.jpg" alt="wps221"> </p>
+<p> </p>
+<p>单步：n</p>
+<p>对照原理图第5步，准备跳到80482f0：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps222.jpg" alt="wps222"> </p>
+<p> </p>
+<p>单步：n</p>
+<p>即可对照原理图第6步：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps223.jpg" alt="wps223"> </p>
+<p> </p>
+<p>单步：n</p>
+<p>对照原理图第7步，准备跳转到804a008：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps224.jpg" alt="wps224"> </p>
+<p>由于原理图第4步压栈参数是0x8，所以第7步跳转到8步的的地址是GOT表偏移8的地址，而我们这里的实例操作因为是0，所以偏移也就是0</p>
+<p> </p>
+<p>单步：n</p>
+<p>对照原理图第8步：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps225.jpg" alt="wps225"> </p>
+<p>这里就是GOT表的程序代码，去找函数地址，此时继续执行:</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps226.jpg" alt="wps226"> </p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps227.jpg" alt="wps227"> </p>
+<p>接下来就是返回到get函数的真实地址了，往下运行就是执行gets()函数了：</p>
+<p>执行完gets()函数：finish</p>
+<p> </p>
+<p>此时执行完一遍gets()函数后，再来查看gets@plt地址：</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps228.jpg" alt="wps228"> </p>
+<p>可见执行流程似乎是和第一次一样的，但是，后面再看下面的第一个jmp的地址0x804a00c</p>
+<p><img src="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps229.jpg" alt="wps229"> </p>
+<p>可见它后面储存的数据才是正确的，可见0xf7e4450这个地址正好就是gets()函数的真实地址了，也就是说第二次再执行gets()函数时，就可以直接跳转到函数真实地址了。</p>
+<p> </p>
+<p> </p>
+<p>但是要注意PLT表和GOT表并不是一一对应的，详情请看：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_18661257/article/details/54694748">GOT表和PLT表知识详解_77458的博客-CSDN博客_got表</a></p>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/%E9%80%86%E5%90%91/PWN/16%E7%AC%AC16%E8%8A%82.Linux%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4%E6%9C%BA%E5%88%B6/wps212.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E9%80%86%E5%90%91/PWN/02%E7%AC%AC%E4%BA%8C%E8%8A%82.%E4%BF%9D%E6%8A%A4%E6%A6%82%E5%BF%B5%E5%92%8C%E6%BA%A2%E5%87%BA%E5%AE%9E%E4%BE%8B/" title="02第二节.保护概念和溢出实例"><img class="cover" src="/%E9%80%86%E5%90%91/PWN/02%E7%AC%AC%E4%BA%8C%E8%8A%82.%E4%BF%9D%E6%8A%A4%E6%A6%82%E5%BF%B5%E5%92%8C%E6%BA%A2%E5%87%BA%E5%AE%9E%E4%BE%8B/wps44.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">02第二节.保护概念和溢出实例</div></div><div class="info-2"><div class="info-item-1">一.常见的保护 操作系统提供了许多安全机制来尝试降低或阻止缓冲区溢出攻击带来的安全风险，包括DEP、ASLR等。在编写漏洞利用代码的时候，需要特别注意目标进程是否开启了DEP（Linux下对应NX）、ASLR(Linux下对应PIE)等机制，例如存在DEP(NX)的话就不能执行栈上地数据，存在ASLR的话各个系统调用的就是随机变化的。   1. CANARY (栈保护) 这个选项表示栈保护功能是否开启 栈溢出保护是一种缓冲区溢出攻击缓冲手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shsellcode能够得到执行。当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就会停止程序运行。攻击者在覆盖返回地址的时候往往也会将cookie信息覆盖掉，导致栈保护检查失败而阻止shellcode的执行。在Linux中我们将cookie信息称为canary。    FORTIFY  也是防止缓冲区溢出攻击，新颖少见    NX（DEP）  NX即No-eXecute（不可执行），基本原理即将数据...</div></div></div></a><a class="pagination-related" href="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/" title="栈迁移stack_migration"><img class="cover" src="/%E9%80%86%E5%90%91/PWN/%E6%A0%88%E8%BF%81%E7%A7%BBstack_migration/wps331.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">栈迁移stack_migration</div></div><div class="info-2"><div class="info-item-1">栈迁移stack_migration 目录 SROP BROP（没有二进制程序，只有一个程序服务） ### brop 如何判断是否存在 canary 和 pie ### STEP 1 : 获取 stop_gadget ( _start 函数地址 ) ### STEP 2 :  获取 pop rdi ; ret -&gt; pop6_ret 指令 ### STEP 3 : 获取 puts_plt ### STEP 4 : dump 程序 ### STEP 5 ：获取 puts_got ### STEP 6 : 获取 libc 版本 ### STEP 7：打 ret2libc 原始的rbp类似一个链表的结构   rsp 被迁移到另外的地方 例题：# stack_migration   因此，在这道题目中，我们可以现在 name 上布置 rop 链，同时利用栈溢出修改 rbp 和 ret_addr 。修改 rbp 为 name 地址，修改 ret_addr 为 leave ; ret 指令   IDA中分析： 由于只能写0x18个字节，所以只能覆盖到rbp和ret_addr     注...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0-ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">0.ELF文件格式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-1-%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">0-1.概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0-2-elf%E6%96%87%E4%BB%B6%E8%A2%AB%E5%8A%A0%E8%BD%BD%E5%88%B0%E5%86%85%E5%AD%98%E4%B8%AD%E7%9A%84%E5%B8%83%E5%B1%80"><span class="toc-number">1.2.</span> <span class="toc-text">0-2.elf文件被加载到内存中的布局</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

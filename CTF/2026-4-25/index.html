@@ -1,0 +1,568 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>2026-4-25 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="123456789101112131415161718192021222324252627282930313233&lt;?php  highlight_file(&quot;index.php&quot;);    function check_url($url) &amp;#123;    $decoded_url &#x3D; urldecode($url);      if (stripos($decod">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026-4-25">
+<meta property="og:url" content="https://blog.oisec.cn/CTF/2026-4-25/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="123456789101112131415161718192021222324252627282930313233&lt;?php  highlight_file(&quot;index.php&quot;);    function check_url($url) &amp;#123;    $decoded_url &#x3D; urldecode($url);      if (stripos($decod">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/CTF/2026-4-25/2026-4-25_20260425_1.png">
+<meta property="article:published_time" content="2026-05-27T17:14:48.000Z">
+<meta property="article:modified_time" content="2026-05-27T17:42:49.031Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/CTF/2026-4-25/2026-4-25_20260425_1.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "2026-4-25",
+  "url": "https://blog.oisec.cn/CTF/2026-4-25/",
+  "image": "https://blog.oisec.cn/CTF/2026-4-25/2026-4-25_20260425_1.png",
+  "datePublished": "2026-05-27T17:14:48.000Z",
+  "dateModified": "2026-05-27T17:42:49.031Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://blog.oisec.cn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/CTF/2026-4-25/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '2026-4-25',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">70</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/CTF/2026-4-25/2026-4-25_20260425_1.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">2026-4-25</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">2026-4-25</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T17:14:48.000Z" title="发表于 2026-05-28 01:14:48">2026-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T17:42:49.031Z" title="更新于 2026-05-28 01:42:49">2026-05-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/CTF/">CTF</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><img src="/CTF/2026-4-25/2026-4-25_20260425_1.png" alt="2026-4-25_20260425_1"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="string">&quot;index.php&quot;</span>);  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check_url</span>(<span class="params"><span class="variable">$url</span></span>) </span>&#123;    <span class="variable">$decoded_url </span>= <span class="title function_ invoke__">urldecode</span>(<span class="variable">$url</span>);  </span><br><span class="line">    <span class="keyword">if</span><span class="title function_ invoke__"> </span>(<span class="title function_ invoke__">stripos</span>(<span class="variable">$decoded_url</span>, <span class="string">&#x27;flag&#x27;</span>) !== <span class="literal">false</span>) &#123;  </span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;❌ 检测到敏感关键字 &#x27;flag&#x27;，禁止访问！&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">      </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="variable">$url </span>= <span class="variable">$_REQUEST</span>[<span class="string">&#x27;url&#x27;</span>];  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span><span class="title function_ invoke__"> </span>(<span class="title function_ invoke__">check_url</span>(<span class="variable">$url</span>)) &#123;            <span class="variable">$message </span>= <span class="string">&#x27;❌ 获取失败，请检查URL&#x27;</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line"><span class="variable">$url </span>= <span class="title function_ invoke__">urldecode</span>(<span class="variable">$url</span>);  </span><br><span class="line"><span class="variable">$ch </span>= <span class="title function_ invoke__">curl_init</span>();  </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_SSL_VERIFYPEER, <span class="literal">false</span>);  </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_SSL_VERIFYHOST, <span class="literal">false</span>);  </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_ENCODING, <span class="string">&#x27;gzip&#x27;</span>);  </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_POST, <span class="number">0</span>);  </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_MAXREDIRS, <span class="number">5</span>);  </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_FOLLOWLOCATION, <span class="number">1</span>);  </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLPROTO_ALL, <span class="number">1</span>);  </span><br><span class="line"><span class="keyword">if</span><span class="title function_ invoke__"> </span>(!<span class="keyword">empty</span>(<span class="variable">$referer</span>)) &#123;<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_REFERER, <span class="variable">$referer</span>);&#125;  </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_URL, <span class="variable">$url</span>);  </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_TIMEOUT, <span class="number">10</span>);  </span><br><span class="line">  </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);    <span class="variable">$data </span>= <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);    <span class="title function_ invoke__">print_r</span>(<span class="variable">$data</span>);  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/CTF/2026-4-25/2026-4-25_20260425_2.png" alt="2026-4-25_20260425_2"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span><span class="title function_ invoke__">    if </span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;password&#x27;</span>]) || <span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]))   </span><br><span class="line">    &#123;  </span><br><span class="line">      <span class="keyword">if</span><span class="title function_ invoke__"> </span>(<span class="title function_ invoke__">ereg </span>(<span class="string">&quot;^[a-zA-Z0-9]+$&quot;</span>, <span class="variable">$_GET</span>[<span class="string">&#x27;password&#x27;</span>]) === <span class="literal">FALSE</span>)  </span><br><span class="line">      &#123;  </span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;p&gt;You password must be alphanumeric&lt;/p &gt;&#x27;</span>;  </span><br><span class="line">      &#125;  </span><br><span class="line">      <span class="keyword">else</span><span class="title function_ invoke__"> if </span>(<span class="title function_ invoke__">strlen</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;password&#x27;</span>]) &lt; <span class="number">8</span> &amp;&amp; <span class="variable">$_GET</span>[<span class="string">&#x27;password&#x27;</span>] &gt; <span class="number">9999999</span>)  </span><br><span class="line">       &#123;  </span><br><span class="line">         <span class="keyword">if</span><span class="title function_ invoke__"> </span>(<span class="title function_ invoke__">strpos </span>(<span class="variable">$_GET</span>[<span class="string">&#x27;password&#x27;</span>], <span class="string">&#x27;*-*&#x27;</span>) !== <span class="literal">FALSE</span>)   </span><br><span class="line">          &#123;            <span class="variable">$cmd </span>= <span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>];  </span><br><span class="line">            <span class="keyword">if</span><span class="title function_ invoke__"> </span>(<span class="title function_ invoke__">preg_match</span>(<span class="string">&quot;/ls|bash|tac|nl|more|less|head|wget|tail|vi|cat|od|grep|sed|bzmore|bzless|pcre|paste|diff|file|echo|sh|\&#x27;|\&quot;|\`|;|,|\*|\?|\\|\\\\|\n|\t|\r|\xA0|\&#123;|\&#125;|\(|\)|\&amp;[^\d]|@|\||\\$|\[|\]|&#123;|&#125;|\(|\)|-|&lt;|&gt;/i&quot;</span>, <span class="variable">$cmd</span>)) &#123;  </span><br><span class="line">                <span class="keyword">echo</span>(<span class="string">&quot;forbid ~&quot;</span>);  </span><br><span class="line">                <span class="keyword">echo</span> <span class="string">&quot;&lt;br&gt;&quot;</span>;  </span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">                <span class="keyword">if</span><span class="title function_ invoke__"> </span>((<span class="keyword">string</span>)<span class="variable">$_POST</span>[<span class="string">&#x27;a&#x27;</span>] !== (<span class="keyword">string</span>)<span class="variable">$_POST</span>[<span class="string">&#x27;b&#x27;</span>] &amp;&amp; <span class="title function_ invoke__">md5</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;a&#x27;</span>]) === <span class="title function_ invoke__">md5</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;b&#x27;</span>])) &#123;  </span><br><span class="line">                    <span class="keyword">echo</span> `<span class="variable">$cmd</span>`;  </span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">                    <span class="keyword">echo</span><span class="title function_ invoke__"> </span>(<span class="string">&quot;md5 is funny ~&quot;</span>);  </span><br><span class="line">                &#125;  </span><br><span class="line">            &#125;  </span><br><span class="line">          &#125;  </span><br><span class="line">          <span class="keyword">else</span>  </span><br><span class="line">          &#123;  </span><br><span class="line">            <span class="keyword">echo</span>(<span class="string">&#x27;&lt;p&gt;*-* have not been found&lt;/p &gt;&#x27;</span>);   </span><br><span class="line">           &#125;  </span><br><span class="line">          &#125;  </span><br><span class="line">         <span class="keyword">else</span>   </span><br><span class="line">         &#123;  </span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;&lt;p&gt;Invalid password&lt;/p &gt;&#x27;</span>;   </span><br><span class="line">          &#125;  </span><br><span class="line">        &#125;    <span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="7-SSTI"><a href="#7-SSTI" class="headerlink" title="7 SSTI"></a>7 SSTI</h1><p><img src="/CTF/2026-4-25/2026-4-25_20260425_3.png" alt="2026-4-25_20260425_3"></p>
+<p><img src="/CTF/2026-4-25/2026-4-25_20260425_4.png" alt="2026-4-25_20260425_4"></p>
+<p><img src="/CTF/2026-4-25/2026-4-25_20260425_5.png" alt="2026-4-25_20260425_5"></p>
+<p><img src="/CTF/2026-4-25/2026-4-25_20260425_6.png" alt="2026-4-25_20260425_6"></p>
+<p><img src="/CTF/2026-4-25/2026-4-25_20260425_7.png" alt="2026-4-25_20260425_7"></p>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/CTF/2026-4-25/2026-4-25_20260425_1.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/CTF/annex/Python%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/" title="Python模板注入"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Python模板注入</div></div><div class="info-2"><div class="info-item-1"> title: Python模板注入date: 2024-09-14T23:34:05+08:00lastmod: 2024-09-14T23:34:05+08:00  Python模板注入Jinja2获取配置payload 12345678910&#123;&#123;config&#125;&#125;&#123;&#123;handler.settings&#125;&#125;&#123;&#123;self.__dict__._TemplateReference__context.config&#125;&#125;&#123;&#123;config.__class__.__init__.__globals__[&#x27;os&#x27;].__dict__.environ&#125;&#125;&#123;&#123;[].__class__.__base__.__subclasses__()[68].__init__.__globals__[&#x27;os&#x27;].__dict__.environ&#125;&#125;&#123;&#123;url_f...</div></div></div></a><a class="pagination-related" href="/CTF/MD5===/" title="MD5==="><img class="cover" src="data:image/png;base64,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" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">MD5===</div></div><div class="info-2"><div class="info-item-1"> 数组绕过 (Array Bypass)  这是针对 PHP md5() 函数最常用的绕过方式。由于 md5() 函数无法处理数组（它期望接收字符串），当传入数组时，该函数会返回 NULL 并触发一个警告。 知乎专栏 +1  原理：md5(Array) === NULL。 操作：如果服务器接收 GET 或 POST 请求参数，可以将参数构造为数组。 Payload 示例：?a[]=1&amp;b[]=2 结果：md5(a) 返回 NULL，md5(b) 也返回 NULL，因此 NULL === NULL 成立。 阿里云开发者社区 +1     MD5 强碰撞 (MD5 Collision)  当代码要求 a !== b 但 md5(a) === md5(b) 时，需要找到两个内容不同但 MD5 值完全相同的二进制字符串。 bbs.huaweicloud.com  原理：利用 MD5 算法的碰撞漏洞，生成具有相同哈希值的两个不同文件或数据块。  工具：可以使用 fastcoll 等专用工具来生成碰撞对。  已知 Payload 对（通常包含不可见字符&#x2F;十六进制）：   t...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#7-SSTI"><span class="toc-number">1.</span> <span class="toc-text">7 SSTI</span></a></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
