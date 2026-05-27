@@ -1,31 +1,31 @@
 <!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Ubuntu环境搭建 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="采用的是ubuntu18.04，搭建之前打快照以便于恢复 根据官网的教程搭建环境搭建开发环境-HUAWEI DevEco Device Tool使用指南-OpenHarmony设备开发-HarmonyOS设备开发 中间遇到的问题是vscode插件没有显示在这篇文章遇到了一样的道友如何在Ubuntu开发环境下安装DevEco Device Tool？-鸿蒙开发者社区-51CTO.COM 这是官方社区">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ubuntu环境搭建">
-<meta property="og:url" content="https://unique-elven.github.io/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/Ubuntu%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:url" content="https://blog.oisec.cn/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/Ubuntu%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
 <meta property="og:site_name" content="乙太">
 <meta property="og:description" content="采用的是ubuntu18.04，搭建之前打快照以便于恢复 根据官网的教程搭建环境搭建开发环境-HUAWEI DevEco Device Tool使用指南-OpenHarmony设备开发-HarmonyOS设备开发 中间遇到的问题是vscode插件没有显示在这篇文章遇到了一样的道友如何在Ubuntu开发环境下安装DevEco Device Tool？-鸿蒙开发者社区-51CTO.COM 这是官方社区">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://unique-elven.github.io/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/Ubuntu%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/Pasted%20image%2020240518113127.png">
+<meta property="og:image" content="https://blog.oisec.cn/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/Ubuntu%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/Pasted%20image%2020240518113127.png">
 <meta property="article:published_time" content="2026-05-27T15:03:30.000Z">
 <meta property="article:modified_time" content="2026-05-27T15:42:30.813Z">
 <meta property="article:author" content="乙太">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://unique-elven.github.io/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/Ubuntu%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/Pasted%20image%2020240518113127.png"><script type="application/ld+json">{
+<meta name="twitter:image" content="https://blog.oisec.cn/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/Ubuntu%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/Pasted%20image%2020240518113127.png"><script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "Ubuntu环境搭建",
-  "url": "https://unique-elven.github.io/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/Ubuntu%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/",
-  "image": "https://unique-elven.github.io/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/Ubuntu%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/Pasted%20image%2020240518113127.png",
+  "url": "https://blog.oisec.cn/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/Ubuntu%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/",
+  "image": "https://blog.oisec.cn/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/Ubuntu%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/Pasted%20image%2020240518113127.png",
   "datePublished": "2026-05-27T15:03:30.000Z",
   "dateModified": "2026-05-27T15:42:30.813Z",
   "author": [
     {
       "@type": "Person",
       "name": "乙太",
-      "url": "https://unique-elven.github.io"
+      "url": "https://blog.oisec.cn"
     }
   ]
-}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://unique-elven.github.io/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/Ubuntu%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/Ubuntu%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
     (() => {
       
     const saveToLocal = {

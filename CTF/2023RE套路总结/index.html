@@ -1,32 +1,32 @@
 <!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>2023RE套路总结 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Windows PE Linux ELF Android main算法平铺： 一般较为简单，这类题目主要初级 主要加密逻辑在main，不需要你去找控制流和数据流 加密逻辑一般来说不难，主要有异或等，这个是一切题目的最简单版本&#x3D;&#x3D;》  加密逻辑麻烦一点&#x3D;&#x3D;》加密算法识别  加入花指令&#x3D;&#x3D;&#x3D;》去除花  主函数加得很大&#x3D;&amp;#">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2023RE套路总结">
-<meta property="og:url" content="https://unique-elven.github.io/CTF/2023RE%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:url" content="https://blog.oisec.cn/CTF/2023RE%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="乙太">
 <meta property="og:description" content="Windows PE Linux ELF Android main算法平铺： 一般较为简单，这类题目主要初级 主要加密逻辑在main，不需要你去找控制流和数据流 加密逻辑一般来说不难，主要有异或等，这个是一切题目的最简单版本&#x3D;&#x3D;》  加密逻辑麻烦一点&#x3D;&#x3D;》加密算法识别  加入花指令&#x3D;&#x3D;&#x3D;》去除花  主函数加得很大&#x3D;&amp;#">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://unique-elven.github.io/CTF/2023RE%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93/Pasted%20image%2020240329143538.png">
+<meta property="og:image" content="https://blog.oisec.cn/CTF/2023RE%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93/Pasted%20image%2020240329143538.png">
 <meta property="article:published_time" content="2026-05-27T14:38:30.000Z">
 <meta property="article:modified_time" content="2026-05-27T15:42:31.101Z">
 <meta property="article:author" content="乙太">
 <meta property="article:tag" content="ascii_chars">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://unique-elven.github.io/CTF/2023RE%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93/Pasted%20image%2020240329143538.png"><script type="application/ld+json">{
+<meta name="twitter:image" content="https://blog.oisec.cn/CTF/2023RE%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93/Pasted%20image%2020240329143538.png"><script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "2023RE套路总结",
-  "url": "https://unique-elven.github.io/CTF/2023RE%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93/",
-  "image": "https://unique-elven.github.io/CTF/2023RE%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93/Pasted%20image%2020240329143538.png",
+  "url": "https://blog.oisec.cn/CTF/2023RE%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93/",
+  "image": "https://blog.oisec.cn/CTF/2023RE%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93/Pasted%20image%2020240329143538.png",
   "datePublished": "2026-05-27T14:38:30.000Z",
   "dateModified": "2026-05-27T15:42:31.101Z",
   "author": [
     {
       "@type": "Person",
       "name": "乙太",
-      "url": "https://unique-elven.github.io"
+      "url": "https://blog.oisec.cn"
     }
   ]
-}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://unique-elven.github.io/CTF/2023RE%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/CTF/2023RE%E5%A5%97%E8%B7%AF%E6%80%BB%E7%BB%93/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
     (() => {
       
     const saveToLocal = {

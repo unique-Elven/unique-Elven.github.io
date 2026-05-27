@@ -1,31 +1,31 @@
 <!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>PE | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1. PE文件结构 02 PE文件的两种状态 各个结构体所占字节大小如下图：32位的扩展PE头占224（E0）字节， 扩展PE头的大小是由标准PE头的SizeOfOptionalHeader决定的，32位程序这里存的是E0，64位程序这里存的是F0 在第一个结构体中的最后一个成员，指向的是PE文件头标志的位置，所以从IMAGE_DOS_HEADER最后一个成员结束位置到PE文件头标志的中间都是DO">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PE">
-<meta property="og:url" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/PE/PE/index.html">
+<meta property="og:url" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PE/PE/index.html">
 <meta property="og:site_name" content="乙太">
 <meta property="og:description" content="1. PE文件结构 02 PE文件的两种状态 各个结构体所占字节大小如下图：32位的扩展PE头占224（E0）字节， 扩展PE头的大小是由标准PE头的SizeOfOptionalHeader决定的，32位程序这里存的是E0，64位程序这里存的是F0 在第一个结构体中的最后一个成员，指向的是PE文件头标志的位置，所以从IMAGE_DOS_HEADER最后一个成员结束位置到PE文件头标志的中间都是DO">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/PE/PE/897781438.gif">
+<meta property="og:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PE/PE/897781438.gif">
 <meta property="article:published_time" content="2026-05-27T15:07:30.000Z">
 <meta property="article:modified_time" content="2026-05-27T15:42:30.709Z">
 <meta property="article:author" content="乙太">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/PE/PE/897781438.gif"><script type="application/ld+json">{
+<meta name="twitter:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/PE/PE/897781438.gif"><script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "PE",
-  "url": "https://unique-elven.github.io/%E9%80%86%E5%90%91/PE/PE/",
-  "image": "https://unique-elven.github.io/%E9%80%86%E5%90%91/PE/PE/897781438.gif",
+  "url": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PE/PE/",
+  "image": "https://blog.oisec.cn/%E9%80%86%E5%90%91/PE/PE/897781438.gif",
   "datePublished": "2026-05-27T15:07:30.000Z",
   "dateModified": "2026-05-27T15:42:30.709Z",
   "author": [
     {
       "@type": "Person",
       "name": "乙太",
-      "url": "https://unique-elven.github.io"
+      "url": "https://blog.oisec.cn"
     }
   ]
-}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://unique-elven.github.io/%E9%80%86%E5%90%91/PE/PE/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E9%80%86%E5%90%91/PE/PE/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
     (() => {
       
     const saveToLocal = {

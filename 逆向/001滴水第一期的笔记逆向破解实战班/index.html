@@ -1,32 +1,32 @@
 <!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>001滴水第一期的笔记逆向破解实战班 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="如何快速定位关键点并爆破什么是关键点：程序进行判断注册码是否正确的位置 什么是爆破：通过修改程序的流程，让程序判断失误 VM壳被称为代码层的最后一层防御。   理解简单程序验证流程：   点击注册按钮 读取读取注册码 GetWindowTextA 判断注册码是否合法 提示用户是否成功 MessageBoxA  scanf函数无法直接在VS中编译，由于有栈溢出漏洞，要编译需要在属性配置中关闭SDL检">
 <meta property="og:type" content="article">
 <meta property="og:title" content="001滴水第一期的笔记逆向破解实战班">
-<meta property="og:url" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/index.html">
+<meta property="og:url" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/index.html">
 <meta property="og:site_name" content="乙太">
 <meta property="og:description" content="如何快速定位关键点并爆破什么是关键点：程序进行判断注册码是否正确的位置 什么是爆破：通过修改程序的流程，让程序判断失误 VM壳被称为代码层的最后一层防御。   理解简单程序验证流程：   点击注册按钮 读取读取注册码 GetWindowTextA 判断注册码是否合法 提示用户是否成功 MessageBoxA  scanf函数无法直接在VS中编译，由于有栈溢出漏洞，要编译需要在属性配置中关闭SDL检">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png">
+<meta property="og:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png">
 <meta property="article:published_time" content="2026-05-27T15:41:30.000Z">
 <meta property="article:modified_time" content="2026-05-27T15:42:30.491Z">
 <meta property="article:author" content="乙太">
 <meta property="article:tag" content="pragma">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png"><script type="application/ld+json">{
+<meta name="twitter:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png"><script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "001滴水第一期的笔记逆向破解实战班",
-  "url": "https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/",
-  "image": "https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png",
+  "url": "https://blog.oisec.cn/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/",
+  "image": "https://blog.oisec.cn/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png",
   "datePublished": "2026-05-27T15:41:30.000Z",
   "dateModified": "2026-05-27T15:42:30.491Z",
   "author": [
     {
       "@type": "Person",
       "name": "乙太",
-      "url": "https://unique-elven.github.io"
+      "url": "https://blog.oisec.cn"
     }
   ]
-}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
     (() => {
       
     const saveToLocal = {

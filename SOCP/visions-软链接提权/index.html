@@ -1,31 +1,31 @@
 <!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>visions-软链接提权 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="visions easy 图片隐写、图片调试、exiftool使用、sudo-nc提权、ssh私钥提权、ssh2john使用、john爆破私钥、ssh 私钥利用   主机发现1sudo netdiscover -i eth0 -r 192.168.44.136&#x2F;24 服务扫描1sudo nmap -sV -A -T 4 -p- 192.168.44.136  目录扫描右键检查查看">
 <meta property="og:type" content="article">
 <meta property="og:title" content="visions-软链接提权">
-<meta property="og:url" content="https://unique-elven.github.io/SOCP/visions-%E8%BD%AF%E9%93%BE%E6%8E%A5%E6%8F%90%E6%9D%83/index.html">
+<meta property="og:url" content="https://blog.oisec.cn/SOCP/visions-%E8%BD%AF%E9%93%BE%E6%8E%A5%E6%8F%90%E6%9D%83/index.html">
 <meta property="og:site_name" content="乙太">
 <meta property="og:description" content="visions easy 图片隐写、图片调试、exiftool使用、sudo-nc提权、ssh私钥提权、ssh2john使用、john爆破私钥、ssh 私钥利用   主机发现1sudo netdiscover -i eth0 -r 192.168.44.136&#x2F;24 服务扫描1sudo nmap -sV -A -T 4 -p- 192.168.44.136  目录扫描右键检查查看">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://unique-elven.github.io/img/toux.jpg">
+<meta property="og:image" content="https://blog.oisec.cn/img/toux.jpg">
 <meta property="article:published_time" content="2026-05-27T14:53:30.000Z">
 <meta property="article:modified_time" content="2026-05-27T15:42:30.944Z">
 <meta property="article:author" content="乙太">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://unique-elven.github.io/img/toux.jpg"><script type="application/ld+json">{
+<meta name="twitter:image" content="https://blog.oisec.cn/img/toux.jpg"><script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "visions-软链接提权",
-  "url": "https://unique-elven.github.io/SOCP/visions-%E8%BD%AF%E9%93%BE%E6%8E%A5%E6%8F%90%E6%9D%83/",
-  "image": "https://unique-elven.github.io/img/toux.jpg",
+  "url": "https://blog.oisec.cn/SOCP/visions-%E8%BD%AF%E9%93%BE%E6%8E%A5%E6%8F%90%E6%9D%83/",
+  "image": "https://blog.oisec.cn/img/toux.jpg",
   "datePublished": "2026-05-27T14:53:30.000Z",
   "dateModified": "2026-05-27T15:42:30.944Z",
   "author": [
     {
       "@type": "Person",
       "name": "乙太",
-      "url": "https://unique-elven.github.io"
+      "url": "https://blog.oisec.cn"
     }
   ]
-}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://unique-elven.github.io/SOCP/visions-%E8%BD%AF%E9%93%BE%E6%8E%A5%E6%8F%90%E6%9D%83/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/SOCP/visions-%E8%BD%AF%E9%93%BE%E6%8E%A5%E6%8F%90%E6%9D%83/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
     (() => {
       
     const saveToLocal = {

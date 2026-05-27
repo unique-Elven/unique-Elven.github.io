@@ -1,31 +1,31 @@
 <!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>005滴水第二期的笔记 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="三个IDA重要关键技巧1. 关于IDA中JMPOUT的修复方法如下图所示这段函数的汇编代码，明明是有两个printf，但是F5的时候竟然会一个识别成JMPOUT？？？ ps: 上节课我们学习给printf添加调试符号，发现添加不到，在VS中F12跟踪printf函数，原来他是直接以源码方式给我们的，不是静态库，所以没签名sig。所以上面的call printf 是我根据经验在IDA中按n键重命名的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="005滴水第二期的笔记">
-<meta property="og:url" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/005%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%BA%8C%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:url" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/005%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%BA%8C%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="乙太">
 <meta property="og:description" content="三个IDA重要关键技巧1. 关于IDA中JMPOUT的修复方法如下图所示这段函数的汇编代码，明明是有两个printf，但是F5的时候竟然会一个识别成JMPOUT？？？ ps: 上节课我们学习给printf添加调试符号，发现添加不到，在VS中F12跟踪printf函数，原来他是直接以源码方式给我们的，不是静态库，所以没签名sig。所以上面的call printf 是我根据经验在IDA中按n键重命名的">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/005%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%BA%8C%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0/Pasted%20image%2020240227140615.png">
+<meta property="og:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/005%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%BA%8C%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0/Pasted%20image%2020240227140615.png">
 <meta property="article:published_time" content="2026-05-27T14:55:30.000Z">
 <meta property="article:modified_time" content="2026-05-27T15:42:30.941Z">
 <meta property="article:author" content="乙太">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/005%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%BA%8C%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0/Pasted%20image%2020240227140615.png"><script type="application/ld+json">{
+<meta name="twitter:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/005%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%BA%8C%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0/Pasted%20image%2020240227140615.png"><script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "005滴水第二期的笔记",
-  "url": "https://unique-elven.github.io/%E9%80%86%E5%90%91/005%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%BA%8C%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0/",
-  "image": "https://unique-elven.github.io/%E9%80%86%E5%90%91/005%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%BA%8C%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0/Pasted%20image%2020240227140615.png",
+  "url": "https://blog.oisec.cn/%E9%80%86%E5%90%91/005%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%BA%8C%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0/",
+  "image": "https://blog.oisec.cn/%E9%80%86%E5%90%91/005%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%BA%8C%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0/Pasted%20image%2020240227140615.png",
   "datePublished": "2026-05-27T14:55:30.000Z",
   "dateModified": "2026-05-27T15:42:30.941Z",
   "author": [
     {
       "@type": "Person",
       "name": "乙太",
-      "url": "https://unique-elven.github.io"
+      "url": "https://blog.oisec.cn"
     }
   ]
-}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://unique-elven.github.io/%E9%80%86%E5%90%91/005%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%BA%8C%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E9%80%86%E5%90%91/005%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%BA%8C%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
     (() => {
       
     const saveToLocal = {

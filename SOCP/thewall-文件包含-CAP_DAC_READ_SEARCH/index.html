@@ -1,31 +1,31 @@
 <!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>thewall-文件包含-CAP_DAC_READ_SEARCH | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="thewall easy Akamai  防火墙、绕过wall、fuzz、文件包含利用、exiftool提权、sudo提权、ssh私钥利用   服务探测12┌──(kali㉿kali)-[~]└─$ sudo nmap -sV -A -T 4 -p 22,80 192.168.18.238   22，80 目录扫描由于目标靶场安装了Akamai  防火墙，正常的扫描会被拦截。所以">
 <meta property="og:type" content="article">
 <meta property="og:title" content="thewall-文件包含-CAP_DAC_READ_SEARCH">
-<meta property="og:url" content="https://unique-elven.github.io/SOCP/thewall-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-CAP_DAC_READ_SEARCH/index.html">
+<meta property="og:url" content="https://blog.oisec.cn/SOCP/thewall-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-CAP_DAC_READ_SEARCH/index.html">
 <meta property="og:site_name" content="乙太">
 <meta property="og:description" content="thewall easy Akamai  防火墙、绕过wall、fuzz、文件包含利用、exiftool提权、sudo提权、ssh私钥利用   服务探测12┌──(kali㉿kali)-[~]└─$ sudo nmap -sV -A -T 4 -p 22,80 192.168.18.238   22，80 目录扫描由于目标靶场安装了Akamai  防火墙，正常的扫描会被拦截。所以">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://unique-elven.github.io/img/toux.jpg">
+<meta property="og:image" content="https://blog.oisec.cn/img/toux.jpg">
 <meta property="article:published_time" content="2026-05-27T15:09:30.000Z">
 <meta property="article:modified_time" content="2026-05-27T15:42:30.546Z">
 <meta property="article:author" content="乙太">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://unique-elven.github.io/img/toux.jpg"><script type="application/ld+json">{
+<meta name="twitter:image" content="https://blog.oisec.cn/img/toux.jpg"><script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "thewall-文件包含-CAP_DAC_READ_SEARCH",
-  "url": "https://unique-elven.github.io/SOCP/thewall-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-CAP_DAC_READ_SEARCH/",
-  "image": "https://unique-elven.github.io/img/toux.jpg",
+  "url": "https://blog.oisec.cn/SOCP/thewall-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-CAP_DAC_READ_SEARCH/",
+  "image": "https://blog.oisec.cn/img/toux.jpg",
   "datePublished": "2026-05-27T15:09:30.000Z",
   "dateModified": "2026-05-27T15:42:30.546Z",
   "author": [
     {
       "@type": "Person",
       "name": "乙太",
-      "url": "https://unique-elven.github.io"
+      "url": "https://blog.oisec.cn"
     }
   ]
-}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://unique-elven.github.io/SOCP/thewall-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-CAP_DAC_READ_SEARCH/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/SOCP/thewall-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-CAP_DAC_READ_SEARCH/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
     (() => {
       
     const saveToLocal = {

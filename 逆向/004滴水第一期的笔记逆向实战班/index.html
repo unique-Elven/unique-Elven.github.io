@@ -1,31 +1,31 @@
 <!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>004滴水第一期的笔记逆向实战班 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="20 即时调试 &amp; 内存注入 编写一个内存注入工具要求： 软件界面能显示当前系统中所有进程ID以及进程名称 软件界面中能显示指定进程的模块句柄以及模块完整路径 可以给指定进程注入模块    在易语言控件中的超级列表框的下标是从第0列开始的，但是数组记得下表标又是从1开始的，有区别要记住。 我们发现我们注入成功后，我们写的模块遍历工具，没法读取和显示出来被注入的dll（这个dll里面引用模块">
 <meta property="og:type" content="article">
 <meta property="og:title" content="004滴水第一期的笔记逆向实战班">
-<meta property="og:url" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/004%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E5%AE%9E%E6%88%98%E7%8F%AD/index.html">
+<meta property="og:url" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/004%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E5%AE%9E%E6%88%98%E7%8F%AD/index.html">
 <meta property="og:site_name" content="乙太">
 <meta property="og:description" content="20 即时调试 &amp; 内存注入 编写一个内存注入工具要求： 软件界面能显示当前系统中所有进程ID以及进程名称 软件界面中能显示指定进程的模块句柄以及模块完整路径 可以给指定进程注入模块    在易语言控件中的超级列表框的下标是从第0列开始的，但是数组记得下表标又是从1开始的，有区别要记住。 我们发现我们注入成功后，我们写的模块遍历工具，没法读取和显示出来被注入的dll（这个dll里面引用模块">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/004%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240213205550.png">
+<meta property="og:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/004%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240213205550.png">
 <meta property="article:published_time" content="2026-05-27T14:52:30.000Z">
 <meta property="article:modified_time" content="2026-05-27T15:42:30.956Z">
 <meta property="article:author" content="乙太">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/004%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240213205550.png"><script type="application/ld+json">{
+<meta name="twitter:image" content="https://blog.oisec.cn/%E9%80%86%E5%90%91/004%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240213205550.png"><script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "004滴水第一期的笔记逆向实战班",
-  "url": "https://unique-elven.github.io/%E9%80%86%E5%90%91/004%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E5%AE%9E%E6%88%98%E7%8F%AD/",
-  "image": "https://unique-elven.github.io/%E9%80%86%E5%90%91/004%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240213205550.png",
+  "url": "https://blog.oisec.cn/%E9%80%86%E5%90%91/004%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E5%AE%9E%E6%88%98%E7%8F%AD/",
+  "image": "https://blog.oisec.cn/%E9%80%86%E5%90%91/004%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240213205550.png",
   "datePublished": "2026-05-27T14:52:30.000Z",
   "dateModified": "2026-05-27T15:42:30.956Z",
   "author": [
     {
       "@type": "Person",
       "name": "乙太",
-      "url": "https://unique-elven.github.io"
+      "url": "https://blog.oisec.cn"
     }
   ]
-}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://unique-elven.github.io/%E9%80%86%E5%90%91/004%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E5%AE%9E%E6%88%98%E7%8F%AD/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/%E9%80%86%E5%90%91/004%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E5%AE%9E%E6%88%98%E7%8F%AD/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
     (() => {
       
     const saveToLocal = {

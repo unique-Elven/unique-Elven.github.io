@@ -1,31 +1,31 @@
 <!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>tron-passwd写入提权 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="tron easy 敏感信息收集、Brainfuck解密、替换密码、ssh利用、passwd提权   1netdiscover -i eth0 -r 192.168.44.0&#x2F;24 端口服务1nmap -sV -A -T4 -p- 192.168.44.135 目录扫描1gobuster dir  -u http:&#x2F;&#x2F;192.168.44.135&#x2F; -w &#x2F;usr&#x2F;share&#x2F;w">
 <meta property="og:type" content="article">
 <meta property="og:title" content="tron-passwd写入提权">
-<meta property="og:url" content="https://unique-elven.github.io/SOCP/tron-passwd%E5%86%99%E5%85%A5%E6%8F%90%E6%9D%83/index.html">
+<meta property="og:url" content="https://blog.oisec.cn/SOCP/tron-passwd%E5%86%99%E5%85%A5%E6%8F%90%E6%9D%83/index.html">
 <meta property="og:site_name" content="乙太">
 <meta property="og:description" content="tron easy 敏感信息收集、Brainfuck解密、替换密码、ssh利用、passwd提权   1netdiscover -i eth0 -r 192.168.44.0&#x2F;24 端口服务1nmap -sV -A -T4 -p- 192.168.44.135 目录扫描1gobuster dir  -u http:&#x2F;&#x2F;192.168.44.135&#x2F; -w &#x2F;usr&#x2F;share&#x2F;w">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://unique-elven.github.io/img/toux.jpg">
+<meta property="og:image" content="https://blog.oisec.cn/img/toux.jpg">
 <meta property="article:published_time" content="2026-05-27T14:57:30.000Z">
 <meta property="article:modified_time" content="2026-05-27T15:42:30.896Z">
 <meta property="article:author" content="乙太">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://unique-elven.github.io/img/toux.jpg"><script type="application/ld+json">{
+<meta name="twitter:image" content="https://blog.oisec.cn/img/toux.jpg"><script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "tron-passwd写入提权",
-  "url": "https://unique-elven.github.io/SOCP/tron-passwd%E5%86%99%E5%85%A5%E6%8F%90%E6%9D%83/",
-  "image": "https://unique-elven.github.io/img/toux.jpg",
+  "url": "https://blog.oisec.cn/SOCP/tron-passwd%E5%86%99%E5%85%A5%E6%8F%90%E6%9D%83/",
+  "image": "https://blog.oisec.cn/img/toux.jpg",
   "datePublished": "2026-05-27T14:57:30.000Z",
   "dateModified": "2026-05-27T15:42:30.896Z",
   "author": [
     {
       "@type": "Person",
       "name": "乙太",
-      "url": "https://unique-elven.github.io"
+      "url": "https://blog.oisec.cn"
     }
   ]
-}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://unique-elven.github.io/SOCP/tron-passwd%E5%86%99%E5%85%A5%E6%8F%90%E6%9D%83/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/SOCP/tron-passwd%E5%86%99%E5%85%A5%E6%8F%90%E6%9D%83/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
     (() => {
       
     const saveToLocal = {
