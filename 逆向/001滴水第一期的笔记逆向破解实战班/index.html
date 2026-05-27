@@ -1,0 +1,992 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>001滴水第一期的笔记逆向破解实战班 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="如何快速定位关键点并爆破什么是关键点：程序进行判断注册码是否正确的位置 什么是爆破：通过修改程序的流程，让程序判断失误 VM壳被称为代码层的最后一层防御。   理解简单程序验证流程：   点击注册按钮 读取读取注册码 GetWindowTextA 判断注册码是否合法 提示用户是否成功 MessageBoxA  scanf函数无法直接在VS中编译，由于有栈溢出漏洞，要编译需要在属性配置中关闭SDL检">
+<meta property="og:type" content="article">
+<meta property="og:title" content="001滴水第一期的笔记逆向破解实战班">
+<meta property="og:url" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="如何快速定位关键点并爆破什么是关键点：程序进行判断注册码是否正确的位置 什么是爆破：通过修改程序的流程，让程序判断失误 VM壳被称为代码层的最后一层防御。   理解简单程序验证流程：   点击注册按钮 读取读取注册码 GetWindowTextA 判断注册码是否合法 提示用户是否成功 MessageBoxA  scanf函数无法直接在VS中编译，由于有栈溢出漏洞，要编译需要在属性配置中关闭SDL检">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png">
+<meta property="article:published_time" content="2026-05-27T15:41:30.000Z">
+<meta property="article:modified_time" content="2026-05-27T15:42:30.491Z">
+<meta property="article:author" content="乙太">
+<meta property="article:tag" content="pragma">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "001滴水第一期的笔记逆向破解实战班",
+  "url": "https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/",
+  "image": "https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png",
+  "datePublished": "2026-05-27T15:41:30.000Z",
+  "dateModified": "2026-05-27T15:42:30.491Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://unique-elven.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '001滴水第一期的笔记逆向破解实战班',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">83</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">67</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">34</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">001滴水第一期的笔记逆向破解实战班</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">001滴水第一期的笔记逆向破解实战班</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T15:41:30.000Z" title="发表于 2026-05-27 23:41:30">2026-05-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T15:42:30.491Z" title="更新于 2026-05-27 23:42:30">2026-05-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="如何快速定位关键点并爆破"><a href="#如何快速定位关键点并爆破" class="headerlink" title="如何快速定位关键点并爆破"></a>如何快速定位关键点并爆破</h1><p>什么是关键点：程序进行判断注册码是否正确的位置</p>
+<p>什么是爆破：通过修改程序的流程，让程序判断失误</p>
+<p>VM壳被称为代码层的最后一层防御。</p>
+<hr>
+<blockquote>
+<p>理解简单程序验证流程：</p>
+</blockquote>
+<ol>
+<li>点击注册按钮</li>
+<li>读取读取注册码<br> <code>GetWindowTextA</code></li>
+<li>判断注册码是否合法</li>
+<li>提示用户是否成功<br> <code>MessageBoxA</code></li>
+</ol>
+<p><code>scanf函数无法直接在VS中编译，由于有栈溢出漏洞，要编译需要在属性配置中关闭SDL检查。</code></p>
+<p>关键位置：jcc指令跳转到jmp下。</p>
+<p>方法：</p>
+<blockquote>
+<p>交叉引用查找法IDA</p>
+<p>调用堆栈–ALT+K 暂停法</p>
+<p>搜索字符串</p>
+<p>访问断点法</p>
+<p>自动跟踪法-控制台程序（什么地方卡住就在什么地方下断点F7跟踪，继续自动步过）</p>
+<p>Ctrl+G搜索MessageBoxA</p>
+</blockquote>
+<p>在OD中快捷键Shift+F2打开<strong>条件断点</strong>！破解易语言程序，由于按钮时间常常被其他事件干扰，若以经常要用到条件断点。（但是汉化版可能会有bug，用原版英文即可）</p>
+<p>条件断点–举例子：<code>[esp+4]!=00290642</code></p>
+<p>调试+自动步过的快捷键Ctrl+F8可以自动跟踪执行。</p>
+<p>OD的插件(ImmLabel)Im.004011C1–&gt;Edit Label可以给call函数打标签哦，不是注释。</p>
+<p>减号键 可以退回到上面的指令显示</p>
+<p>修改后右键可以撤销选择处修改，要保存可以右键保存到复制可执行文件–全部复制–右键保存文件</p>
+<p>逆向破解随手搜索字符串</p>
+<p>IDA如果搜索字符串的时候不支持中文则需要在快捷键加个参数空格<code>-dCULTURE=all</code></p>
+<p>OD搜索不出的字符串可以用IDA找出并交叉引用跟踪到地址，记得交叉使用。</p>
+<p>（PIE）aslr地址随机化：程序模块基地址OD中找E键：CFF Exlporer可以在可选头–DllCharacteristics–Click here-去掉DLL can move就不会随机改变了。在vs2017里项目属性–链接器–所有选项–随机基址也可以改成否。而且基址在PE结构中ImageBase是可以改的，写多少基址就是多少（因此以后PE加载不一定是在00401000，而是想在什么位置就在什么位置）。</p>
+<p>OD为了打印程序调用的堆栈，调用了微软提供的<strong>dbghelp.dll</strong>，OD的字母Alt+K就是<strong>调用堆栈</strong>，通过这个方法往上走同样可以点位关键点，但是记得暂停程序，才能在调用堆栈中查看到还在堆栈没被释放的东西。</p>
+<p>OD的字母Alt+M同样可以在内存中–&gt;右键–&gt;查找 字符串(经验所说有可能在提示框信息旁边放的就是注册码)，内存断点也可以定位关键点，只要内存访问断点可以断，那么硬件访问断点就可以断。(但是有时候呢，OD的的访问断点可能会失效，这是很多插件影响导致的bug，x96dbg就不会)</p>
+<p>xdbg要想保存可以鼠标右键–补丁–修补文件</p>
+<p>增量链接：快速编译功能，在vs中-属性-链接器-所有选项-启用增量链接可以修改。启用后会在DBG中生成很多的jmp。（在有些大程序可能用到很多函数，不能把所有函数打包到程序，所以使用链接的方式，用到再说）</p>
+<p>自动跟踪法-控制台程序（什么地方卡住就在什么地方下断点F7跟踪，继续自动步过），OD的字母Alt+T是线程，有时候OD会假死就是线程被暂停住了，所以可以右键Resume All Threads修复，继续自动步过，卡住就F7步入，继续跟…。</p>
+<p>在OD中如果分析出了call的作用，那么就可以使用插件(ImmLabel)Im.00463FB6–Edit Label取标签（其实就是给一个地址取了个别名）。其实他的原理就是用的OD打标签功能，即使进入call第一行右键–标签（逆VM常用）。其实这个插件的原理也非常的简单，就是双击call复制后面call的地址，Ctrl+G追踪跳转到那个地址，第一行右键–标签，这是OD自带的功能，只不过插件更方便，优化掉了我们追踪的这一步，直接可以打标签。</p>
+<hr>
+<h1 id="破解补丁工具的使用"><a href="#破解补丁工具的使用" class="headerlink" title="破解补丁工具的使用"></a>破解补丁工具的使用</h1><h4 id="OD中搜索字符串的原理："><a href="#OD中搜索字符串的原理：" class="headerlink" title="OD中搜索字符串的原理："></a>OD中搜索字符串的原理：</h4><blockquote>
+<p>该插件是由一个吾爱的大佬开发的叫ustrref的插件，论坛可以下到源码分析。</p>
+<p>原理是取得显示在当前反汇编窗口中内存块区域地址，也即是整个PE文件的内存地址，在OD中按Ctrl+E即可查看到范围。循环读取每行的指令，将读取到的当前行指令进行反汇编，循环判断，寻找push mov lea指令，对操作数进行读取，判断操作数是否以\0结尾，如果是的话就判定为一段字符串（像结构体里面的字符串有的时候就会找不到，因为插件读到前面的00就会结束了）。这就是该插件的设计缺陷。</p>
+</blockquote>
+<p>IDA中搜索字符串的原理：</p>
+<blockquote>
+<p>总所周知，IDA是一款静态反汇编工具，是直接查找PE文件中能读取到的字符串，有点类似于strings吧。</p>
+</blockquote>
+<p>以上就是有的字符串OD搜不到但是IDA却能搜到的原因，那有没什么方式能让两种方式都搜不到呢</p>
+<blockquote>
+<p>&#x2F;&#x2F;这段的代码能正常执行输出字符串“注册失败”，但是无法搜到了。可以在VS下断然后右键转到反汇编串口，看汇编的代码发现都是传值16进制。but但是放在全局变量里面这个方法就失效了。又能找到。</p>
+<p>#include &lt;stdio.h&gt;</p>
+<p>int main()<br>{<br>char str[] &#x3D; {D7, A2, B2, E1, CA, A7, B0, DC, 00};&#x2F;&#x2F;注册失败<br>printf(str);<br>}</p>
+<p><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png" alt="2024_1_21_001"></p>
+</blockquote>
+<p>OD中分析代码的功能：看到local.1是局部变量1，参数1是【arg-1】,可以从右键–分析–删除模块分析就是显示ebp的加减，右键–分析–分析代码就是。</p>
+<p><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_002.png" alt="2024_1_21_002"></p>
+<ol>
+<li>记住线程的特征？</li>
+</ol>
+<blockquote>
+<p>（易语言）push过后马上call后马上pop–可能就是线程，要找到从哪里启动的线程就要右键–查找参考–选定命令–双击<strong>绿色</strong>的行就能找到启动线程的call</p>
+<p><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_003.png" alt="2024_1_21_003"></p>
+<p>实例代码：</p>
+<p><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_004.png" alt="2024_1_21_004"></p>
+<p>OD找到从哪里启动的线程</p>
+<p>如果易语言多线程编译不成功请在–工具–》支持库配置–》全选确认！！！</p>
+<p><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_005.png" alt="2024_1_21_005"></p>
+</blockquote>
+<ol start="2">
+<li>IDA里保存后的exe文件？</li>
+</ol>
+<blockquote>
+<p>*<em>IDA–&gt;选项–&gt;常规–&gt;操作码字节数（16）才能显示操作码字节，因为IDA是不会自动nop填充的所以需要一个个字节码改</em></p>
+<p>首先如果在OD中找到了关键跳，那么在IDA中需要快速定位到地址要按键盘g，输入地址–OK</p>
+</blockquote>
+<blockquote>
+<p><strong>选中地址Edit–Patch program–Assemble–修改后OK；再选中地址Edit–Patch program–Patched bytes(或者&#x2F;修补程序应用到输入文件&#x2F;)</strong></p>
+</blockquote>
+<ol start="3">
+<li>为什么要使用破解补丁工具？</li>
+</ol>
+<blockquote>
+<p>总结就是牛逼，所以使用</p>
+</blockquote>
+<ol start="4">
+<li>怎么让IDA和OD都搜不到字符串？</li>
+</ol>
+<blockquote>
+<p>OD搜索字符串的插件源码是寻找push mov lea指令–对操作数读取–判断操作数是否以\0结尾。所以当字符串前有\0是就搜不到了。</p>
+</blockquote>
+<blockquote>
+<p>IDA是通过PE文件静态搜索字符串的，所以有时用记事本也可以看到</p>
+</blockquote>
+<blockquote>
+<p>可以在将字符串改变为十六进制的数保存在局部变量数组中，这样就搜不到了，编译时候保存到了代码段；但是全局变量还是能搜到，这是因为数据被编译到了.data节。</p>
+</blockquote>
+<ol start="5">
+<li>加壳后修改数据在保存时OD报错在可执行文件中无法定位数据。<blockquote>
+<p>此时破解补丁工具就派上用场了。远程读取进程内存<strong>WriteProcessMemoy</strong>。</p>
+</blockquote>
+<blockquote>
+<p>例如：XH 补丁制作工具1.3.6，PYG内存破解补丁制作工具，PYGDLL内存破解补丁制作工具。DLL劫持就是程序<strong>就近加载原则</strong>需要的dll文件名，有时是必须要用HOOKAPI的（比如程序加壳了，程序还没执行的时候关键位置的硬编码都是00，如果此时修改为90，当壳把代码吐出来的时候又会把原来改的给覆盖掉成程序原本应该的硬编码，因此HOOKAPI的作用，就可以检测原始代码是否正[原理埋坑，后面再讲]）。</p>
+</blockquote>
+</li>
+</ol>
+<hr>
+<h1 id="编写第一个破解补丁"><a href="#编写第一个破解补丁" class="headerlink" title="编写第一个破解补丁"></a>编写第一个破解补丁</h1><ol>
+<li><p>为什么吧字符数组放在全局变量里面OD又能找到?</p>
+<p> · 原来是编译器它把我们的数组以字符串的形式写到了.data段里面，放在局部变量里面就被编译在了.text段。</p>
+</li>
+</ol>
+<p>直接跟踪main函数的新方法：<strong>OD调试选项(调试设置–地址)记得勾选–解码修饰符号名称</strong></p>
+<blockquote>
+<p>一个Debug的x86程序放入OD：跟踪call ConsoleA.__scrt_common_main –&gt; call ConsoleA.__scrt_common_main_seh –&gt; 往下找ConsoleA.invoke_main –&gt; call ConsoleA.main –&gt; 这就跟踪到了我们的main函数</p>
+</blockquote>
+<p>OD调试选项记得勾选–解码修饰符号名称</p>
+<ol start="2">
+<li><p>思考，实现dll劫持补丁，万一调用到真正的dll函数的功能怎么办？</p>
+<blockquote>
+<p>为什么我的破解补丁能用，但是dll劫持做出的补丁不能用啊，一样的数据?</p>
+</blockquote>
+</li>
+</ol>
+<p>（NCK老师说曾经应用这个技术破解过Dnguard和MaxtoCode，这里埋坑，以后学到来填坑）</p>
+<p>解答：实现dll劫持补丁时，万一用到真正的dll需要使用API转发，对加载的DLL动手脚，需要什么还给它转发出去。<code>Loadlibrary</code> <code>GetProProcess</code></p>
+<ol start="3">
+<li><p>认识壳</p>
+<blockquote>
+<p>就是把原始代码加密存储在PE文件中，在程序运行时候再一个字节一个字节的吐出来到原始的位置。才能正常执行。</p>
+</blockquote>
+</li>
+<li><p>编写第一个内存破解补丁</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// 内存破解补丁.cpp : 此文件包含 &quot;main&quot; 函数。程序执行将在此处开始并结束。</span><br><span class="line">//</span><br><span class="line">#include &lt;windows.h&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    int pId;</span><br><span class="line">    printf(&quot;请输入要破解的程序进程ID：&quot;);</span><br><span class="line">    scanf(&quot;%d&quot;, &amp;pId);</span><br><span class="line">    byte buff[] = &#123; 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 &#125;;</span><br><span class="line">    HANDLE hHandle=OpenProcess(PROCESS_ALL_ACCESS, TRUE, pId);</span><br><span class="line">    WriteProcessMemory(hHandle, (LPVOID)0x004010FD, buff, 6, NULL);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>​</p>
+<p> <code>OpenProcess</code>打开一个进程，返回一个进程句柄</p>
+</li>
+</ol>
+<p><code>WriteProcessMemory</code>将数据写入指定进程中的内存区域。要写入的整个区域必须可访问，否则操作将失败。</p>
+<p>使用VS编译时，属性–关闭SDL检查，就不会函数报错了，就不用添加预处理器了。</p>
+<p>易语言写内存破解补丁需要将填入的数据都转成十进制。</p>
+<ol start="5">
+<li>编写第一个过壳的dll劫持补丁<blockquote>
+<p>易语言在编写dll劫持补丁的时候如果遇到加壳程序，可能会造成时机不对（就是壳还没把代码吐出来就改了，后面吐出来就又覆盖了前面的修改，所以等于没改）—可以使用–（创建线程）延迟技术、HOOK API、判断解密是否完成。</p>
+</blockquote>
+<p> 此劫持补丁代码远不止这些，运用到了易语言的神器精益模块，可以去网上下载模块或源码，该模块已经帮助我们封装好了所有的常用功能，如果不想调用它的模块还课可以直接复制他的源码到你自己的源码里实现该功能，避免重复造轮子。<br> <img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_006.png" alt="2024_1_21_006"></p>
+<p> C语言的劫持补丁</p>
+<p> 主要部分代码如下，采用的是winspool.drv(Windows的打印客户端 （winspool.drv）把打印的APl暴露给用户应用程序， 用户应用程序用打印API来查询打印机、打印任务、改变打印机设置、查询打印机设置、加载打印机驱动程序用户界面DLL来显示打印机具体设置属性页和做一些其他的事情。Windows的打印客户端 （winspool.drv）帮助GDI决定打印任务应该如何处理。对于一般的打印任务，GDI生成EMF文件并把它送到打印池客户，然后打印客户用远程进程调用把打印任务发送给打印系统服务进程)</p>
+</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/micro-chen/p/6015739.html">Windows打印体系结构之Print Spooler概念与架构 - 特洛伊-Micro - 博客园 (cnblogs.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/deng02/archive/2012/06/21/2558204.html">打印管理库函数Winspool.drv - 邓春光 - 博客园 (cnblogs.com)</a></p>
+<p>前面后面还有大量代码没有写出：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">DWORD WINAPI <span class="title function_">ThreadProc</span><span class="params">(_In_ LPVOID lpParameter)</span></span><br><span class="line">&#123;</span><br><span class="line">	byte byteRead = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		ReadProcessMemory((HANDLE)<span class="number">-1</span>,(LPVOID)<span class="number">0x004010A9</span>,&amp;byteRead,<span class="number">1</span>,<span class="literal">NULL</span>);</span><br><span class="line">		<span class="keyword">if</span> (byteRead==<span class="number">0x55</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			byte writeBytes[] = &#123;<span class="number">0x90</span>,<span class="number">0x90</span>, <span class="number">0x90</span>, <span class="number">0x90</span>, <span class="number">0x90</span>, <span class="number">0x90</span>&#125;;</span><br><span class="line">			WriteProcessMemory((HANDLE)<span class="number">-1</span>, (LPVOID)<span class="number">0x004010FD</span>, writeBytes, <span class="number">6</span>, <span class="literal">NULL</span>);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	MessageBoxA(<span class="literal">NULL</span>,<span class="string">&quot;unique-elven&quot;</span>,<span class="string">&quot;Elven&quot;</span>,<span class="literal">NULL</span>);</span><br><span class="line">	<span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span></span><br><span class="line"><span class="comment">// 入口函数</span></span><br><span class="line">BOOL WINAPI <span class="title function_">DllMain</span><span class="params">(HMODULE hModule, DWORD dwReason, PVOID pvReserved)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (dwReason == DLL_PROCESS_ATTACH)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//::MessageBoxA(0, &quot;今天的作业来了\n\n根据我提供的劫持补丁模板\n\n给此模板增加代码，实现劫持补丁\n\n&quot;, &quot;恭喜你领到作业一份&quot;, 0);</span></span><br><span class="line">		CreateThread(<span class="literal">NULL</span>,<span class="literal">NULL</span>,ThreadProc,<span class="literal">NULL</span>,<span class="literal">NULL</span>,<span class="literal">NULL</span>);</span><br><span class="line">		DisableThreadLibraryCalls(hModule);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> Load();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (dwReason == DLL_PROCESS_DETACH)</span><br><span class="line">	&#123;</span><br><span class="line">		Free();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> ​<br>    .NET程序(采用C#,面向对象)很容易就会被工具dnSpy给反编译出源码来，所以一般都会加壳保护。</p>
+<hr>
+<h1 id="不修改代码实现破解01"><a href="#不修改代码实现破解01" class="headerlink" title="不修改代码实现破解01"></a>不修改代码实现破解01</h1><h2 id="1-如何调试自己写的dll文件？？"><a href="#1-如何调试自己写的dll文件？？" class="headerlink" title="1. 如何调试自己写的dll文件？？?"></a>1. 如何调试自己写的dll文件？？?</h2><pre><code>&gt; VS在属性中--》调试--》命令--》添加调用到这个文件的exe程序路径
+
+&gt; 这样就能开始通过先执行exe再调用我们的dll进行愉快的调试啦.
+
+补充: DLL劫持的其他用途(劫持注入技术 - 过游戏保护)
+
+其实在同一个进程里的地址空间，直接指针访问就行，不建议使用读内存API,因为这样可以防止别人偷补丁数据的时候直接下断点这个API，就什么都知道了。
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">待补充上一节课遗留，这一课编写的C代码的内存破解补丁。</span><br></pre></td></tr></table></figure>
+</code></pre>
+<p>硬件HOOK用途强大：</p>
+<blockquote>
+<p>国外强壳（ILProtector）通杀脱壳演示</p>
+<p>游戏辅助 (经典的过游戏检测技术之一)</p>
+<p>反调试</p>
+</blockquote>
+<h2 id="2-什么是线程"><a href="#2-什么是线程" class="headerlink" title="2. 什么是线程???"></a>2. 什么是线程???</h2><p>(进程就是4GB, 线程就是EIP)(进程是死的是不会执行的,必须要有线程)(宿主,寄宿者)</p>
+<p><strong>进程32位4G，64位16EG</strong>。</p>
+<p>ST0~7浮点型寄存器，X87FPU。埋坑!</p>
+<p>线程上下文CONTEXT。(因为CPU给线程分配时间片的特性，切换作用)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	CONTEXT ctx;<span class="comment">//监视这个变量就可以看到所有的寄存器的值,这就是线程上下文,这样线程才知道下一步往哪里跑</span></span><br><span class="line">	GetThreadContext(GetCurrentThread(),&amp;ctx);<span class="comment">//读取线程上下文</span></span><br><span class="line">	system(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">``</span><br></pre></td></tr></table></figure>
+
+<p>​</p>
+<h2 id="3-科普–初识异常之VEH"><a href="#3-科普–初识异常之VEH" class="headerlink" title="3. 科普–初识异常之VEH"></a>3. 科普–初识异常之VEH</h2><p><strong>初识异常之VEH</strong>–<code>AddVectored Exception Handler</code>，以下代码在vs中会卡住是因为异常处理被vs接管了，而用OD来执行却能正常执行是因为OD有反反调试插件。</p>
+<p>优先级高于seh,高于try catch<br>可看看这三者的关系：<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-173853.htm">[原创]白话windows之四 异常处理机制(VEH、SEH、TopLevelEH…)-编程技术-看雪-安全社区|安全招聘|kanxue.com</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line">LONG CALLBACK <span class="title function_">VectoredHandler</span><span class="params">(PEXCEPTION_POINTERS pExceptionInfo)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;hello world&quot;</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%08x&quot;</span>, pExceptionInfo-&gt;ContextRecord-&gt;Eip);</span><br><span class="line">	<span class="keyword">return</span> EXCEPTION_EXECUTE_HANDLER;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//注册了一个异常处理,当后面的代码发生异常,就会进入这个函数进行处理</span></span><br><span class="line">	AddVectoredExceptionHandler(<span class="literal">NULL</span>, VectoredHandler);</span><br><span class="line">	__asm <span class="type">int</span> <span class="number">3</span>;</span><br><span class="line">	system(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>（2024&#x2F;1&#x2F;18再来补充），前几天发现自己写的注册异常程序竟然没有进入异常处理，看了一下午原来是我的API写错了哈哈哈。​<br>我把竟然把上面的AddVectoredExceptionHandler写成了AddVectoredContinueHandler，这是很不应该的哈哈。<br>直到看了这篇文章：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/qiangua/p/3710324.html">Site Unreachable</a><br>AddVectoredExceptionHandler是执行在所有SEH的前面，AddVectoredContinueHandler是执行在所有SEH后面。</p>
+<p>最后那一版总算是调试完美了，请看我的GitHub</p>
+<p>OD的<strong>硬件断点</strong>的原理：调试寄存器DR7是最大的老大(DR7配置DR0–DR的属性,不管他们有没有值,都由DR7说了算)的，到程序地址执行到硬件断点地址就会送入DR寄存器判断，如果存在该地址就会出发异常，OD就会接管异常，程序就停下了。</p>
+<p>OD的F2下的断点是把改内存地址的数据改为CC,称为<strong>CC断点</strong>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;这在OD内存中可能看着没变,但其实它就是有变cc,可以使用CE修改器附加被调试程序的进程,添加地址就能看到字节数据十六进制cc.</p>
+<ol start="4">
+<li>了解crc检测</li>
+</ol>
+<p><strong>crc检测</strong>: 用途，防破解</p>
+<p>实例: 校验总和</p>
+<p>写一个简单的防CC断点，示例代码，原理就是检测这0x00401000+0x3000一段内存是否有改变，由于OD断点的原理会导致字节变成CC，所以检测到断点就会退出。如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;windows.h&gt;</span><br><span class="line"></span><br><span class="line">int gTotal = 0;</span><br><span class="line">DWORD WINAPI ThreadProc(_In_ LPVOID lpParameter)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">	while (true)</span><br><span class="line">	&#123;</span><br><span class="line">		int address = 0x00401000;</span><br><span class="line">		int byteToal = 0;</span><br><span class="line">		for (int Index = 0; Index &lt; 0x3000; Index++)</span><br><span class="line">		&#123;</span><br><span class="line">			byte byteRead = 0;</span><br><span class="line">			ReadProcessMemory((HANDLE)-1, (LPVOID)address, &amp;byteRead, 1, NULL);</span><br><span class="line">			byteToal += byteRead;</span><br><span class="line">			address++;</span><br><span class="line">		&#125;</span><br><span class="line">		if (byteToal != gTotal)</span><br><span class="line">		&#123;</span><br><span class="line">			exit(0);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return TRUE;</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	int address = 0x00401000;</span><br><span class="line">	for (int Index = 0; Index &lt; 0x3000; Index++)</span><br><span class="line">	&#123;</span><br><span class="line">		byte byteRead = 0;</span><br><span class="line">		ReadProcessMemory((HANDLE)-1, (LPVOID)address, &amp;byteRead, 1, NULL);</span><br><span class="line">		gTotal += byteRead;</span><br><span class="line">		address++;</span><br><span class="line">	&#125;</span><br><span class="line">	CreateThread(NULL, NULL, ThreadProc, NULL, NULL, NULL);</span><br><span class="line">	while (1)</span><br><span class="line">	&#123;</span><br><span class="line">		Sleep(1500);</span><br><span class="line">		printf(&quot;%d 正常执行中....\n&quot;,i);</span><br><span class="line">		i++;</span><br><span class="line">	&#125;</span><br><span class="line">	//由于直接pause导致调试效果不明显，所以加上上面的while</span><br><span class="line">	system(&quot;pause&quot;);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​</p>
+<hr>
+<h1 id="不修改代码实现破解2"><a href="#不修改代码实现破解2" class="headerlink" title="不修改代码实现破解2"></a>不修改代码实现破解2</h1><p><code>AddVectoredExceptionHandler</code>函数用于注册异常，只要产生异常就会进入异常处理。</p>
+<p>硬件断点的原理（通过对地址调试寄存器DR写值构造异常中断，然后调试器接管）</p>
+<hr>
+<ol>
+<li>公开课内容补充，DLL劫持补丁的生成（就是上节课C代码里没我没展示的一堆导入导出函数）</li>
+</ol>
+<p>使用工具AheadLib.exe可以预生成dll劫持代码额，然后再在vs建立dll项目调试。</p>
+<p>(但是像有些系统dll是不能劫持的，如ntdll)</p>
+<p>出现C1010报错遇到意外预编译头#include “stdafx.h”,可以在属性–C&#x2F;C++–预编译头–不使用预编译头。</p>
+<p>出现E1067实参与形参的类型不兼容，因为vs默认的是unicode字节集，所以在属性–常规–使用多字节符集。</p>
+<p>最后源文件只能留下一个包含DLLMain函数的文件，在入口函数DLLMain编写函数。</p>
+<p>工具–代码片段管理器–导入–画眉专用代码模板yyds——-比番茄助手<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/661815368">番茄助手2022</a>还nb,模板如下，以后自己做内容替换即可，用好以后就是纯中文编程：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="line">&lt;CodeSnippets xmlns=<span class="string">&quot;http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet&quot;</span>&gt;</span><br><span class="line">	&lt;CodeSnippet Format=<span class="string">&quot;1.0.0&quot;</span>&gt;</span><br><span class="line">		&lt;Header&gt;</span><br><span class="line">			&lt;Title&gt;信息框&lt;/Title&gt;</span><br><span class="line">			&lt;Shortcut&gt;信息框&lt;/Shortcut&gt;</span><br><span class="line">			&lt;Description&gt;信息框&lt;/Description&gt;</span><br><span class="line">			&lt;Author&gt;Microsoft Corporation&lt;/Author&gt;</span><br><span class="line">			&lt;SnippetTypes&gt;</span><br><span class="line">				&lt;SnippetType&gt;Expansion&lt;/SnippetType&gt;</span><br><span class="line">				&lt;SnippetType&gt;SurroundsWith&lt;/SnippetType&gt;</span><br><span class="line">			&lt;/SnippetTypes&gt;</span><br><span class="line">		&lt;/Header&gt;</span><br><span class="line">		&lt;Snippet&gt;</span><br><span class="line">			&lt;Code Language=<span class="string">&quot;cpp&quot;</span>&gt;&lt;![CDATA[::MessageBox(<span class="literal">NULL</span>, <span class="string">&quot;内容&quot;</span>, <span class="string">&quot;标题&quot;</span>, <span class="literal">NULL</span>);]]&gt;</span><br><span class="line">			&lt;/Code&gt;</span><br><span class="line">		&lt;/Snippet&gt;</span><br><span class="line">	&lt;/CodeSnippet&gt;</span><br><span class="line">&lt;/CodeSnippets&gt;</span><br></pre></td></tr></table></figure>
+<p>但这个可能会和番茄助手冲突，使用这个，记得禁用番茄助手！<br>​</p>
+<ol start="2">
+<li>作业讲解<blockquote>
+<p>加了壳的程序不能拖进去就搜索字符串，必须在全局内存中找到代码段才能进去搜，不然是搜不出来的。</p>
+</blockquote>
+<blockquote>
+<p>遇上CRC检测的程序，请在Ctrl+T的线程查看中暂停掉线程。挂起！</p>
+</blockquote>
+<blockquote>
+<p>遇上有个输入框的Windows程序，可以在setWindowsTextA的API函数下断点。</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="不修改代码实现破解2-1"><a href="#不修改代码实现破解2-1" class="headerlink" title="不修改代码实现破解2"></a>不修改代码实现破解2</h1><ul>
+<li><p>上节课后作业破解演示</p>
+<ol>
+<li>挂起检测线程</li>
+<li>修改退出函数-（埋坑，等了解易语言机制后再讲）</li>
+<li>IDAFicator.dll插件的陷阱(硬件)（2024&#x2F;4&#x2F;6回来补坑，学到后面其实不是插件问题，是不会下硬件断点哈哈哈，需要暂停也就是挂起线程，在下面的WIN10硬件HOOKC语言版也遇到这个问题，看微软官方介绍<code>SetThreadContext</code>）</li>
+</ol>
+</li>
+</ul>
+<p>SetWindowTextW 函数 (winuser.h)如果指定窗口的标题栏有一个(文本) ，则更改 (文本)。 如果指定的窗口是控件，则更改控件的文本。 但是， <strong>SetWindowText</strong> 无法更改另一个应用程序中控件的文本。但是我们找到这个位置虽然能跟踪还是无法在关键位置下cc断点（其实就可以直接改关键位置了）因为有检测</p>
+<p>由于大多数crc全代码检验都是另外启动的线程，所以在OD中可以使用Alt+T查看线程然后暂停crc线程来绕过检测。</p>
+<p>要在代码节的开始位置（而且是壳把代码吐出来）比如401000搜索命令<code>test edx,3</code>（鼠标右键查找–命令Ctr+F）就能搜索到易语言的字符串对比的关键位置。这是特征。注意下图红色框框位置：</p>
+<p><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_007.png" alt="2024_1_21_007"><br>在下硬件断点的时候注意，硬件断点重启是不会消失的，它是记录在CPU的</p>
+<p>插件IDAFicator.dll虽然好用但是有坑的，有了这个插件后硬件执行断点每次要程序重启一次才有效果。除非移出插件。</p>
+<p>最后：提到一种修改退出函数的方法，由于关键位置下断点后直接导致程序退出了，看堆栈往下翻，就能发现一个ExitProcess的API，所以能直接猜测到就是使用的这个API导致程序退出了。Ctrl+G搜这个API。本想在头部retn，但是发现没用，所以猜测程序执行流程还没走到这里就停了。可以在堆栈跟踪函数执行流程（课程挖坑，留下思考题！）</p>
+<ul>
+<li><p>全代码校验的破解思路：过CRC通常的方法：</p>
+<blockquote>
+<ol>
+<li>干掉CRC线程</li>
+<li>干掉CRC函数的判断</li>
+<li>绕过CRC检测的位置，到更底层去改</li>
+<li>硬件HOOK</li>
+<li>其他HOOK，欺骗CRC检测函数（虚表[去C++补习去]HOOK）</li>
+<li>干掉退出函数</li>
+</ol>
+</blockquote>
+</li>
+<li><p>编写硬件HOOK破解补丁</p>
+<blockquote>
+<p>思路：对关键判断位置设置硬件断点，VEH接管异常，修改EIP到正确的提示位置</p>
+</blockquote>
+</li>
+<li><p>调试寄存器的一些设置问题</p>
+<p>在上节课我们学习到了硬件断点的原理这次再次附上笔记：</p>
+<blockquote>
+<p>OD的<strong>硬件断点</strong>的原理：调试寄存器DR7是最大的老大(DR7配置DR0–DR的属性,不管他们有没有值,都由DR7说了算)的，到程序地址执行到硬件断点地址就会送入DR寄存器判断，如果存在该地址就会出发异常，OD就会接管异常，程序就停下了。</p>
+</blockquote>
+</li>
+</ul>
+<p>下面的代码只在win7有效！重点在下面的注释里</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//异常捕捉</span></span><br><span class="line">DWORD NTAPI <span class="title function_">ExceptionHandler</span><span class="params">(EXCEPTION_POINTERS* ExceptionInfo)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> ((DWORD)ExceptionInfo-&gt;ExceptionRecord-&gt;ExceptionAddress == <span class="number">0x00401053</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		ExceptionInfo-&gt;ContextRecord-&gt;Eip += <span class="number">6</span>;</span><br><span class="line">		<span class="comment">//已经处理了异常，不需要再调用下一个异常处理来处理此异常</span></span><br><span class="line">		<span class="keyword">return</span> EXCEPTION_CONTINUE_EXECUTION;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//调用下一个处理器</span></span><br><span class="line">	<span class="keyword">return</span> EXCEPTION_CONTINUE_SEARCH;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">SetHwBreakPoint</span><span class="params">(HANDLE hThread)</span></span><br><span class="line">&#123;</span><br><span class="line">	CONTEXT ctx;</span><br><span class="line">	ctx.ContextFlags = CONTEXT_ALL;</span><br><span class="line">	GetThreadContext(hThread, &amp;ctx);</span><br><span class="line">	ctx.Dr0 = <span class="number">0x00401053</span>;</span><br><span class="line">	ctx.Dr7 = <span class="number">0x1</span>;<span class="comment">//这节课的关键在这，有人设置0x405（第十位和L0,L1）但是动态调试监视发现会自动变成0x5，就是把Dr7的L0和L1位设置成了1</span></span><br><span class="line">	<span class="comment">//由于L0对应着第1位，第1位为1意味着Dr0生效，所以这里只需要设置0x1就可以了</span></span><br><span class="line">	<span class="comment">// Dr的原意是Debug register</span></span><br><span class="line">	<span class="comment">// 但是一个很神奇的是L和G的解释很想，只有一个局部和全局，自动清除和不自动清除的区别，但是设置0x2（就是只把G0置1）却无效，没法断</span></span><br><span class="line">	<span class="comment">// 即使我们设置0x3，调试监视发现它依然会变成0x1才成功!!!</span></span><br><span class="line">	<span class="comment">// 此问题，至今无人解答，大大的疑问？？？？？？目前只能猜测很可能是翻译理解错了。</span></span><br><span class="line">	<span class="comment">//这节课用的是win7，下节课会讲到下面这API在win10设置不成功的特别之处</span></span><br><span class="line">	SetThreadContext(hThread, &amp;ctx);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span></span><br><span class="line"><span class="comment">// 入口函数</span></span><br><span class="line">BOOL WINAPI <span class="title function_">DllMain</span><span class="params">(HMODULE hModule, DWORD dwReason, PVOID pvReserved)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (dwReason == DLL_PROCESS_ATTACH)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//设置全局异常处理</span></span><br><span class="line">		AddVectoredExceptionHandler(<span class="literal">NULL</span>, (PVECTORED_EXCEPTION_HANDLER)VectoredHandler) ;</span><br><span class="line">		<span class="comment">//设置硬件断点</span></span><br><span class="line">		SetHwBreakPoint();</span><br><span class="line">		<span class="comment">//禁用指定动态链接库 (DLL) 的DLL_THREAD_ATTACH和DLL_THREAD_DETACH通知。 这可以减少某些应用程序的工作集的大小。</span></span><br><span class="line">		<span class="comment">//DisableThreadLibraryCalls(hModule);</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> Load();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (dwReason == DLL_THREAD_ATTACH)</span><br><span class="line">	&#123;</span><br><span class="line">		SetHwBreakPoint();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (dwReason == DLL_PROCESS_DETACH)</span><br><span class="line">	&#123;</span><br><span class="line">		Free();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//篇幅有限。。。。。包括前面后面还有一大堆Alihead生成的代码没有粘贴过来，只是把几乎所有主要坑的代码放过来了，复现的时候自行替换</span></span><br></pre></td></tr></table></figure>
+<p>中途我的硬件hook代码不知道为什么一直都不成功(看到后一节课程的解答我在知道，上面这段代码（暂空）在win7是可以的，win10有别的坑，看下节课才知道<code>win10中在运行程序的设置上下文的结果是不可预测的，所以注意要先挂起线程；创建线程挂起主线程。（这就是这节课我的硬件HOOK一直不成功的原因呜呜呜，大坑）官方解释请看SetThreadContext的API备注</code>)，中途所以到了这么一篇文章，很nice，讲了五花八门的HOOK，虽然解决不了问题，当作拓展学习。<br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/mp/homepage?__biz=MzkxNTE0Mjk5Mw==&hid=1&sn=51468c334acf2babaee60d8e240f1697&scene=1&devicetype=Windows+10+x64&version=6309021a&lang=zh_CN&nettype=WIFI&ascene=0&session_us=gh_9a4b2d41bb29&uin=&key=">HOOK</a><br>但是还是不够详细深入不足以解释上述代码啊，所以在2024官网下的<code>英特尔® 64 位和 IA-32 架构软件开发人员手册第 3A、3B、3C 和 3D 卷组合：系统编程指南</code>第<strong>18.2</strong>节我找到了这张图</p>
+<p><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_008.png" alt="2024_1_21_008"></p>
+<p>然后在一本中文书籍《软件调试》4.2章节找到些解释如下图片</p>
+<blockquote>
+<p>IA-32处理器定义了8个调试寄存器，分别称为DRO～DR7。在32位模式下，它们都是32位的;在64位模式下，它们都是64位的。首先，DR4和 DR5是保留的，当调试扩展（debug extension）功能被启用(CR4寄存器的DE位设为1)时，任何对DR4和 DR5的引用都会导致一个非法指令异常(#UD)，当此功能被禁止时，DR4和DR5分别是DR6和DR7的别名寄存器，即等价于访问后者。<br>其他6个寄存器分别如下。<br>4个32位的调试地址寄存器(DR0<del>DR3)，64位下是64位的。<br>1个32位的调试控制寄存器（DR7），64位时，高32位保留未用。<br>1个32位的调试状态寄存器（DR6），64位时，高32位保留未用。<br>通过以上寄存器最多可以设置4个断点,其基本分工是DRO</del>DR3用来指定断点的内存(线性地址)或I&#x2F;O地址。DR7用来进一步定义断点的中断条件。DR6的作用是当调试事件发生时，向调试器报告事件的详细信息，以供调试器判断发生的是何种事件。<br><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_009.png" alt="2024_1_21_009"></p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/whatday/article/details/8621410">调试寄存器 原理与使用：DR0-DR7_dr7寄存器-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-107515.htm">[总结]调试寄存器 原理与使用：DR0-DR7-软件逆向-看雪-安全社区|安全招聘|kanxue.com</a></p>
+<ul>
+<li>课余时间加壳演示<br>中途有人提到了The Enigma Protector，做个标记。以后详细了解一下哈哈哈，据说是俄罗斯大佬写的。<br>这节演示的是VMProtect v3.2破解版(小俊)加壳！<br>首先找到一个程序的关键位置函数的内存地址开头。<br>然后打开VMProtect–&gt;需保护的函数–&gt;右键–&gt;添加函数–&gt;在地址框输入地址–》点击播放键保护<br>(不能把程序拖进来直接点击保护，这是小学生做法，还是能到代码实际上啥也没保护，只是保护了PE文件，不能修改保存，可是并没有保护到代码。上面的具体方法才能保护到代码)<br>破解VM的方法：</li>
+</ul>
+<ol>
+<li>绕过到没有被VM的代码节，比如文本比较test edx,3上面如果没有VM掉那就能找到<br>（这就是VM的缺陷之一，只能VM当前函数，并不能跟踪里面的其他Call继续VM）</li>
+</ol>
+<hr>
+<h1 id="Alihead使用教程"><a href="#Alihead使用教程" class="headerlink" title="Alihead使用教程"></a>Alihead使用教程</h1><p><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240121143852.png" alt="Pasted image 20240121143852"><br>在windows目录中的SysWOW64叫<code>32位子系统</code></p>
+<p>，为了兼容32位程序在64位系统中运行，保存的是以前xp系统以前的一些32位的dll。而system32保存的才是64位的dll(后来才知道好像也有32位的)。</p>
+<hr>
+<p>硬件断点VEH在XP上也是不能用的。<br>win10中在运行程序的设置上下文的结果是不可预测的，所以注意要先挂起线程；创建线程挂起主线程。（这就是上节课我的硬件HOOK一直不成功的原因呜呜呜，大坑，看下面代码有更加详细的解释）官方解释请看SetThreadContext的API备注</p>
+<hr>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 宏定义</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EXTERNC extern <span class="string">&quot;C&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NAKED __declspec(naked)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EXPORT __declspec(dllexport)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ALCPP EXPORT NAKED</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ALSTD EXTERNC EXPORT NAKED void __stdcall</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ALCFAST EXTERNC EXPORT NAKED void __fastcall</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ALCDECL EXTERNC NAKED void __cdecl</span></span><br><span class="line"><span class="comment">////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span></span><br><span class="line"></span><br><span class="line">DWORD NTAPI <span class="title function_">VectoredHandler</span><span class="params">(PEXCEPTION_POINTERS ExceptionInfo)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> ((DWORD)ExceptionInfo-&gt;ExceptionRecord-&gt;ExceptionAddress == <span class="number">0x00401053</span>);</span><br><span class="line">	&#123;</span><br><span class="line">		ExceptionInfo-&gt;ContextRecord-&gt;Eip += <span class="number">6</span>;</span><br><span class="line">		::MessageBox(<span class="literal">NULL</span>, <span class="string">&quot;硬件HOOK成功&quot;</span>, <span class="string">&quot;ELven&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">		<span class="comment">//已经处理过了异常，不需要再调用下一个异常来处理此异常</span></span><br><span class="line">		<span class="keyword">return</span> EXCEPTION_CONTINUE_EXECUTION;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//调用下一个处理器</span></span><br><span class="line">	<span class="keyword">return</span> EXCEPTION_CONTINUE_SEARCH;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">SetHwBreakPoint</span><span class="params">(HANDLE hThread)</span></span><br><span class="line">&#123;</span><br><span class="line">	CONTEXT ctx;</span><br><span class="line">	ctx.ContextFlags = CONTEXT_ALL;</span><br><span class="line">	GetThreadContext(hThread, &amp;ctx);</span><br><span class="line">	ctx.Dr0 = <span class="number">0x00401053</span>;</span><br><span class="line">	ctx.Dr7 = <span class="number">0x01</span>;</span><br><span class="line">	<span class="comment">//我说之前怎么这里一直都不成功呢，原来这个函数在WIN10有大坑，请看官方文档的备注。。。</span></span><br><span class="line">	<span class="comment">//好像是设置了马上又会被清除，所以设置前要挂起主线程,但发现会卡死，原来dll和主程序在同一个线程上执行</span></span><br><span class="line">	<span class="comment">//所以我们要新开启一个线程，在新线程里挂起主线程</span></span><br><span class="line">	SetThreadContext(hThread, &amp;ctx);</span><br><span class="line">&#125;</span><br><span class="line">DWORD WINAPI <span class="title function_">ThreadProc</span><span class="params">(_In_ LPVOID lpParameter)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//主线程的线程句柄，，，由于如果传伪线程句柄过来，不一定能有用，所以为了保险起见，传一个线程Id,再打开获取句柄。</span></span><br><span class="line">	HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, TRUE, (DWORD)lpParameter);</span><br><span class="line">		<span class="comment">//挂起主线程</span></span><br><span class="line">		SuspendThread((HANDLE)hThread);</span><br><span class="line">		<span class="comment">//设置硬件断点</span></span><br><span class="line">		SetHwBreakPoint(hThread);</span><br><span class="line">		<span class="comment">//恢复线程</span></span><br><span class="line">		ResumeThread((HANDLE)hThread);</span><br><span class="line">	<span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</span></span><br><span class="line"><span class="comment">// AheadLib 命名空间</span></span><br><span class="line">namespace AheadLib</span><br><span class="line">&#123;</span><br><span class="line">	HMODULE m_hModule = <span class="literal">NULL</span>;	<span class="comment">// 原始模块句柄</span></span><br><span class="line">	DWORD m_dwReturn[<span class="number">305</span>] = &#123;<span class="number">0</span>&#125;;	<span class="comment">// 原始函数返回地址</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 加载原始模块</span></span><br><span class="line">	<span class="keyword">inline</span> BOOL WINAPI <span class="title function_">Load</span><span class="params">()</span></span><br><span class="line">	&#123;</span><br><span class="line">		TCHAR tzPath[MAX_PATH];</span><br><span class="line">		TCHAR tzTemp[MAX_PATH * <span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">		<span class="comment">//是否是WOW64位子系统下运行</span></span><br><span class="line">		BOOL isWow64Process = FALSE;</span><br><span class="line">		<span class="comment">//判断进程是否为WOW64位子系统下的进程</span></span><br><span class="line">		<span class="comment">//返回是否执行成功</span></span><br><span class="line">		<span class="keyword">if</span> (IsWow64Process((HANDLE)<span class="number">-1</span>, &amp;isWow64Process))</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> (isWow64Process)</span><br><span class="line">			&#123;</span><br><span class="line">				GetSystemWow64Directory(tzPath, MAX_PATH);</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span></span><br><span class="line">			&#123;</span><br><span class="line">				GetSystemDirectory(tzPath, MAX_PATH);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//注册VEH异常</span></span><br><span class="line">		AddVectoredExceptionHandler(<span class="number">1</span>, (PVECTORED_EXCEPTION_HANDLER)VectoredHandler) ;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//线程创建</span></span><br><span class="line">		HANDLE hThread = CreateThread(<span class="literal">NULL</span>,<span class="literal">NULL</span>,ThreadProc,(LPVOID)GetCurrentThreadId(), <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">		<span class="comment">//获取的系统的目录</span></span><br><span class="line">		<span class="comment">//GetSystemDirectory(tzPath, MAX_PATH);</span></span><br><span class="line">		lstrcat(tzPath, TEXT(<span class="string">&quot;\\winspool.drv&quot;</span>));</span><br><span class="line">		m_hModule = LoadLibrary(tzPath);</span><br><span class="line">		<span class="keyword">if</span> (m_hModule == <span class="literal">NULL</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			wsprintf(tzTemp, TEXT(<span class="string">&quot;无法加载 %s，程序无法正常运行。&quot;</span>), tzPath);</span><br><span class="line">			MessageBox(<span class="literal">NULL</span>, tzTemp, TEXT(<span class="string">&quot;AheadLib&quot;</span>), MB_ICONSTOP);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> (m_hModule != <span class="literal">NULL</span>);	</span><br><span class="line">	&#125;</span><br><span class="line">		</span><br><span class="line">	<span class="comment">// 释放原始模块</span></span><br><span class="line">	<span class="keyword">inline</span> VOID WINAPI <span class="title function_">Free</span><span class="params">()</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (m_hModule)</span><br><span class="line">		&#123;</span><br><span class="line">			FreeLibrary(m_hModule);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 获取原始函数地址</span></span><br><span class="line">	FARPROC WINAPI <span class="title function_">GetAddress</span><span class="params">(PCSTR pszProcName)</span></span><br><span class="line">	&#123;</span><br><span class="line">		FARPROC fpAddress;</span><br><span class="line">		CHAR szProcName[<span class="number">16</span>];</span><br><span class="line">		TCHAR tzTemp[MAX_PATH];</span><br><span class="line"></span><br><span class="line">		fpAddress = GetProcAddress(m_hModule, pszProcName);</span><br><span class="line">		<span class="keyword">if</span> (fpAddress == <span class="literal">NULL</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> (HIWORD(pszProcName) == <span class="number">0</span>)</span><br><span class="line">			&#123;</span><br><span class="line">				wsprintf(szProcName, <span class="string">&quot;%d&quot;</span>, pszProcName);</span><br><span class="line">				pszProcName = szProcName;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			wsprintf(tzTemp, TEXT(<span class="string">&quot;无法找到函数 %hs，程序无法正常运行。&quot;</span>), pszProcName);</span><br><span class="line">			MessageBox(<span class="literal">NULL</span>, tzTemp, TEXT(<span class="string">&quot;AheadLib&quot;</span>), MB_ICONSTOP);</span><br><span class="line">			ExitProcess(<span class="number">-2</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> fpAddress;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">using namespace AheadLib;</span><br><span class="line"><span class="comment">//篇幅有限。。。。。包括前面后面还有一大堆Alihead生成的代码没有粘贴过来，只是把几乎所有主要坑的代码放过来了，复现的时候自行替换</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>前面我们在OD知道退出进程的函数是ExitProcess时候，用插件搜索然后下断点，但是并不能断下，原因是有可能有多个一样的函数，OD只搜到一个就停止了，比如在Kernrl32.dll和kernelba.dll都有ExitProcess，断点之后被你下在都到的地址靠前的那个，如果程序执行使用的是后买那个，那就断不下来，因此精确的搜法是Kernel32.ExitProcess。</p>
+<ul>
+<li>修改退出函数 –补坑<br>通过上面的学习知道，在OD知道推出进程的函数是ExitProcess时候，用插件搜索然后下断点，但是并不能断下？？？<br>为什么呢？？？<br>原因是有可能有多个一样的函数，OD只搜到一个就停止了，比如在Kernrl32.dll和kernelbase.dll都有ExitProcess。<br>Alt+E查看dll<br><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240121161018.png" alt="Pasted image 20240121161018"><br>可以看到内存里加载的所有dll,从上到下发现kernelbase.dll在前面，而直接搜索ExitProcess的时候，插件原理是从上往下，搜到一个后就不继续往下搜了，所以断点之后被你下在地址靠前的那个，如果程序执行使用的是后买那个，那就断不下来，因此精确的搜法Kernel32.ExitProcess。<br>Alt+B查看断点，更进一步证实了有两个模块哟<br><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240121161127.png" alt="Pasted image 20240121161127"></li>
+</ul>
+<p>通过调用堆栈找到是谁调用了kernel.Exitprocess的地方，然后在调用的地方的函数头retn，即可实现不退出绕过crc<br><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240121163526.png" alt="Pasted image 20240121163526"><br>还有一种思路是下在ntdll.dll，方法很多自行研究。</p>
+<hr>
+<ul>
+<li>带壳调试</li>
+</ul>
+<p>OEP是PE文件里第一个执行的代码，在CFF Explorer里可选头部AddressOfEntryPoint+ImageBase的值，也就是真实程序（不是壳）执行的第一句代码的内存地址。<br>所以没加壳的程序可以善用CFF Explorer寻找OEP<br>在程序执行起来找到代码段去搜索字符串，猜测关键点下断点。为什么重新执行，断点不生效了？？？</p>
+<blockquote>
+<p>原来在有壳的程序下内存cc断点的时候，壳吐源代码的时候会覆盖原来断点，所以可以把断点下在关键函数以前，壳完全吐出代码之后的位置，比如API下断点（第七课举例是，在易语言所写的程序OEP之后的前面部分，在调用其他函数之前，必然后调用<code>GetVersion</code>函数，所以可以下断点在GetVersion就可以绕过壳，继续下断点在别的函数）【当然不一定是非得是GetVersion,可以自己写一个不加壳的程序，看一下开头有啥API，比如CreateWindowExA，CreateWindowExA，LoadLibraryA】。我这里就是在LoadLibraryA才有效啊哈哈</p>
+</blockquote>
+<p>修改关键跳，可以猜测那个比较大的跳转。</p>
+<ul>
+<li>课余时间了解易语言神器<br>E-Debug&amp;Analysis修复版：这个程序可以直接识别出来代码里一些关键的东西的内存地址。<br>易语言–&gt;在编译之前可以–》点击工具–&gt;系统设置–&gt;就可以一键设置花指令。</li>
+</ul>
+<p>硬件写入断点可以跟到壳吐代码的位置，观察内存</p>
+<hr>
+<h1 id="08-算法分析-amp-初识IDA用法"><a href="#08-算法分析-amp-初识IDA用法" class="headerlink" title="08 算法分析 &amp; 初识IDA用法"></a>08 算法分析 &amp; 初识IDA用法</h1><ul>
+<li>前面的课程回顾<blockquote>
+<ol>
+<li>从零开始了解AheadLib工具的使用，手动编写劫持补丁</li>
+<li>修改退出函数（OD第三坑），（回顾OD还有的坑）条件断点–汉化原因，硬件断点–Ctrl+G插件原因。</li>
+<li>WIN10硬件HOOK不成功原因–需要挂起线程<br>理解壳的加载过程：</li>
+</ol>
+<ul>
+<li>运行程序</li>
+<li>在内存中吐出代码</li>
+<li>转到真实的OEP</li>
+<li>执行真实的代码</li>
+<li>执行到我们想要下断点的位置</li>
+</ul>
+</blockquote>
+</li>
+<li>带壳调试补充–加壳程序如何在我们想要下断点的位置下断点才不会被覆盖？<blockquote>
+<p>可以把断点下在关键函数以前，壳完全吐出代码之后的位置，比如API下断点（第七课举例是，在易语言所写的程序OEP之后的前面部分，在调用其他函数之前，必然后调用<code>GetVersion</code>函数，所以可以下断点在GetVersion就可以绕过壳，继续下断点在别的函数）【当然不一定是非得是GetVersion,可以自己写一个不加壳的程序，看一下开头有啥API，比如CreateWindowExA（在执行关键函数之前创建窗口），LoadLibraryA（调用动态链接库）】</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>也可以直接在函数头的内存窗口下内存写入或者硬件写入断点,可以看到壳一个个字节吐出代码的过程.<br>具体用法,比如吐出53代表函数头push ebp, 我们可以修改成C3代表retn, 直接就retn掉了我们不想执行的函数.</p>
+</blockquote>
+<h4 id="初始花指令Junk-code"><a href="#初始花指令Junk-code" class="headerlink" title="初始花指令Junk code"></a>初始花指令Junk code</h4><ol>
+<li>花指令的作用（防止静态分析IDA）</li>
+<li>花指令模板介绍</li>
+<li>花指令设计思路（构造恒成立跳转）</li>
+<li>手动去除花指令</li>
+<li>自动去除花指令</li>
+</ol>
+<hr>
+<p>vs中属性–C&#x2F;C++–所有选项–支持仅我的代码调试JMC–改成否：：就能写出和VC6一样简洁的代码。否则不知为何会多出一个<code>call  ConsoleA.__CHeckForDebuggerJustMycode</code></p>
+<p>vs属性–配置属性–常规–平台工具集–要选到xp：：这样发给xp系统才能兼容运行<br>vs中属性–》配置属性–》常规–》字符集–》使用多字节字符集</p>
+<p>vs中属性–》C&#x2F;C++–》所有选项–》SDL检查（否）、安全检查（禁用）、基于运行时的检查（未初始化的变量&#x2F;RTCu）、运行库（MTd才是静态编译）预编译头–否</p>
+<p>vs中属性–链接器–》所有选项–》启用增量链接（否 (&#x2F;INCREMENTAL:NO)）、数据执行保护（关）、随机基址(编译dll就不用关)–否</p>
+<p>vs中属性–链接器–生成调试信息–》&#x2F;DEBUG:FULL（这样才能看到调试信息，否则调试的时候所有call都没有名子）</p>
+<p>vs中属性–C&#x2F;C++–语言–符合模式–关</p>
+<hr>
+<p><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_010.png" alt="2024_1_21_010"></p>
+<p>e8&#x3D;call，90&#x3D;nop，c3&#x3D;retn，clc&#x3D;clear cf位（清除了cf位，jnb就是判断cf位为0才跳转）<br>上面这个程序编译出来，放到OD里面根据调试信息直接跟踪main函数，记住地址，然后放到IDA里面。发现函数头变成了loc开头（sub才是函数），无法反编译F5大法，神奇失效，按P是把数据转换成一个函数但是也失效。</p>
+<p>如图，下面就是花指令的实际展现形式：（像个没有指向的半个跳转）<br><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240122165336.png" alt="Pasted image 20240122165336"><br>去除思路就是，把前面的干扰nop掉。然程序正常跳转，比如这个就是可以在内存窗口搜索004010AB，把它修改成90即可，程序就会跳转到004010AC。</p>
+<p>花指令是防止静态分析IDA的，设计思路是构造恒成立的EIP跳转，里面插无效代码（防静态分析，防不住动态调试，防字符串搜索）。上面图片就是构造了jmp中间写入了数据，但是反编译工具逐条解释遇到e8当成了call，接着就把后面xxx指令当成了call的地址，反编译就不能F5了。手动去除花指令，看他的半个跳转的位置，然后请在数据窗口中修改跳转目地的前面多出来的数据nop<br>方法2：（还在数据行可以右键–分析–从下次代码分析的时候设置为byte–再分析代码–就会把这一行变成数据）。</p>
+<p>易语言–&gt;工具–》系统配置–》可以调花指令插入级别、编译结果打乱码<br>针对易语言花指令模板–》OD有个插件–》（选中待去除的所有函数段）选择插件去除花指令MainFDlg。</p>
+<ul>
+<li>上节课作业讲解<blockquote>
+<p>下断点GetWindowTextA<br>Ctrl+F9可以直接走到返回位置，小技巧记住<br>断在GetDlgItemInt是读取文本字符转化成整数，值保存在EAX<br>OD的local是局部变量<br>找到关键算法位置发现有汉字乱码，但是IDA对unicode编码不是那么友好，所以要手动点击字符串跟踪到.rdata数据段，在点击字符串地址的头部，点Options–&gt;String literals–&gt;Currently–》UTF-16LE–》yes.返回如果没变就重新按F5</p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> __cdecl <span class="title function_">ChecKey</span><span class="params">(<span class="type">int</span> userkey)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> result; <span class="comment">// eax</span></span><br><span class="line">	result = userkey * (userkey - <span class="number">23</span>) == <span class="number">-102</span>;</span><br><span class="line">	<span class="keyword">if</span> (userkey * (userkey - <span class="number">23</span>) == <span class="number">-102</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		result = userkey * userkey * userkey;</span><br><span class="line">		<span class="keyword">if</span> (result == <span class="number">4913</span>)</span><br><span class="line">			<span class="keyword">return</span> MessageBoxW(<span class="number">0</span>, <span class="string">L&quot;恭喜你开始了IDA的征程&quot;</span>, <span class="string">L&quot;注册成功&quot;</span>, <span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	__asm</span><br><span class="line">	&#123;</span><br><span class="line">		jmp Label1</span><br><span class="line">		_emit <span class="number">0xe8</span></span><br><span class="line">		Label1:</span><br><span class="line">		<span class="comment">//注意Label后面一定是冒号，不然会报错！！！！找到“newline&quot;</span></span><br><span class="line">	&#125;</span><br><span class="line">	__asm</span><br><span class="line">	&#123;</span><br><span class="line">		xor eax, eax</span><br><span class="line">		test eax, eax</span><br><span class="line">		je Label2</span><br><span class="line">		_emit <span class="number">0e8</span>h</span><br><span class="line">		Label2:</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	__asm</span><br><span class="line">	&#123;</span><br><span class="line">		xor eax, eax</span><br><span class="line">		test eax, eax</span><br><span class="line">		je Label3</span><br><span class="line">			jnz label0</span><br><span class="line">			Label0:</span><br><span class="line">				_emit <span class="number">0e8</span>h<span class="comment">//e8是call，这里随便插啥都行</span></span><br><span class="line">		Label3:</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Test Junk Code&quot;</span>);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> userkey = <span class="number">0</span>; userkey &lt; <span class="number">0xFFFFFFFF</span>; userkey++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (userkey * (userkey - <span class="number">23</span>) == <span class="number">-102</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> (userkey * userkey * userkey == <span class="number">4913</span>)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="built_in">printf</span>(<span class="string">&quot;暴力破解：%d&quot;</span>, userkey);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//还能用求根公式解一元二次方程</span></span><br><span class="line"></span><br><span class="line">	system(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>CTF大多数逆向题目都是解一元二次方程（用求根公式），椭圆曲线方程，高数要比较好<br>写注册机只要超过了RSA2000就几乎不可能爆出来，1024就比较难了，512还行。</p>
+<hr>
+<h1 id="IDA逆向之置换密码"><a href="#IDA逆向之置换密码" class="headerlink" title="IDA逆向之置换密码"></a>IDA逆向之置换密码</h1><ul>
+<li><p>课程回顾</p>
+<blockquote>
+<ol>
+<li>加壳程序的断点技巧（CreateWindowExA, CreateWindowExW等等）</li>
+<li>花指令的作用（防静态分析，无法防动态调试）</li>
+<li>花指令的设计思路（构造恒成立代码，中间插无效数据）</li>
+<li>手动去除花指令（NOP）</li>
+<li>自动去除花指令(用插件)</li>
+<li>借助IDA的Hex-Rays插件逆行第一个程序（F5）</li>
+</ol>
+</blockquote>
+</li>
+<li><p>逆向自写一段代码<br>OD可以在调试–》执行到用户代码（Alt+F4）执行到用户领空。也可以直接在内存Alt+M窗口在代码段.text段下断点。还可以在系统领空下断点，看它调用了哪些Dll里面的API.(带壳调试关键小技巧)</p>
+</li>
+</ul>
+<p>OD在数据窗口Ctrl+B搜索二进制串，Ctrl+L搜索下一个</p>
+<p><strong>逆向数组、结构体：</strong> IDA中按c将识别为数据的转化为代码，在Structures中安ins可以增加结构体，在结构体下按d可以添加元素，按n把元素重命名。右键“db”可以修改数组大小，或按d修改字类型</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/aurorayqz/article/details/71549166">(32条消息) 位、字、字节的区别 | 汇编伪指令db，dw，dd_汇编中位等于字还是字节_aurorayqz的博客-CSDN博客</a></p>
+<p>db定义字节类型变量，一个字节数据占1个字节单元，读完一个，偏移量加1</p>
+<p>dw定义字类型变量，一个字数据占2个字节单元，读完一个，偏移量加2</p>
+<p>dd定义双字类型变量，一个双字数据占4个字节单元，读完一个，偏移量加4</p>
+</blockquote>
+<p>IDA按a键识别为字符串，按c把数据转化为汇编代码。</p>
+<p>在CFF Explorer中的Address Converter可以填入VA和RVA，直接在指定范围内搜索数据。</p>
+<p>一般在IDA中出现*(_BYTE *)都是数据类型识别错误导致的，可以直接改传入函数的形式参数数据类型</p>
+<p>在IDA看伪代码的时候可以点击Edit–&gt;Public–》Hex-Rays–&gt;Options–&gt;Analysis options属性可以全选可以提高阅读性。</p>
+<ul>
+<li>作业讲解<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="comment">// int __cdecl keygen(char* Str, char* Str1, unsigned int a3)</span></span><br><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">// 	signed int v4; // [esp+0h] [ebp-Ch]</span></span><br><span class="line"><span class="comment">// 	size_t j; // [esp+4h] [ebp-8h]</span></span><br><span class="line"><span class="comment">// 	signed int i; // [esp+8h] [ebp-4h]</span></span><br><span class="line"><span class="comment">// </span></span><br><span class="line"><span class="comment">// 	__CheckForDebuggerJustMyCode(byte_45A007);</span></span><br><span class="line"><span class="comment">// 	if (!Str)</span></span><br><span class="line"><span class="comment">// 		return -1;</span></span><br><span class="line"><span class="comment">// 	if (!Str1 || !a3)</span></span><br><span class="line"><span class="comment">// 		return -1;</span></span><br><span class="line"><span class="comment">// 	if (strlen(Str) &lt;= a3)</span></span><br><span class="line"><span class="comment">// 		v4 = strlen(Str);</span></span><br><span class="line"><span class="comment">// 	else</span></span><br><span class="line"><span class="comment">// 		v4 = a3;</span></span><br><span class="line"><span class="comment">// 	for (i = 0; i &lt; v4; ++i)</span></span><br><span class="line"><span class="comment">// 	&#123;</span></span><br><span class="line"><span class="comment">// 		for (j = 0; j &lt; strlen(&quot;bcdaren&quot;); ++j)</span></span><br><span class="line"><span class="comment">// 			Str1[i] = byte_442198[j] ^ (Str[i] + 13);</span></span><br><span class="line"><span class="comment">// 	&#125;</span></span><br><span class="line"><span class="comment">// 	return 0;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="comment">//Str1=((++**--,,//..QQPP</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">keygen</span><span class="params">(<span class="type">char</span> *Str,<span class="type">char</span> *flag)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">char</span> byte_442198[<span class="number">8</span>] = <span class="string">&quot;bcdaren&quot;</span>;</span><br><span class="line">	<span class="type">int</span> a2 = <span class="number">136</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">18</span>; ++i)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="built_in">strlen</span>(byte_442198); ++j)</span><br><span class="line">			flag[i] = (byte_442198[j] ^ Str[i])<span class="number">-13</span>;</span><br><span class="line">			flag[i + <span class="number">1</span>] = <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> *flag;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">char</span> String[] = <span class="string">&quot;((++**--,,//..QQPP&quot;</span>;</span><br><span class="line">	<span class="type">char</span> flag[<span class="number">128</span>] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">	*flag = keygen(String, flag);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%s&quot;</span>, &amp;flag);</span><br><span class="line">	system(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="10-指令变形初识-amp-TLS反调试"><a href="#10-指令变形初识-amp-TLS反调试" class="headerlink" title="10 指令变形初识 &amp; TLS反调试"></a>10 指令变形初识 &amp; TLS反调试</h1></li>
+<li>上节课的课程回顾补充<blockquote>
+<p><strong>逆向数组、结构体：</strong> IDA中按c将识别为数据的转化为代码，在Structures中安ins可以增加结构体，在结构体下按d可以添加元素，按n把元素重命名。右键“db”可以修改数组大小，或按d修改字类型</p>
+</blockquote>
+</li>
+</ul>
+<p>有些库函数的特征我们见的多了就应该记住，这就是经验。免得下次再见当成了算法去逆到头来竹篮打水一场空。还有时候scanf函数IDA会只识别出一个参数，此时别慌，点击去跟踪再ESC出来，就会识别出来啦！</p>
+<ul>
+<li>Main函数真的是最早执行的函数吗？<br>先写一段代码：只写个main函数并在内部调用信息框，通过CFF Explorer找到EP，然后去OD从EP开始跟踪，发现在main函数之前还是有别的指令和函数是先执行的呀。<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">public:</span><br><span class="line">	MyClass()</span><br><span class="line">	&#123;</span><br><span class="line">		::MessageBox(<span class="literal">NULL</span>, <span class="string">&quot;我是构造函数&quot;</span>, <span class="string">&quot;Elven&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line">MyClass a;<span class="comment">//全局变量</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	::MessageBox(<span class="literal">NULL</span>, <span class="string">&quot;我是main函数&quot;</span>, <span class="string">&quot;Main&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+在实验中写一篇C++语言的代码cpp，定义一个类和public方法，构造函数在main函数之前，并定义类的全局变量，然后去OD中从EP开始跟踪观察会发现一个叫._initterm的函数call，这个就是C语言用来初始化全局变量的函数。是优先于main函数执行的。</li>
+</ul>
+<h4 id="TLS–线程局部存储，甚至比OEP先执行"><a href="#TLS–线程局部存储，甚至比OEP先执行" class="headerlink" title="TLS–线程局部存储，甚至比OEP先执行"></a>TLS–线程局部存储，甚至比OEP先执行</h4><p>使用TLS示例代码如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/c6a644e7f0dc8379aeaba0b0d6ad2bd7.png" alt="image.png"></p>
+<p>有了最下面那一段才发现，在PE文件结构中就会发现它添加了一个TLS目录：其实就是在可选头部–数据目录–》添加了一个TLS表如下红框所示。</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/f2eff5f3bbe673b62dc1eea7afb1fef1.png" alt="image.png"></p>
+<p>这个表描述的是一个TLS结构体：在CFF的TLS结构体看到的Value是VA绝对内存地址。</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/0ad3f5803c926a4c77490e2308e56039.png" alt="image.png"><br>这个结构体在C语言中格式如下，其他几个都能直译，唯独重点关注这个<code>AddressOfCallBacks</code>：<br><img src="https://img-blog.csdnimg.cn/img_convert/a3f2854bc0f821f1da67c27bb9ed177e.png" alt="image.png"></p>
+<p>在AddressOfCallBacks保存的就是最下面里面注册的函数的地址的内存位置的地址。按顺序存储，最后以零结束。<img src="https://img-blog.csdnimg.cn/img_convert/3be0a04e8c2b3459b6003a2a02eb2f5c.png" alt="image.png"></p>
+<p>在CFF Explorer中寻找TLS Directory RVA中的地址，放到Address Converder中的地址转换器的RVA中得到VA，可去OD的内存数据款窗口搜索到这个地址，发现从这个地址开始存储的就是TLS目录的值</p>
+<p>遇到这种情况将程序放到OD，那么TLS的函数会直接运行起来，然后不停在OEP的位置，这就是TLS反调试。此时再OD菜单栏–选项–调试设置–事件–设置第一次暂停于–系统断点。再用OD插件StrongOD–OPtion–勾选Break On Tls就可以直接停在Tls的回调函数上。</p>
+<p>就相当于停在这里了：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/2e9cec22df7111e19fd0c95fa9d62968.png" alt="image.png"></p>
+<p>综上：TLS先于OEP执行！这段知识还在《逆向工程核心原理》书中有过讲解。</p>
+<p>实际应用：十分常用…<br>发现TLS的注册函数和DLLMian函数几乎一模一样，画眉提到dll有四种状态，看了有关于动态链接库的知识才详细了解道<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/130871341">有关动态链接库的知识 - 知乎</a></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/e1f34502a785b1fd19f6a1c405f29263.png" alt="image.png"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;Windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;tchar.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;LPC/ntdll.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//_IMAGE_TLS_DIRECTORY32</span></span><br><span class="line"><span class="comment">//我要用到TLS这个东西了</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(linker,<span class="string">&quot;/INCLUDE:__tls_used&quot;</span>)</span></span><br><span class="line"></span><br><span class="line">DWORD isDebug = <span class="number">0</span>;</span><br><span class="line"><span class="type">void</span> NTAPI <span class="title function_">TLS_CALLBACK</span><span class="params">(PVOID DllHandle, DWORD Reason, PVOID Reserved)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (Reason == DLL_PROCESS_ATTACH)</span><br><span class="line">	&#123;</span><br><span class="line">		::MessageBox(<span class="literal">NULL</span>, <span class="string">&quot;TLS函数执行1&quot;</span>, <span class="string">&quot;Elven&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">		<span class="comment">//不接受内核调试信息 第一个参数是进程句柄，第二个参数是想干啥(我想中断和内核之间调试信息的联系)</span></span><br><span class="line">		<span class="comment">//NtSetInformationThread(GetCurrentThread(), ThreadHideFromDebugger, 0, 0);</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">//返回值isDebug为0则没被调试，如果不为0证明被调试了</span></span><br><span class="line">		NtQueryInformationProcess(GetCurrentProcess(), ProcessDebugPort, (PVOID)&amp;isDebug, <span class="keyword">sizeof</span>(DWORD), <span class="literal">NULL</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> NTAPI <span class="title function_">TLS_CALLBACK2</span><span class="params">(PVOID DllHandle, DWORD Reason, PVOID Reserved)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (Reason == DLL_PROCESS_ATTACH)</span><br><span class="line">	&#123;</span><br><span class="line">		::MessageBox(<span class="literal">NULL</span>, <span class="string">&quot;TLS函数执行2&quot;</span>, <span class="string">&quot;Elven&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">		<span class="comment">//不接受内核调试信息 第一个参数是进程句柄，第二个参数是想干啥(我想中断和内核之间调试信息的联系)</span></span><br><span class="line">		<span class="comment">//NtSetInformationThread(GetCurrentThread(), ThreadHideFromDebugger, 0, 0);</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">//返回值isDebug为0则没被调试，如果不为0证明被调试了</span></span><br><span class="line">		NtQueryInformationProcess(GetCurrentProcess(), ProcessDebugPort, (PVOID)&amp;isDebug, <span class="keyword">sizeof</span>(DWORD), <span class="literal">NULL</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">// 	char array[] = &#123; 0xD7,0xA2,0xB2,0xE1,0xB3,0xC9,0xB9,0xA6,0x00 &#125;;//注册成功</span></span><br><span class="line"><span class="comment">// 	for (int i = 0; i &lt; 9; i++)</span></span><br><span class="line"><span class="comment">// 	&#123;</span></span><br><span class="line"><span class="comment">// 		array[i] = array[i] ^ 0x10;</span></span><br><span class="line"><span class="comment">// 	&#125;</span></span><br><span class="line">	<span class="type">char</span> array2[] = &#123; <span class="number">0xc7</span>, <span class="number">0xb2</span>, <span class="number">0xa2</span>, <span class="number">0xf1</span>, <span class="number">0xa3</span>, <span class="number">0xd9</span>, <span class="number">0xa9</span> ,<span class="number">0xb6</span> ,<span class="number">0x10</span>&#125;;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">9</span>; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		array2[i] = array2[i] ^ <span class="number">0x10</span>^isDebug;<span class="comment">//由于如果是0那么异或任何数都为原来的数，利用这个特性实现反调试，因为调试了isDebug会变，结果也就会变.</span></span><br><span class="line">		<span class="comment">//但是画眉的OD有反反调试插件，所以可能没变要注意。</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//0xc7, 0xb2, 0xa2, 0xf1, 0xa3, 0xd9, 0xa9 ,0xb6 ,0x10</span></span><br><span class="line">	MessageBox(<span class="literal">NULL</span>, array2, <span class="string">&quot;Elven&quot;</span>, MB_OK);</span><br><span class="line">	system(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//新建一段数据，放到TLS这个目录表里面</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> data_seg(<span class="string">&quot;.CRT$XLX&quot;</span>)</span></span><br><span class="line">PIMAGE_TLS_CALLBACK pTLS_CALLBACKs[] = &#123; TLS_CALLBACK,TLS_CALLBACK2,<span class="literal">NULL</span> &#125;;</span><br><span class="line"><span class="comment">//这里还发现当把第二个元素换成NULL时候，第一个TLS会无限次执行...</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> data_seg()</span></span><br></pre></td></tr></table></figure>
+<hr>
+<ul>
+<li>上节课一道CTF的作业讲解</li>
+</ul>
+<p>花指令–不仅能由jcc指令来实现，还能由call,retn指令来实现。只要能操控Eip都是<br>如下图所示，仔细观察推敲会发现也是一种花指令形式，我标红的都是花指令可以nop.<br><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240124173105.png" alt="Pasted image 20240124173105"><br>刚改完，下面又能发现他call实现的花指令，如下图标红处：<br><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240124175356.png" alt="Pasted image 20240124175356"><br>nop掉那个字节后，再分析后面call会把下一跳(返回地址)压栈的，但是它又给【ESP】+0x，再次retn，所以就相当于直接跳到了00402037，所以下面标红的地方都可以是看作花指令nop掉。<br><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240124180409.png" alt="Pasted image 20240124180409"><br>综上可见汇编功底之强大可以构造多么精巧的花指令。<br>（挖坑。课程提到了个0x30的东西，据说是拿_PEB结构体,可以在Win32的课程下，学在R3环下断链–隐藏模块–即把dll全部隐藏在OD查不到，才能真正了解_PEB结构体）</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1062697-1-1.html">让vmp在调试器里可以运行——过antidebug过程实操 - 『脱壳破解区』 - 吾爱破解 - LCG - LSG |安卓破解|病毒分析|www.52pojie.cn</a><br>执行到返回，按上面帖子的方法把堆栈地址 dff48指向的数据清0<br>原因是CheckRemoteDebuggerPresent，返回值&#x3D;1代表被调试，返回值&#x3D;0代表未被调试<br>注意：CheckRemoteDebuggerPresent判断被调试返回值不是存在eax而是存在堆栈中，所以把eax清0也没用。</p>
+</blockquote>
+<p>Push距离call最近的就是第一个参数。我们去花指令之后，分析汇编，对应着上面我们的反调试源码，才会发现一目了然，豁然开朗。如下图，NtQueryInformationProcess的第三个参数是返回结果，若不是因为画眉的OD拥有反反调试插件，否则这里是8个F,调试就会异常没法继续<br><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240125144748.png" alt="Pasted image 20240125144748"><br>[0x地址]像这样子的格式的写死了就是–全局变量<br>(如果程序有把这个全局变量代入计算，那怎么查看还有哪些地方调用了这个全局变量呢。<br>复制地址–》右键–》查找–》所有常量–》输入地址<br><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240125182813.png" alt="Pasted image 20240125182813"><br>跟过来竟然还发现，它在取随机数之前，还拿这个全局变量异或过<br>)<br>但上面还不是最精巧的，而是这里下面，才是反调试的灵魂，极为精巧，如下图：</p>
+<blockquote>
+<p>如果NtQueryInformationProcess的结果全局变量isDebug不等于0, 则说明发现被调试了，就会把esi的0值赋值给edi<a target="_blank" rel="noopener" href="https://blog.csdn.net/npu2017302288/article/details/109171692">cmov条件传送指令-CSDN博客</a>，EDI原本是存储的下一个TLS函数的地址，如果没被发现调试，那就给AddressOfCallBacks的后面接着传入下一个TLS函数的地址，让程序继续执行TLS的回调函数。</p>
+</blockquote>
+<p><img src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240125175936.png" alt="Pasted image 20240125175936"></p>
+<p>在找到画指令的规则模板之后可以Ctrl+B直接二进制搜索匹配，还支持模糊匹配。</p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/pragma/">pragma</a></div><div class="post-share"><div class="social-share" data-image="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/CTF/%E6%B5%B7%E6%B2%B3%E5%B7%A5%E5%8C%A0%E6%9D%AF%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" title="海河工匠杯环境配置"><img class="cover" src="/CTF/%E6%B5%B7%E6%B2%B3%E5%B7%A5%E5%8C%A0%E6%9D%AF%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/Pasted%20image%2020240402153412.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">海河工匠杯环境配置</div></div><div class="info-2"><div class="info-item-1">use ip addr 192.168.1.155&#x2F;24 dev eth1ifconfig eth1 up 16.04 中包含的 OpenSSH 版本禁用 ssh-dss。有一个包含此问题的遗留信息的简洁页面：http://www.openssh.com/legacy.html 添加网卡：blog.51cto.com&#x2F;506554897&#x2F;1742070service network restart 简而言之，您应该将选项添加-oHostKeyAlgorithms=+ssh-dss到 SSH 命令中： 1ssh -oHostKeyAlgorithms=+ssh-dss root@192.168.8.109   您还可以在您的文件中添加主机模式，~/.ssh/config这样您就不必每次都指定密钥算法： 123Host nas  HostName 192.168.8.109  HostKeyAlgorithms=+ssh-dss  这样做的另一个好处是您无需键入 IP 地址。相反，ssh将识别主机nas并知道连接到哪里。当然，您可以使用任何其他名称代替。...</div></div></div></a><a class="pagination-related" href="/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/hydra/" title="hydra"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">hydra</div></div><div class="info-2"><div class="info-item-1">常用参数说明hydra &lt;&lt;&lt;-l LOGIN|-L FILE&gt; &lt;-p PASS|-P FILE&gt;&gt; | &lt;-C FILE&gt;&gt; &lt;-e ns&gt;&lt;-o FILE&gt; &lt;-t TASKS&gt; &lt;-M FILE &lt;-T TASKS&gt;&gt; &lt;-w TIME&gt; &lt;-f&gt; &lt;-s PORT&gt; &lt;-S&gt; &lt;-vV&gt;server service -R继续从上一次进度接着破解-S大写，采用 SSL 链接-s 小写，可通过这个参数指定非默认端口-l 指定破解的用户，对特定用户破解-L 指定用户名字典-p 小写，指定密码破解，少用，一般是采用密码字典-P 大写，指定密码字典-e 可选选项，n：空密码试探，s：使用指定用户和密码试探-C 使用冒号分割格式，例如“登录名:密码”来代替-L&#x2F;-P 参数-M 指定目标列表文件一行一条-o 指定结果输出文件-f在使用-M 参数以后，找到第一对登录名或者密码的时候中止破解-t 同时...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/%E9%80%86%E5%90%91/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/" title="003滴水第一期的笔记逆向破解实战班"><img class="cover" src="/%E9%80%86%E5%90%91/003%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/Pasted%20image%2020240204161429.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-27</div><div class="info-item-2">003滴水第一期的笔记逆向破解实战班</div></div><div class="info-2"><div class="info-item-1">16 InlineHook补丁技术 认识Inline HOOK其实在之前学习硬件HOOK的时候，我们已经自行了解过了。   HOOK的分类：Inline HOOK，APIHOOK,，IATHOOK，硬件HOOK 什么是InlineHOOK 通过修改汇编代码从而实现修改程序执行流程   易语言里的超级HOOK是什么？ 是InlineHOOK的一种，可以对任意地址进行HOOK易语言外挂作者常常称这种HOOK技术为超级HOOK     示例：利用InlineHOOK给程序添加信息框  OD分析易语言程序的时候，最好同时使用E-Debug_20.dll（包含CodeMake.exe），和E-Debug_302.dll两个插件。先使用E-Debug_20.dll，再点击使用E-Debug_302.dll！如果发现E-Debug_20.dll弹窗使用不了，那就在Alt+M内存窗口中查看找到，当前的内存地址开始(基址)和偏移的大小是多少，再回来填入弹框即可！ 如下图，假如在下原本点击按钮只是会修改窗口标题的程序的按钮事件ff55fc5f5e下断点，我们需要通过lnlinehook技术，让它可以...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%AE%9A%E4%BD%8D%E5%85%B3%E9%94%AE%E7%82%B9%E5%B9%B6%E7%88%86%E7%A0%B4"><span class="toc-number">1.</span> <span class="toc-text">如何快速定位关键点并爆破</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E8%A1%A5%E4%B8%81%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">破解补丁工具的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#OD%E4%B8%AD%E6%90%9C%E7%B4%A2%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">OD中搜索字符串的原理：</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A0%B4%E8%A7%A3%E8%A1%A5%E4%B8%81"><span class="toc-number">3.</span> <span class="toc-text">编写第一个破解补丁</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8D%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E7%A0%B4%E8%A7%A301"><span class="toc-number">4.</span> <span class="toc-text">不修改代码实现破解01</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E8%87%AA%E5%B7%B1%E5%86%99%E7%9A%84dll%E6%96%87%E4%BB%B6%EF%BC%9F%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">1. 如何调试自己写的dll文件？？?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%BF%E7%A8%8B"><span class="toc-number">4.2.</span> <span class="toc-text">2. 什么是线程???</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%A7%91%E6%99%AE%E2%80%93%E5%88%9D%E8%AF%86%E5%BC%82%E5%B8%B8%E4%B9%8BVEH"><span class="toc-number">4.3.</span> <span class="toc-text">3. 科普–初识异常之VEH</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8D%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E7%A0%B4%E8%A7%A32"><span class="toc-number">5.</span> <span class="toc-text">不修改代码实现破解2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8D%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E7%A0%B4%E8%A7%A32-1"><span class="toc-number">6.</span> <span class="toc-text">不修改代码实现破解2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Alihead%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B"><span class="toc-number">7.</span> <span class="toc-text">Alihead使用教程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#08-%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90-amp-%E5%88%9D%E8%AF%86IDA%E7%94%A8%E6%B3%95"><span class="toc-number">8.</span> <span class="toc-text">08 算法分析 &amp; 初识IDA用法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E8%8A%B1%E6%8C%87%E4%BB%A4Junk-code"><span class="toc-number">8.0.0.1.</span> <span class="toc-text">初始花指令Junk code</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IDA%E9%80%86%E5%90%91%E4%B9%8B%E7%BD%AE%E6%8D%A2%E5%AF%86%E7%A0%81"><span class="toc-number">9.</span> <span class="toc-text">IDA逆向之置换密码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#10-%E6%8C%87%E4%BB%A4%E5%8F%98%E5%BD%A2%E5%88%9D%E8%AF%86-amp-TLS%E5%8F%8D%E8%B0%83%E8%AF%95"><span class="toc-number">10.</span> <span class="toc-text">10 指令变形初识 &amp; TLS反调试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#TLS%E2%80%93%E7%BA%BF%E7%A8%8B%E5%B1%80%E9%83%A8%E5%AD%98%E5%82%A8%EF%BC%8C%E7%94%9A%E8%87%B3%E6%AF%94OEP%E5%85%88%E6%89%A7%E8%A1%8C"><span class="toc-number">10.0.0.1.</span> <span class="toc-text">TLS–线程局部存储，甚至比OEP先执行</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

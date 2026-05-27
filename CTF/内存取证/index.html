@@ -1,0 +1,690 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>内存取证 | 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Volatility工具使用详解&amp;&amp;做题-CTF对抗-看雪-安全社区|安全招聘|kanxue.com 高难度CyberDefenders: Blue team CTF Challenges | TeamSpy溯源取证-内存取证 高难度篇_strings -el svchost*-CSDN博客老规矩，先看一下当前映像的系统信息 1.&#x2F;volatility_2.6_lin64_stan">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内存取证">
+<meta property="og:url" content="https://unique-elven.github.io/CTF/%E5%86%85%E5%AD%98%E5%8F%96%E8%AF%81/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="Volatility工具使用详解&amp;&amp;做题-CTF对抗-看雪-安全社区|安全招聘|kanxue.com 高难度CyberDefenders: Blue team CTF Challenges | TeamSpy溯源取证-内存取证 高难度篇_strings -el svchost*-CSDN博客老规矩，先看一下当前映像的系统信息 1.&#x2F;volatility_2.6_lin64_stan">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://unique-elven.github.io/img/toux.jpg">
+<meta property="article:published_time" content="2026-05-27T14:46:30.000Z">
+<meta property="article:modified_time" content="2026-05-27T15:42:31.076Z">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://unique-elven.github.io/img/toux.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "内存取证",
+  "url": "https://unique-elven.github.io/CTF/%E5%86%85%E5%AD%98%E5%8F%96%E8%AF%81/",
+  "image": "https://unique-elven.github.io/img/toux.jpg",
+  "datePublished": "2026-05-27T14:46:30.000Z",
+  "dateModified": "2026-05-27T15:42:31.076Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "乙太",
+      "url": "https://unique-elven.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://unique-elven.github.io/CTF/%E5%86%85%E5%AD%98%E5%8F%96%E8%AF%81/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '内存取证',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/github-chart.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">83</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">67</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">34</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/753197.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a><a class="nav-page-title" href="/"><span class="site-name">内存取证</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">内存取证</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-27T14:46:30.000Z" title="发表于 2026-05-27 22:46:30">2026-05-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-27T15:42:31.076Z" title="更新于 2026-05-27 23:42:31">2026-05-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/CTF/">CTF</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-279016.htm">Volatility工具使用详解&amp;&amp;做题-CTF对抗-看雪-安全社区|安全招聘|kanxue.com</a></p>
+<h2 id="高难度"><a href="#高难度" class="headerlink" title="高难度"></a>高难度</h2><p><a target="_blank" rel="noopener" href="https://cyberdefenders.org/blueteam-ctf-challenges/teamspy/#nav-questions">CyberDefenders: Blue team CTF Challenges | TeamSpy</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_48421613/article/details/130014454">溯源取证-内存取证 高难度篇_strings -el svchost*-CSDN博客</a><br>老规矩，先看一下当前映像的系统信息</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpoffice/win7ecorpoffice2010-<span class="number">36</span>b02ed3<span class="selector-class">.vmem</span> imageinfo </span><br></pre></td></tr></table></figure>
+
+<p>使用两种方式获得进程列表pslist，或者psscan</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpoffice/win7ecorpoffice2010-<span class="number">36</span>b02ed3<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 pslist</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpoffice/win7ecorpoffice2010-<span class="number">36</span>b02ed3<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 psscan</span><br></pre></td></tr></table></figure>
+
+<p>使用getsids命令统计 PID 为 1364 的进程或进程组</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpoffice/win7ecorpoffice2010-<span class="number">36</span>b02ed3<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 getsids -<span class="selector-tag">p</span> <span class="number">1364</span>  </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmdline</span><br></pre></td></tr></table></figure>
+
+<p>查找和服务器交互的IP地址</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpoffice/win7ecorpoffice2010-<span class="number">36</span>b02ed3<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 netscan</span><br></pre></td></tr></table></figure>
+<p>被恶意文件滥用的Teamviewer(远程连接软件)版本是什么？-F 以正则方式匹配</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings win7ecorpoffice2010<span class="number">-36b</span>02ed3.vmem| grep -F <span class="string">&quot;54.174.131.235&quot;</span></span><br></pre></td></tr></table></figure>
+<p>恶意文件使用了什么密码来启用对系统的远程访问,“editbox” 是该配置文件中与 “Win7SP1x64” 相关的编辑框数据的名称。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2<span class="number">.6</span>_lin64_standalone -f c74-TeamSpy/ecorpoffice/win7ecorpoffice2010<span class="number">-36b</span>02ed3.vmem --profile=Win7SP1x64 editbox</span><br></pre></td></tr></table></figure>
+
+<p>发送钓鱼电子邮件的发件人的电子邮件地址是什么<br>我们将找到扩展名为*.eml或*.pst的文件（Outlook和Microsoft Exchange文件具有这样的扩展名，它们可以包含信件本身和文件夹，联系人，地址，附件等）。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpoffice/win7ecorpoffice2010-<span class="number">36</span>b02ed3<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 filescan | grep pst$</span><br></pre></td></tr></table></figure>
+
+<p>将 pst相关的文件转储在 pst目录下<br>dumpfiles:提取内存映射和缓存的文件，包括-n(不覆盖已有的 dump 文件)、-u(只创建新的 dump 文件，不覆盖已有的 dump 文件) 和-r(指定 dump 文件的根目录)。<br>-D:指定要存储 dump 文件的路径和文件名，是 –dump-dir的简写</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpoffice/win7ecorpoffice2010-<span class="number">36</span>b02ed3<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 dumpfiles -n -u -<span class="attribute">r</span> pst$ -D pst</span><br></pre></td></tr></table></figure>
+
+<p>此时使用readpst工具进行读取，该工具需要手动安装<br><code>sudo apt-get install pst-utils</code></p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readpst -S <span class="keyword">file</span><span class="number">.2692</span><span class="number">.0</span>xfffffa80042dcf10.phillip.price@e-corp.biz.pst.dat</span><br></pre></td></tr></table></figure>
+
+<p>恶意文档的MD5哈希是什么？</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">md5sum <span class="number">13</span>-bank_statement_088452<span class="selector-class">.doc</span></span><br></pre></td></tr></table></figure>
+
+<p>比特币的地址</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep -r -i bitcoin pst</span><br></pre></td></tr></table></figure>
+
+<p>恶意文件为系统提供的用于远程访问的ID是什么？</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings win7ecorpoffice2010<span class="number">-36b</span>02ed3.vmem| grep <span class="string">&quot;54.174.131.235&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+<p>memdump命令捕获 pid 为 1364的内存状态，生成一个名为1364.dmp的文件，同时将生成的1364.dmp文件保存在当前目录下，以便于后续的分析</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpoffice/win7ecorpoffice2010-<span class="number">36</span>b02ed3<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 memdump -<span class="selector-tag">p</span> <span class="number">1364</span> -D ./</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings -el <span class="number">1364.</span>dmp | grep -A10 -B10 <span class="string">&quot;54.174.131.235&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>参与者最后一次使用远程访问工具连接到系统的IPv4地址是什么？</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">strings <span class="number">1364.</span>dmp| grep -B10 -A10 -E <span class="string">&quot;([0-9]&#123;1,3&#125;[\.])&#123;3&#125;[0-9]&#123;1,3&#125;&quot;</span> | grep <span class="string">&quot;team&quot;</span> -B10 -A10  </span><br><span class="line">strings -el <span class="number">1364.</span>dmp | grep -F <span class="string">&#x27;31.6.13.155&#x27;</span> -B <span class="number">10</span> -A <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<p>word文档中的哪个公共函数返回最终在系统上运行的完整命令字符串？</p>
+<p>先安装个工具，用于分析Microsoft OLE2文件（也称为结构化存储，复合文件二进制格式或复合文档文件格式）例如Microsoft Office文档或Outlook消息，主要用于恶意软件分析，取证和调试。它基于olefile解析器<br><code>sudo pip3 install -U oletools</code></p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">olevba -c <span class="number">13</span>-bank_statement_088452.doc </span><br></pre></td></tr></table></figure>
+
+<h3 id="ecorpwin7"><a href="#ecorpwin7" class="headerlink" title="ecorpwin7"></a>ecorpwin7</h3><p>恶意文档的MD5哈希是什么？</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpwin7/ecorpwin7-e73257c4<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 filescan | grep pst$</span><br><span class="line"></span><br><span class="line">mkdir pst2</span><br><span class="line"></span><br><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpwin7/ecorpwin7-e73257c4<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 dumpfiles -n -u -<span class="attribute">r</span> pst$ -D pst2</span><br><span class="line"></span><br><span class="line">readpst -S file.<span class="number">2496.0</span>xfffffa80034e9850<span class="selector-class">.Outlscott</span><span class="selector-class">.knowles</span><span class="keyword">@e-corp</span>.biz-00000004.pst.dat </span><br><span class="line"></span><br><span class="line">xxd <span class="number">10</span>-Important_ECORP_Lawsuit_Washington_Leak.rtf</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>但是导出来的时候，该RTF文件损坏了，全是GG</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2<span class="number">.6</span>_lin64_standalone -f c74-TeamSpy/ecorpwin7/ecorpwin7-e73257c4.vmem --profile=Win7SP1x64 filescan | grep rtf$ </span><br><span class="line"></span><br><span class="line">./volatility_2<span class="number">.6</span>_lin64_standalone -f c74-TeamSpy/ecorpwin7/ecorpwin7-e73257c4.vmem --profile=Win7SP1x64 dumpfiles -Q <span class="number">0x000000007d6b3850</span> -u -n -D pst2</span><br></pre></td></tr></table></figure>
+<p>这段命令行的作用是将文件 xxxLeak.rtf.dat 中的特定字节删除，并将文件中的特定字符串替换为另一个字符串，最后将修改后的二进制文件写入新文件 xxxLeak.rtf。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxd -p <span class="keyword">file</span>.None<span class="number">.0</span>xfffffa80040b3260.Important_ECORP_Lawsuit_Washington_Leak.rtf.dat | sed <span class="string">&#x27;/000000000000000000000000000000000000000000000000000000000000/d&#x27;</span> | sed <span class="string">&#x27;/0000000000000000000000000000000000000000000000000000/d&#x27;</span> | sed <span class="string">&#x27;s/6131376136616631303365316533616437657d7d7d7d0000000000000000/6131376136616631303365316533616437657d7d7d7d/g&#x27;</span> | xxd -r -p &gt; Important_ECORP_Lawsuit_Washington_Leak.rtf </span><br></pre></td></tr></table></figure>
+<p>或者  使用 Sed 命令将文件中的任意空字符 (0x0) 替换为空字符串 (即删除所有空字符)。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#x27;s/\x0//<span class="selector-tag">g</span>&#x27; file<span class="selector-class">.None</span>.<span class="number">0</span>xfffffa80040b3260<span class="selector-class">.Important_ECORP_Lawsuit_Washington_Leak</span><span class="selector-class">.rtf</span><span class="selector-class">.dat</span> &gt; Important_ECORP_Lawsuit_Washington_Leak<span class="selector-class">.rtf</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">md5sum Important_ECORP_Lawsuit_Washington_Leak<span class="selector-class">.rtf</span></span><br><span class="line">使用clamscan -<span class="attribute">r</span>工具扫一下，也是告诉我们，别人利用的是CVE_2010_3333-<span class="number">5</span> Microsoft RTF栈溢出漏洞</span><br><span class="line">在 VirusTotal 中，该文件除其他外还被标记为 KorPlug。KorPlug 是 PlugX 的变体</span><br></pre></td></tr></table></figure>
+
+<p>被加载的恶意文件的通用名称是什么？</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpwin7/ecorpwin7-e73257c4<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 netscan</span><br><span class="line"></span><br><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpwin7/ecorpwin7-e73257c4<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 pstree | grep <span class="number">288</span></span><br><span class="line"></span><br><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpwin7/ecorpwin7-e73257c4<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 cmdline | grep &quot;rundll&quot; -<span class="selector-tag">A</span> <span class="number">10</span> -<span class="selector-tag">B</span> <span class="number">10</span></span><br><span class="line"></span><br><span class="line">mkdir dll</span><br><span class="line"></span><br><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpwin7/ecorpwin7-e73257c4<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 dumpfiles -n -<span class="selector-tag">i</span> -<span class="attribute">r</span> test<span class="selector-class">.dll</span> -D dll </span><br><span class="line"></span><br><span class="line">clamscan -<span class="attribute">r</span> .      </span><br><span class="line"></span><br><span class="line">md5sum file.<span class="number">288.0</span>xfffffa8003791f10<span class="selector-class">.test</span><span class="selector-class">.DLL</span><span class="selector-class">.dat</span>  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Clamscan 是一个免费的开源杀毒软件，它使用 clamav 软件包来检测文件是否包含恶意软件。Clamscan 最初是由加州大学伯克利分校开发的，并在其 BSD 授权条款下免费提供。它支持多种文件格式和平台，并且可以在多个平台上运行。Clamscan 可以用于扫描本地计算机或远程服务器上的文件，并且可以自动检测和清除恶意软件。</p>
+</blockquote>
+<blockquote>
+<p>Malpedia 是一个在线的恶意软件数据库，提供有关各种恶意软件、病毒、黑客攻击和网络犯罪的信息。Malpedia 官网是<br>链接: <a target="_blank" rel="noopener" href="https://malpedia.caad.fkie.fraunhofer.de/library">https://malpedia.caad.fkie.fraunhofer.de/library</a> 。在该网站上，您可以找到有关各种恶意软件和攻击的详细信息，包括它们的特征、传播方式、攻击目标、预防和应对措施等。Malpedia 是由 OpenDNS 和安全公司 ESET 共同开发的，旨在为网络安全专业人士和普通人提供有关恶意软件的详细信息。</p>
+</blockquote>
+<p>攻击者使用什么密码来暂存压缩文件以进行exfil？</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> ./volatility_2<span class="number">.6</span>_lin64_standalone -f c74-TeamSpy/ecorpwin7/ecorpwin7-e73257c4.vmem --profile=Win7SP1x64 memdump -p <span class="number">288</span> -D ./  </span><br><span class="line"> </span><br><span class="line">strings -el <span class="number">288.</span>dmp| grep <span class="string">&quot;password&quot;</span> -A10 -B10</span><br><span class="line"></span><br><span class="line">strings -el  ecorpwin7-e73257c4.vmem| egrep -A5 -B5 <span class="string">&quot;password1234&quot;</span></span><br><span class="line"></span><br><span class="line">strings -el  ecorpwin7-e73257c4.vmem| egrep <span class="string">&quot;reports.rar&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>恶意文件的c2服务器的IP地址是什么？</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpwin7/ecorpwin7-e73257c4<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 netscan</span><br></pre></td></tr></table></figure>
+
+<p>发送钓鱼电子邮件的电子邮件地址是什么？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">之前我们发现附件存储在10.eml中。</span><br><span class="line">cat pst2/scott.knowles@e-corp.biz1/Inbox/10.eml</span><br></pre></td></tr></table></figure>
+<p>这段命令行的目的是扫描指定的内存文件，并使用 Yarascan 扫描内存以查找可能的病毒或恶意软件，-Y “From:” 在 Yarascan 扫描期间，忽略扫描指定字符串的内存块</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c74-TeamSpy/ecorpwin7/ecorpwin7-e73257c4<span class="selector-class">.vmem</span> <span class="attr">--profile</span>=Win7SP1x64 yarascan -<span class="attribute">Y</span> &quot;<span class="selector-tag">From</span>:<span class="string">&quot; | grep &quot;</span>@<span class="string">&quot; -B3 -A3  </span></span><br></pre></td></tr></table></figure>
+
+<p>攻击者用来感染E Coin服务器的deb包的名称是什么？</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings -el ecorpwin7-e73257c4<span class="selector-class">.vmem</span> | grep -F &#x27;<span class="selector-class">.deb</span>&#x27;</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="中级难"><a href="#中级难" class="headerlink" title="中级难"></a>中级难</h1><p><a target="_blank" rel="noopener" href="https://cyberdefenders.org/blueteam-ctf-challenges/seized/">CyberDefenders: Blue team CTF Challenges | Seized</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_48421613/article/details/130135499">溯源取证-Linux内存取证 中难度篇_6_lin64_stand-CSDN博客</a></p>
+<p>工具：<a target="_blank" rel="noopener" href="https://github.com/volatilityfoundation/volatility/">GitHub - volatilityfoundation&#x2F;volatility: An advanced memory forensics framework</a><br>将moudle.dwarf以及system.map文件打包成一个zip文件，放在volatility&#x2F;plugins&#x2F;overlays&#x2F;linux下。<br><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-279016.htm">Volatility工具使用详解&amp;&amp;做题-CTF对抗-看雪-安全社区|安全招聘|kanxue.com</a><br> 1.机器上安装的 CentOS 版本是什么？</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">strings  dump.mem| grep -i  <span class="string">&quot;Linux release&quot;</span></span><br><span class="line">7.7.1908</span><br></pre></td></tr></table></figure>
+<p>或者直接解压文件<br>链接: <a target="_blank" rel="noopener" href="https://forums.centos.org/viewtopic.php?t=74194">https://forums.centos.org/viewtopic.php?t=74194</a></p>
+<p> 2.在 bash 历史记录中有一个命令包含一条奇怪的消息。你能读懂吗？<br>此次我们需要使用 python版本的脚本，集成式的脚本不太适用于linux环境，我们首先看一下集成式的volatility_2.6_lin64_standalone工具，里面是没有linux的环境的</p>
+<p><code>./volatility_2.6_lin64_standalone --info </code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">python2 vol.py --info   </span><br><span class="line"></span><br><span class="line">python2 vol.py -f ../c73-EZDump/dump.mem  --profile=LinuxCentos7_3_10_1062x64 linux_bash</span><br><span class="line"></span><br><span class="line">echo <span class="string">&#x27;c2hrQ1RGe2wzdHNfc3Q0cnRfdGgzXzFudjNzdF83NWNjNTU0NzZmM2RmZTE2MjlhYzYwfQo=&#x27;</span> | base64 -d</span><br></pre></td></tr></table></figure>
+
+<p> 3.可疑进程的 PID 是什么？<br>很明显，该pid进程执行了个nc的脚本，该命令是用来链接肉鸡用的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python2 vol.py -f ../c73-EZDump/dump.mem  --profile=LinuxCentos7_3_10_1062x64 linux_psaux </span><br></pre></td></tr></table></figure>
+
+<p> 4.攻击者下载了后门程序以获得持久性。这个后门隐藏的信息是什么？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">python2 vol.py -f ../c73-EZDump/dump.mem  --profile=LinuxCentos7_3_10_1062x64 linux_bash  </span><br><span class="line"></span><br><span class="line">git clone https:<span class="comment">//github.com/tw0phi/PythonBackup</span></span><br><span class="line"></span><br><span class="line">snapshot内容如下</span><br><span class="line">curl https:<span class="comment">//pastebin.com/raw/nQwMKjtZ </span></span><br><span class="line"></span><br><span class="line">echo c2hrQ1RGe3RoNHRfdzRzXzRfZHVtYl9iNGNrZDAwcl84NjAzM2MxOWUzZjM5MzE1YzAwZGNhfQo= | base64 -d</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p> 5.攻击者的 IP 地址和目标计算机上的本地端口是什么？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">python2 vol.py -f ../c73-EZDump/dump.mem  --profile=LinuxCentos7_3_10_1062x64 linux_netstat</span><br><span class="line"></span><br><span class="line">因为上面我们看到，ncat的命令开启了<span class="number">12345</span>作为通信端口，所以我们可以直接过滤<span class="number">12345</span>作为关键数据</span><br><span class="line">python2 vol.py -f ../c73-EZDump/dump.mem  --profile=LinuxCentos7_3_10_1062x64 linux_netstat | grep <span class="string">&quot;12345&quot;</span></span><br><span class="line"></span><br><span class="line">验证</span><br><span class="line">python2 vol.py -f ../c73-EZDump/dump.mem  --profile=LinuxCentos7_3_10_1062x64 linux_bash_env | grep <span class="string">&quot;192.168.49.1&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p> 6.攻击者执行的第一个命令是什么？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python2 vol.py -f ../c73-EZDump/dump.mem  --profile=LinuxCentos7_3_10_1062x64 linux_psaux</span><br></pre></td></tr></table></figure>
+
+<p>  7.更改用户密码后，我们发现攻击者仍然具有访问权限。你能知道怎么做吗？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">python2 vol.py -f ../c73-EZDump/dump.mem  --profile=LinuxCentos7_3_10_1062x64 linux_dump_map --pid <span class="number">2887</span> -D <span class="number">2887</span>/</span><br><span class="line"></span><br><span class="line">find <span class="number">2887</span> -name <span class="string">&quot;*.vma&quot;</span> -type f -exec file &#123;&#125; \; -exec grep -q <span class="string">&quot;/etc/rc.local&quot;</span> &#123;&#125; \; -print  </span><br><span class="line"></span><br><span class="line">strings -a task.<span class="number">2887.0</span>x806000.vma| grep <span class="string">&quot;/etc/rc.local&quot;</span> -A <span class="number">10</span> -B <span class="number">10</span></span><br><span class="line"></span><br><span class="line">strings -a task.<span class="number">2887.0</span>x806000.vma| grep <span class="string">&quot;ssh-rsa &quot;</span> -A <span class="number">10</span> -B <span class="number">10</span></span><br><span class="line"></span><br><span class="line">echo c2hrQ1RGe3JjLmwwYzRsXzFzX2Z1bm55X2JlMjQ3MmNmYWVlZDQ2N2VjOWNhYjViNWEzOGU1ZmEwfQo= | base64 -d</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>  8.攻击者使用的 rootkit 的名称是什么？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">python2 vol.py -f ../c73-EZDump/dump.mem  --profile=LinuxCentos7_3_10_1062x64 linux_dmesg | grep <span class="string">&quot;out-of-tree&quot;</span> -A <span class="number">5</span> -B <span class="number">5</span></span><br><span class="line">该命令用于提取系统内存信息，通过分析系统内存信息来查看哪一个模块是没有进行系统认证的，通常情况下，rootkit病毒的模块都是没有进行系统认证的</span><br><span class="line"></span><br><span class="line">我们可以看到内核警告，指出加载的 sysemptyrect 模块未经验证，可能会损害内核，即模块不受信任。</span><br><span class="line">然后执行CRC65加密。</span><br><span class="line"></span><br><span class="line">python2 vol.py -f ../c73-EZDump/dump.mem  --profile=LinuxCentos7_3_10_1062x64 linux_check_syscall | grep <span class="string">&quot;HOOKED&quot;</span></span><br><span class="line"></span><br><span class="line">我们可以看到其中一个系统调用（系统调用编号 <span class="number">88</span> 是 symlink）被 sysemptyrect 模块拦截，内核也向该模块发出警告</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p> 9.rootkit 使用 crc65 加密，秘钥是什么？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings -a dump.mem| grep <span class="string">&quot;sysemptyrect&quot;</span> -A <span class="number">5</span> -B <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<p>insmod sysemptyrect.ko crc65_key&#x3D;”1337tibbartibbar”</p>
+<h1 id="初级难"><a href="#初级难" class="headerlink" title="初级难"></a>初级难</h1><p><a target="_blank" rel="noopener" href="https://cyberdefenders.org/blueteam-ctf-challenges/blackenergy/">CyberDefenders: Blue team CTF Challenges | BlackEnergy</a><br><a target="_blank" rel="noopener" href="https://responderj01.medium.com/blackenergy-walkthrough-cyberdefenders-8502d4e37301">BlackEnergy Walkthrough — Cyberdefenders | by responderj | Medium</a></p>
+<p>题解：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_48421613/article/details/129950300">溯源取证-内存取证基础篇_raw 内存取证-CSDN博客</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f c79-BE/CYBERDEF<span class="number">-567078</span><span class="number">-20230213</span><span class="number">-171333.</span>raw imageinfo</span><br></pre></td></tr></table></figure>
+
+<p> 5.哪一个进程被注入的可能性最高<br>此题其实考验对rootkit病毒的熟知程度，通常情况下rootkit病毒在windows系统中最喜欢干的事就是通过svchost进程进行捆绑，因为svchost是系统守护程序，是不能通过常规手段停止的，那么任何与之关联的程序也都没有办法通过常规杀软去清除，因为svchost启动等级高于常规杀软，所以若是想清除与svchost捆绑的程序，需要进入到系统安全模式下，并使用最小化启动，然后找到svchost注册表项清除对应捆绑关系再删掉木马就行了</p>
+<p> 6.该进程在运行过程中引用了一个奇怪的文件，文件完整路径是什么</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f CYBERDEF<span class="number">-567078</span><span class="number">-20230213</span><span class="number">-171333.</span>raw profile=WinXPSP2x86 ldrmodules -p <span class="number">880</span> | grep -i <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">-p 是指定进程 ID 的选项</span><br><span class="line">handles 是用于打印每个进程的打开句柄列表的插件命令</span><br><span class="line">-t 是一个选项，用于指定您希望结果显示的对象类型。</span><br><span class="line">此题依然考验对rootkit病毒的理解，通常情况下rootkit会释放两个文件，一个是sys驱动文件，一个是dll文件，rootkit自身只是一个释放程序，dll文件自身功能通常为通信木马，sys驱动程序为保活文件</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>7.该进程在运行过程中被注入的DLL文件是什么</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f CYBERDEF<span class="number">-567078</span><span class="number">-20230213</span><span class="number">-171333.</span>raw profile=WinXPSP2x86 ldrmodules -p <span class="number">880</span> | grep -i <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">ldrmodules 是用于检测未链接 DLL 的插件命令</span><br><span class="line">这里其实就是通过恶意的dll文件是未签名的来寻找，因为正常的dll动态链接库都是通过了签名校验的，但是恶意的dll文件是没有通过签名校验的，PChunter找病毒也是一样的原理</span><br></pre></td></tr></table></figure>
+
+<p> 8.这个注入的dll文件的内存地址是什么</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f CYBERDEF<span class="number">-567078</span><span class="number">-20230213</span><span class="number">-171333.</span>raw profile=WinXPSP2x86 malfind -p <span class="number">880</span>  </span><br><span class="line"></span><br><span class="line">malfind 是查找隐藏和注入代码的插件命令</span><br><span class="line"></span><br><span class="line">我们可以把该dll文件导出到我们想要的目录里</span><br><span class="line">./volatility_2.<span class="number">6</span>_lin64_standalone -f CYBERDEF<span class="number">-567078</span><span class="number">-20230213</span><span class="number">-171333.</span>raw profile=WinXPSP2x86 dlldump -p <span class="number">880</span> --base=<span class="number">0x980000</span> --dump-dir=.</span><br><span class="line"></span><br><span class="line">md5sum module.<span class="number">880.9</span>aab590.<span class="number">980000.</span>dll</span><br></pre></td></tr></table></figure>
+</article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/toux.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>如果这篇文章帮到了你，可以请我喝杯咖啡。</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubao.jpg" target="_blank"><img class="post-qr-code-img" src="/images/zhifubao.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/SOCP/translator-sudo-l/" title="translator-sudo-l"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">translator-sudo-l</div></div><div class="info-2"><div class="info-item-1">HackMyVm - Translator - YouTubehttps://www.dcode.fr/cipher-identifier           translator easy 命令执行、sudo提权、trans 提权   主机发现1netdiscover -i eth0 -r 192.168.44.193/24 服务探测1nmap -sV -A -T4 -p- 192.168.44.134 得到只开放了80和22端口 目录爆破加上-e参数能带着url一起输出路径更好点击访问 1gobuster dir -u http://192.168.44.134/ -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt -x html,txt,php -e  只是个输入框，尝试输入，发现我们输入的字符被替换了然后显示尝试发现是26个字母倒叙替换也可以通过https://www.dcode.fr/cipher-identifier 发现是使用atbash编码但我直接写了个脚本 12345...</div></div></div></a><a class="pagination-related" href="/SOCP/jabita-python%E5%BA%93%E5%8A%AB%E6%8C%81%E6%8F%90%E6%9D%83-suid/" title="jabita-python库劫持提权-suid"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">jabita-python库劫持提权-suid</div></div><div class="info-2"><div class="info-item-1">         jabita easy 文件包含利用、shadow爆破、sudo-awk 提权、python库劫持提权、python反弹shell   主机发现12┌──(kali㉿kali)-[~]└─$ sudo netdiscover -i eth0 -r 192.168.44.139/24  服务探测12┌──(kali㉿kali)-[~]└─$ sudo nmap -sV -A -T 4 -p- 192.168.44.147  22,  80 目录扫描12┌──(kali㉿kali)-[~]└─$ gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u http://192.168.44.147 -x php,html.txt.png -e  12345678http://192.168.44.147/building   在这个页面随便点个home发现这个页面可能存在文件包含http://192.168.44.147/building/index.php?page...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AB%98%E9%9A%BE%E5%BA%A6"><span class="toc-number">1.</span> <span class="toc-text">高难度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ecorpwin7"><span class="toc-number">1.1.</span> <span class="toc-text">ecorpwin7</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%AD%E7%BA%A7%E9%9A%BE"><span class="toc-number"></span> <span class="toc-text">中级难</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9D%E7%BA%A7%E9%9A%BE"><span class="toc-number"></span> <span class="toc-text">初级难</span></a></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

@@ -1,0 +1,23 @@
+.github-chart-card {
+  overflow: hidden;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: var(--card-box-shadow);
+}
+
+.github-chart-post {
+  margin: 0 0 1.25rem;
+}
+
+.github-chart-img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+#aside-content .github-chart-card {
+  margin-top: 1rem;
+}

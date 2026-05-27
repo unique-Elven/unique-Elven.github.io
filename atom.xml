@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>乙太</title>
+  
+  <subtitle>乙太</subtitle>
+  <link href="https://unique-elven.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://unique-elven.github.io/"/>
+  <updated>2026-05-27T15:42:30.435Z</updated>
+  <id>https://unique-elven.github.io/</id>
+  
+  <author>
+    <name>乙太</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>海河工匠杯环境配置</title>
+    <link href="https://unique-elven.github.io/CTF/%E6%B5%B7%E6%B2%B3%E5%B7%A5%E5%8C%A0%E6%9D%AF%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    <id>https://unique-elven.github.io/CTF/%E6%B5%B7%E6%B2%B3%E5%B7%A5%E5%8C%A0%E6%9D%AF%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</id>
+    <published>2026-05-27T15:42:30.000Z</published>
+    <updated>2026-05-27T15:42:30.435Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;use ip addr 192.168.1.155&amp;#x2F;24 dev eth1&lt;br&gt;ifconfig eth1 up&lt;/p&gt;
+&lt;p&gt;16.04 中包含的 OpenSSH 版本禁用 ssh-dss。有一个包含此问题的遗留信息的简洁页面：&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="CTF" scheme="https://unique-elven.github.io/categories/CTF/"/>
+    
+    
+    <category term="plugin" scheme="https://unique-elven.github.io/tags/plugin/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>001滴水第一期的笔记逆向破解实战班</title>
+    <link href="https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/"/>
+    <id>https://unique-elven.github.io/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/</id>
+    <published>2026-05-27T15:41:30.000Z</published>
+    <updated>2026-05-27T15:42:30.491Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;如何快速定位关键点并爆破&quot;&gt;&lt;a href=&quot;#如何快速定位关键点并爆破&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="逆向" scheme="https://unique-elven.github.io/categories/%E9%80%86%E5%90%91/"/>
+    
+    
+    <category term="pragma" scheme="https://unique-elven.github.io/tags/pragma/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hydra</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/hydra/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/hydra/</id>
+    <published>2026-05-27T15:40:30.000Z</published>
+    <updated>2026-05-27T15:42:30.492Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;常用参数说明&lt;br&gt;hydra &amp;lt;&amp;lt;&amp;lt;-l LOGIN|-L FILE&amp;gt; &amp;lt;-p PASS|-P FILE&amp;gt;&amp;gt; | &amp;lt;-C FILE&amp;gt;&amp;gt; &amp;lt;-e ns&amp;gt;&lt;br&gt;&amp;lt;-o FILE&amp;gt;</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="002穷举篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>cheetah</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/cheetah/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/cheetah/</id>
+    <published>2026-05-27T15:39:30.000Z</published>
+    <updated>2026-05-27T15:42:30.493Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;支持 asp php .net jsp 后门&lt;br&gt;-u 后门地址&lt;br&gt;-r 提交的方法 一般是 post&lt;br&gt;-n 一次提交密码的数量&lt;br&gt;-v 详细信息&lt;br&gt;-p 字典位置&lt;br&gt;例子&lt;br&gt;python cheetah.py -u &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="002穷举篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>网站后台验证码识别穷举密码</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/%E7%BD%91%E7%AB%99%E5%90%8E%E5%8F%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB%E7%A9%B7%E4%B8%BE%E5%AF%86%E7%A0%81/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/%E7%BD%91%E7%AB%99%E5%90%8E%E5%8F%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB%E7%A9%B7%E4%B8%BE%E5%AF%86%E7%A0%81/</id>
+    <published>2026-05-27T15:38:30.000Z</published>
+    <updated>2026-05-27T15:42:30.496Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;验证码干扰像素太少很容易就会被一些工具识别出来。如图片提取文字工具。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;缺失图片：Pasted image 20231210163324.png&lt;br&gt;登录框存在验证码 这个验证码可被识别的情况下</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="002穷举篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>CobaltStrike TeamServer 口令暴力破解</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/CobaltStrike%20TeamServer%20%E5%8F%A3%E4%BB%A4%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/CobaltStrike%20TeamServer%20%E5%8F%A3%E4%BB%A4%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3/</id>
+    <published>2026-05-27T15:37:30.000Z</published>
+    <updated>2026-05-27T15:42:30.497Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;python3 csbuster.py 192.168.0.102 &amp;#x2F;home&amp;#x2F;kali&amp;#x2F;top1000.txt -t 20&lt;/p&gt;
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="002穷举篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>dirbuster</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/dirbuster/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/dirbuster/</id>
+    <published>2026-05-27T15:36:30.000Z</published>
+    <updated>2026-05-27T15:42:30.498Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/weixin_44203158/article/details/106340159&quot;&gt;web目录扫描工具dirbuster使用详解_owasp</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="002穷举篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>sublist3r</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/sublist3r/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/sublist3r/</id>
+    <published>2026-05-27T15:35:30.000Z</published>
+    <updated>2026-05-27T15:42:30.499Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/aboul3la/Sublist3r&quot;&gt;GitHub - aboul3la&amp;#x2F;Sublist3r: Fast subdomains enumeration tool for penetration</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="001信息收集篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>穷举密码</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/%E7%A9%B7%E4%B8%BE%E5%AF%86%E7%A0%81/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/%E7%A9%B7%E4%B8%BE%E5%AF%86%E7%A0%81/</id>
+    <published>2026-05-27T15:34:30.000Z</published>
+    <updated>2026-05-27T15:42:30.512Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;burpsuite 穷举后台密码&lt;br&gt;burpsuite 对 webshell 穷举破解密&lt;br&gt;burpsuite 设置宏获取 token 对网站后台&lt;br&gt;    &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="002穷举篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/"/>
+    
+    <category term="001实战流程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>常见服务端口</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/%E5%B8%B8%E8%A7%81%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8F%A3/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/%E5%B8%B8%E8%A7%81%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8F%A3/</id>
+    <published>2026-05-27T15:33:30.000Z</published>
+    <updated>2026-05-27T15:42:30.519Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;常见服务端口&quot;&gt;&lt;a href=&quot;#常见服务端口&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="002穷举篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/"/>
+    
+    <category term="001实战流程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>001穷举篇目录</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/001%E7%A9%B7%E4%B8%BE%E7%AF%87%E7%9B%AE%E5%BD%95/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/001%E7%A9%B7%E4%B8%BE%E7%AF%87%E7%9B%AE%E5%BD%95/</id>
+    <published>2026-05-27T15:32:30.000Z</published>
+    <updated>2026-05-27T15:42:30.520Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;ol&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="002穷举篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/"/>
+    
+    <category term="001实战流程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>心脏滴血</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/003%E6%BC%8F%E6%B4%9E/%E5%BF%83%E8%84%8F%E6%BB%B4%E8%A1%80/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/003%E6%BC%8F%E6%B4%9E/%E5%BF%83%E8%84%8F%E6%BB%B4%E8%A1%80/</id>
+    <published>2026-05-27T15:31:30.000Z</published>
+    <updated>2026-05-27T15:42:30.521Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="001信息收集篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/"/>
+    
+    <category term="003漏洞" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/003%E6%BC%8F%E6%B4%9E/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ARL</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/ARL/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/ARL/</id>
+    <published>2026-05-27T15:30:30.000Z</published>
+    <updated>2026-05-27T15:42:30.521Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;ARL(Asset Reconnaissance Lighthouse)资产侦察灯塔系统&lt;br&gt;git clone &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="001信息收集篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>namp</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/namp/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/namp/</id>
+    <published>2026-05-27T15:29:30.000Z</published>
+    <updated>2026-05-27T15:42:30.523Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/smli_ng/article/details/105964486&quot;&gt;nmap详细使用教程_nmap使用教程-CSDN博客&lt;/a&gt;&lt;br&gt;nmap -sn 目标ip</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="001信息收集篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>subDomainsBrute</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/subDomainsBrute/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/subDomainsBrute/</id>
+    <published>2026-05-27T15:28:30.000Z</published>
+    <updated>2026-05-27T15:42:30.524Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/lijiejie/subDomainsBrute&quot;&gt;GitHub - lijiejie&amp;#x2F;subDomainsBrute: A fast sub domain brute tool for</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="001信息收集篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>gobuster</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/gobuster/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/gobuster/</id>
+    <published>2026-05-27T15:27:30.000Z</published>
+    <updated>2026-05-27T15:42:30.525Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/kalixcn/p/17477388.html&quot;&gt;gobuster工具使用 - kalixcn - 博客园&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="001信息收集篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>InsightScan</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/InsightScan/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/InsightScan/</id>
+    <published>2026-05-27T15:26:30.000Z</published>
+    <updated>2026-05-27T15:42:30.526Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/AnthraX1/InsightScan&quot;&gt;GitHub - AnthraX1&amp;#x2F;InsightScan: A single file multithread portscanner in</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="001信息收集篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ksudomain</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/ksudomain/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/ksudomain/</id>
+    <published>2026-05-27T15:25:30.000Z</published>
+    <updated>2026-05-27T15:42:30.527Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/knownsec/ksubdomain&quot;&gt;GitHub - knownsec&amp;#x2F;ksubdomain:</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="001信息收集篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Cwebscanner</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/Cwebscanner/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/Cwebscanner/</id>
+    <published>2026-05-27T15:24:30.000Z</published>
+    <updated>2026-05-27T15:42:30.528Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/se55i0n/Cwebscanner&quot;&gt;GitHub - se55i0n&amp;#x2F;Cwebscanner:</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="001信息收集篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>子域名收集</title>
+    <link href="https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/%E5%AD%90%E5%9F%9F%E5%90%8D%E6%94%B6%E9%9B%86/"/>
+    <id>https://unique-elven.github.io/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/%E5%AD%90%E5%9F%9F%E5%90%8D%E6%94%B6%E9%9B%86/</id>
+    <published>2026-05-27T15:23:30.000Z</published>
+    <updated>2026-05-27T15:42:30.529Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;域名解析的类型&quot;&gt;&lt;a href=&quot;#域名解析的类型&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="001信息收集篇" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/"/>
+    
+    <category term="001实战流程" scheme="https://unique-elven.github.io/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+</feed>
