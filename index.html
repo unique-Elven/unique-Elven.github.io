@@ -1,0 +1,592 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>乙太 - 乙太</title><meta name="author" content="乙太"><meta name="copyright" content="乙太"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="道也者，至精也，不可为形，不可为名，强为之名，谓之乙太。|！">
+<meta property="og:type" content="website">
+<meta property="og:title" content="乙太">
+<meta property="og:url" content="https://blog.oisec.cn/index.html">
+<meta property="og:site_name" content="乙太">
+<meta property="og:description" content="道也者，至精也，不可为形，不可为名，强为之名，谓之乙太。|！">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.oisec.cn/img/toux.jpg">
+<meta property="article:author" content="乙太">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.oisec.cn/img/toux.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "乙太",
+  "alternateName": [
+    "乙太",
+    "blog.oisec.cn"
+  ],
+  "url": "https://blog.oisec.cn/"
+}</script><link rel="shortcut icon" href="/img/toux.jpg"><link rel="canonical" href="https://blog.oisec.cn/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":2,"unescape":true,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'medium_zoom',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '乙太',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><link rel="preload" as="image" href="/img/beijing.jpg"><link rel="stylesheet" href="/css/github-chart.css"><link rel="stylesheet" href="/css/custom-footer.css"><link rel="stylesheet" href="/css/custom-glass.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="乙太" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">63</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/img/beijing.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/toux.jpg" alt="Logo"><span class="site-name">乙太</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/atom.xml"><i class="fa-fw fas fa-rss"></i><span> RSS</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">乙太</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/unique-Elven" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://space.bilibili.com/2098810443" target="_blank" title="Bilibili"><i class="fab fa-bilibili" style="color: #00a1d6;"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="post_cover left"><a href="/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/CVE-2023-27997%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%BB%A5%E5%8F%8A%E5%A0%86%E6%BA%A2%E5%87%BA%E5%A4%8D%E7%8E%B0/" title="CVE-2023-27997环境搭建以及堆溢出复现"><img class="post-bg" src="https://img.oisec.cn/image/2025/202507/CVE-2023-27997环境搭建以及堆溢出复现_20250625_1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CVE-2023-27997环境搭建以及堆溢出复现"></a></div><div class="recent-post-info"><a class="article-title" href="/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/CVE-2023-27997%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E4%BB%A5%E5%8F%8A%E5%A0%86%E6%BA%A2%E5%87%BA%E5%A4%8D%E7%8E%B0/" title="CVE-2023-27997环境搭建以及堆溢出复现">CVE-2023-27997环境搭建以及堆溢出复现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-27T15:19:48.000Z" title="发表于 2026-05-27 23:19:48">2026-05-27</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a></span></div><div class="content">2025&#x2F;6&#x2F;23 23:23 找环境VM由于关于这篇文章的环境搭建追根溯源的文章在csdn上已经删除了，官网有些历史版本已经不提供了，及其费劲艰辛才找到合适的FGT_VM64-v7.2.2.F-build1255-FORTINET.out.ovf.zip没想到最终在波斯人的一个Fortinet交流群才找到所有的历史版本Telegram: View @Fortinetsolutions 2025-06-24 07:42 配置fortigate-vm导入forigate-vm 同意，然后命名保存到一个文件夹。 将网络适配器都改为NAT 登录账号admin 密码初始为空 登录后自己设置密码；我是本地测试直接就设置admin;admin了。 配置ip地址查看网卡配置 1show system interface   网卡ip配置：为了后续方便调试，这里的ip设置为自己另一台ubuntu同段的ip注意要设置在vm的dhcp设置范围内，这是我的网段，各位按照虚拟机自己的来 123456config system interfaceedit port1set mode s...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E6%8A%98%E8%85%BE/PVE/pve/" title="pve">pve</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-27T16:58:48.000Z" title="发表于 2026-05-28 00:58:48">2026-05-28</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%8A%98%E8%85%BE/">折腾</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%8A%98%E8%85%BE/PVE/">PVE</a></span></div><div class="content">安装All in One保姆教程④（PVE 8.3安装）[附件未迁移：pve_20260207_2.mhtml] post.smzdm.com&#x2F;p&#x2F;akle62mk&#x2F; [附件未迁移：pve_20260207_1.mhtml] 换软件源中科大123456789101112131415161718192021mv /etc/apt/sources.list.d/pve-enterprise.list /etc/apt/sources.list.d/pve-enterprise.list.bak# 屏蔽订阅企业源wget https://mirrors.ustc.edu.cn/proxmox/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpgecho &quot;deb https://mirrors.ustc.edu.cn/proxmox/debian bookworm pve-no-subscription&quot; &g...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/Failed%20to%20connect%20to%20github.com/" title="Failed to connect to github.com">Failed to connect to github.com</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-27T17:30:48.000Z" title="发表于 2026-05-28 01:30:48">2026-05-28</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/">毕业设计</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/">开源推送</a></span></div><div class="content">123456789101112131415161718192021222324然后再次尝试推送。---### 3. 修改 Hosts 文件（“直连”应急方案）如果不想用代理，可以通过修改本地 Hosts 文件，直接将 `github.com` 指向目前响应最快的 IP 地址。1. **查找当前最快 IP：** 访问 [https://stock.hostmonit.com/hosts](https://stock.hostmonit.com/hosts) 搜索 `github.com`。2. **修改 Hosts：**    - 打开 `C:\Windows\System32\drivers\etc\hosts`（需要管理员权限）。   - 在末尾添加一行，例如：`140.82.113.3 github.com`（具体 IP 请以查询到的为准）。3. **刷新 DNS：** 在 CMD 中输入 `ipconfig /flushdns`。---### 4. 终极稳定方案：使用 SSH 协议HTTPS 协议在 Windows 环境下经常受到各种安全软件或网络环境的干扰。切换到 SSH...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%A1%B9%E7%9B%AE%E8%BD%AC%E7%A7%BB/" title="项目转移">项目转移</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-27T17:18:48.000Z" title="发表于 2026-05-28 01:18:48">2026-05-28</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/">毕业设计</a></span></div><div class="content">我有一个带着venv虚拟环境的项目复制粘贴迁移了，换到别的电脑上python版本，怎么重新激活环境并运行 Gemini 说搬迁 venv 虚拟环境时，直接“复制粘贴”通常会失效。这是因为 venv 环境中包含大量的硬编码绝对路径（指向原电脑的 Python 解释器位置和库路径）。 既然到了新电脑，最稳妥且专业的方法不是“修复”旧环境，而是基于原有的包列表重新创建一个。  方案一：标准做法（推荐）这是最干净的方法，可以避开所有路径报错。  在新电脑的项目根目录下，删除旧的 venv 文件夹。  打开终端&#x2F;命令行，重新创建环境：  Bash  1python -m venv venv  激活环境：  Windows: .\venv\Scripts\activate  Mac&#x2F;Linux: source venv/bin/activate    重新安装依赖：  如果你有 requirements.txt：   Bash   1pip install -r requirements.txt  如果没有这个文件，你可以去旧电脑（或旧文件夹）运行 pip freeze ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/" title="001滴水第一期的笔记逆向破解实战班"><img class="post-bg" src="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/2024_1_21_001.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="001滴水第一期的笔记逆向破解实战班"></a></div><div class="recent-post-info"><a class="article-title" href="/%E9%80%86%E5%90%91/001%E6%BB%B4%E6%B0%B4%E7%AC%AC%E4%B8%80%E6%9C%9F%E7%9A%84%E7%AC%94%E8%AE%B0%E9%80%86%E5%90%91%E7%A0%B4%E8%A7%A3%E5%AE%9E%E6%88%98%E7%8F%AD/" title="001滴水第一期的笔记逆向破解实战班">001滴水第一期的笔记逆向破解实战班</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-27T15:41:30.000Z" title="发表于 2026-05-27 23:41:30">2026-05-27</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a></span></div><div class="content">如何快速定位关键点并爆破什么是关键点：程序进行判断注册码是否正确的位置 什么是爆破：通过修改程序的流程，让程序判断失误 VM壳被称为代码层的最后一层防御。   理解简单程序验证流程：   点击注册按钮 读取读取注册码 GetWindowTextA 判断注册码是否合法 提示用户是否成功 MessageBoxA  scanf函数无法直接在VS中编译，由于有栈溢出漏洞，要编译需要在属性配置中关闭SDL检查。 关键位置：jcc指令跳转到jmp下。 方法：  交叉引用查找法IDA 调用堆栈–ALT+K 暂停法 搜索字符串 访问断点法 自动跟踪法-控制台程序（什么地方卡住就在什么地方下断点F7跟踪，继续自动步过） Ctrl+G搜索MessageBoxA  在OD中快捷键Shift+F2打开条件断点！破解易语言程序，由于按钮时间常常被其他事件干扰，若以经常要用到条件断点。（但是汉化版可能会有bug，用原版英文即可） 条件断点–举例子：[esp+4]!=00290642 调试+自动步过的快捷键Ctrl+F8可以自动跟踪执行。 OD的插件(ImmLabel)Im.004011C1–&gt;Edit...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/%E6%91%98%E6%8A%84/%E6%9D%82%E9%A1%B9/" title="杂项"><img class="post-bg" src="https://imag.keyblue.cn/imag/202309061407818.png &quot;image-20230906140725773&quot;" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="杂项"></a></div><div class="recent-post-info"><a class="article-title" href="/%E6%91%98%E6%8A%84/%E6%9D%82%E9%A1%B9/" title="杂项">杂项</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-27T17:06:48.000Z" title="发表于 2026-05-28 01:06:48">2026-05-28</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%91%98%E6%8A%84/">摘抄</a></span></div><div class="content">[CISCN 2018]Picture打开是一张图片，binwalk解压得到两个文件  其中一个是base64编码  解码发现神似压缩包，此时不要直接复制解码后的明文，打开010新建一个空文本，选择粘贴自base64。因为使用别的软件可能会出现一些问题  将文件头修复  用7z打开，但是解压文件需要密码，bing搜索报错信息ZeroDivisionError:  搜到多个报错  最终解压密码为 CODE integer division or modulo by zero  打开code文件，是uucode编码，  解码  CODE CISCN&#123;2388AF2893EB85EB1B439ABFF617319F&#125;  [CISCN 2023 初赛]被加密的生产流量第一次接触工控流量 追踪TCP流，这个流量有点奇特  记录下来 CODE MMYWMX3GNEYWOXZRGAYDA===  用base32解码  CODE c1f_fi1g_1000  [GDOUCTF 2023]pixelart打开压缩包，是一张图片，图片有点大。。。  用010打开图片，有隐藏的信息...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/%E6%8A%98%E8%85%BE/PVE/%E5%8F%8C%E7%A1%AC%E7%9B%98%E7%9B%B4%E9%80%9A%E5%88%9B%E5%BB%BA%E7%BE%A4%E6%99%96/" title="双硬盘直通创建群晖"><img class="post-bg" src="/%E6%8A%98%E8%85%BE/PVE/%E5%8F%8C%E7%A1%AC%E7%9B%98%E7%9B%B4%E9%80%9A%E5%88%9B%E5%BB%BA%E7%BE%A4%E6%99%96/%E5%8F%8C%E7%A1%AC%E7%9B%98%E7%9B%B4%E9%80%9A%E5%88%9B%E5%BB%BA%E7%BE%A4%E6%99%96_20260216_1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="双硬盘直通创建群晖"></a></div><div class="recent-post-info"><a class="article-title" href="/%E6%8A%98%E8%85%BE/PVE/%E5%8F%8C%E7%A1%AC%E7%9B%98%E7%9B%B4%E9%80%9A%E5%88%9B%E5%BB%BA%E7%BE%A4%E6%99%96/" title="双硬盘直通创建群晖">双硬盘直通创建群晖</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-27T15:53:48.000Z" title="发表于 2026-05-27 23:53:48">2026-05-27</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%8A%98%E8%85%BE/">折腾</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%8A%98%E8%85%BE/PVE/">PVE</a></span></div><div class="content">既然你有两块物理盘（引导盘 + 1T 数据盘）且都已经插在了 B75 主板上，这种“物理直通”的方式是性能最强、最接近真群晖的方案。 由于 B75 主板较老，不支持完美的 IOMMU 控制器直通，我们采用 磁盘 ID 直通。 第一步：在 PVE 中找出这两块盘的 ID打开 PVE 的 **终端 (Shell)**，输入： Bash 1ls -l /dev/disk/by-id/  你会看到一堆很长的字符串。根据容量和型号找到你的两块盘：  引导盘：通常容量较小（几 GB 或 16GB 左右）。  1T 数据盘：会有 1000G 或 931G 左右的标识。   记住这两串 ata-xxxxxx 的名字。  第二步：创建黑群晖虚拟机 (VM)在 PVE 网页操作：  常规：名称填 DS918（或其他），记住 ID（假设是 104）。  操作系统：选“不使用任何介质”。  系统：机型选 q35，BIOS 选 **OVMF (UEFI)**（RR 引导推荐 UEFI）。但是我这情况不支持，只能选择默认才能启动。  磁盘：这里很关键！ 先不要添加任何硬盘。直接点下一步直到完成。  CPU：...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/%E9%80%86%E5%90%91/C++/C++%E5%AE%9E%E7%8E%B0/" title="C++实现"><img class="post-bg" src="/%E9%80%86%E5%90%91/C++/C++%E5%AE%9E%E7%8E%B0/Pasted%20image%2020240530122211.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++实现"></a></div><div class="recent-post-info"><a class="article-title" href="/%E9%80%86%E5%90%91/C++/C++%E5%AE%9E%E7%8E%B0/" title="C++实现">C++实现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-27T14:46:48.000Z" title="发表于 2026-05-27 22:46:48">2026-05-27</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E9%80%86%E5%90%91/C/">C++</a></span></div><div class="content">1.private 成员只能被本类成员（类内）和友元访问，不能被派生类访问； 2.protected 成员可以被派生类访问 this指针在 C++ 中，this 指针是一个特殊的指针，它指向当前对象的实例。 在 C++ 中，每一个对象都能通过 this 指针来访问自己的地址。 this是一个隐藏的指针，可以在类的成员函数中使用，它可以用来指向调用对象。 当一个对象的成员函数被调用时，编译器会隐式地传递该对象的地址作为 this 指针。 友元函数没有 this 指针，因为友元不是类的成员，只有成员函数才有 this 指针。 C++把函数放在结构体里面和外面没区别，唯一的区别是放在结构体里面汇编会多传一个参数，参数就是当前对象的首地址类和结构体没区别，都是在栈里 1lea ecx,[ebp-4]  构造-析构函数C++ 重载运算符和重载函数 | 菜鸟教程 构造函数构造函数和类名一样而且不需要定义返回值C++可以重载构造函数，重载函数，函数一样，只不过参数不一样，名字可以一样  构造函数特：1、与类同名2、没有返回值3、创建对象的时候执行4、主要用于初始化5、可以有多个(最好有一个无参...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E9%80%86%E5%90%91/PE/PE/" title="PE">PE</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-27T17:32:48.000Z" title="发表于 2026-05-28 01:32:48">2026-05-28</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E9%80%86%E5%90%91/PE/">PE</a></span></div><div class="content">1. PE文件结构在 Windows 官方 SDK（winnt.h）中，它的确叫 e_lfanew  缺失图片：897781438.gif  02 PE文件的两种状态 缺失图片：QQ截图20240305105327.png  各个结构体所占字节大小如下图：32位的扩展PE头占224（E0）字节， 扩展PE头的大小是由标准PE头的SizeOfOptionalHeader决定的，32位程序这里存的是E0，64位程序这里存的是F0     缺失图片：QQ截图20240305110246.png  在第一个结构体中的最后一个成员，指向的是PE文件头标志的位置，所以从IMAGE_DOS_HEADER最后一个成员结束位置到PE文件头标志的中间都是DOS块，这块长度是可变的，取决于e_fanew的值 从最后一个IMAGE_SECTION_HEADE结构体结束位置后面就是编译器放入的其他的数据了，那这后面的数据怎么确定填充的大小呢？怎么做分割呢？在填充范围内我们才能随意写数据  [!IPS] 在扩展PE头中：成员SizeOfHeaders保存了整个PE头（DOS+PE+所有节表）的按照文件对齐以...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/%E4%B8%BA%E4%BB%80%E4%B9%88%E7%86%B5%E5%80%BC%E6%98%AF%200~8%EF%BC%9F/" title="为什么熵值是 0~8？">为什么熵值是 0~8？</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-05-27T17:31:48.000Z" title="发表于 2026-05-28 01:31:48">2026-05-28</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/">毕业设计</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/">特征提取</a></span></div><div class="content">为什么熵值是 0~8？（详细通俗解释 + 美化公式） 这是你问的 GeneralFileInfo 和 ByteEntropyHistogram 里出现的 Shannon 熵（Shannon Entropy） 的取值范围问题。 我一步步给你讲清楚。  1. 先看公式（美化版）Shannon 熵的定义（信息论里的核心公式）： $$ H &#x3D; -\sum_{i&#x3D;0}^{255} p_i \log_2 (p_i) $$  $H$ ：熵值（我们计算出来的那个数字） $p_i$ ​：第 $i$  种情况出现的概率 $\log_2$ ​：以 2 为底的对数（信息论里固定用 2） 负号是为了让结果为正数   2. 为什么字节数据的熵最大是 8？因为 一个字节 &#x3D; 8 个比特（bit）。  一个字节可以表示 256 种不同值（0 ~ 255）。 如果文件里的每个字节值（0~255）出现的概率完全一样（即  $p_i &#x3D; \frac{1}{256}$ )，这时信息最“随机”、最不可预测，熵值达到最大。  我们来算一下这个最大值： $$H_{\max} &#x3D...</div></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/#content-inner">23</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/toux.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">乙太</div><div class="author-info-description">道也者，至精也，不可为形，不可为名，强为之名，谓之乙太。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">97</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">63</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/unique-Elven"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/unique-Elven" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://space.bilibili.com/2098810443" target="_blank" title="Bilibili"><i class="fab fa-bilibili" style="color: #00a1d6;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">期待各位给这篇博客项目点点 star：<a target="_blank" rel="noopener" href="https://github.com/unique-Elven/unique-Elven.github.io">unique-Elven.github.io</a><br>如果有问题可以反馈到项目里，持续改进，知识共享。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%B8%97%E9%80%8F/OSCP%E9%9D%B6%E5%9C%BA%E8%AE%AD%E7%BB%83(hackmyvm)/gigachad%20-%20suid/" title="gigachad - suid">gigachad - suid</a><time datetime="2026-05-27T17:41:48.000Z" title="发表于 2026-05-28 01:41:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96%E7%BB%B4%E5%BA%A6%E5%8E%9F%E7%90%86/" title="特征提取维度原理">特征提取维度原理</a><time datetime="2026-05-27T17:40:48.000Z" title="发表于 2026-05-28 01:40:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/AI/LightBGM/Day%201.LightGBM%E7%AE%97%E6%B3%95%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/" title="Day 1.LightGBM算法基本原理">Day 1.LightGBM算法基本原理</a><time datetime="2026-05-27T17:39:48.000Z" title="发表于 2026-05-28 01:39:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/01%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E5%87%86%E5%A4%87/" title="01环境安装准备">01环境安装准备</a><time datetime="2026-05-27T17:38:48.000Z" title="发表于 2026-05-28 01:38:48">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/SHAP/SHAP/" title="SHAP">SHAP</a><time datetime="2026-05-27T17:37:48.000Z" title="发表于 2026-05-28 01:37:48">2026-05-28</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list expandBtn" id="aside-cat-list">
+            <li class="card-category-list-item parent"><a class="card-category-list-link" href="/categories/AI/"><span class="card-category-list-name">AI</span><span class="card-category-list-count">2</span><i class="fas fa-caret-left expand"></i></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/AI/LightBGM/"><span class="card-category-list-name">LightBGM</span><span class="card-category-list-count">1</span></a></li></ul></li><li class="card-category-list-item parent"><a class="card-category-list-link" href="/categories/CTF/"><span class="card-category-list-name">CTF</span><span class="card-category-list-count">19</span><i class="fas fa-caret-left expand"></i></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/CTF/annex/"><span class="card-category-list-name">annex</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/CTF/%E9%87%91%E7%A0%96%E5%9B%BD%E5%AE%B6/"><span class="card-category-list-name">金砖国家</span><span class="card-category-list-count">3</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Excalidraw/"><span class="card-category-list-name">Excalidraw</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/JAVAWEB/"><span class="card-category-list-name">JAVAWEB</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Obsidian%E7%9F%A5%E8%AF%86%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA/"><span class="card-category-list-name">Obsidian知识库的搭建</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item parent"><a class="card-category-list-link" href="/categories/OpenHarmony/"><span class="card-category-list-name">OpenHarmony</span><span class="card-category-list-count">4</span><i class="fas fa-caret-left expand"></i></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/OpenHarmony/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"><span class="card-category-list-name">应用开发</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/OpenHarmony/%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91/"><span class="card-category-list-name">设备开发</span><span class="card-category-list-count">1</span></a></li></ul></li><li class="card-category-list-item parent"><a class="card-category-list-link" href="/categories/PWN/"><span class="card-category-list-name">PWN</span><span class="card-category-list-count">6</span><i class="fas fa-caret-left expand"></i></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/PWN/01-PWN%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"><span class="card-category-list-name">01 PWN基础知识</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/PWN/02-PWN%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"><span class="card-category-list-name">02 PWN基础知识</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/PWN/03-%E8%BF%9C%E7%A8%8BPWN/"><span class="card-category-list-name">03 远程PWN</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/PWN/04-%E8%BF%9C%E7%A8%8BPWN/"><span class="card-category-list-name">04 远程PWN</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/PWN/05-printf%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0%E5%92%8C%E8%B0%83%E8%AF%95/"><span class="card-category-list-name">05 printf漏洞概述和调试</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/PWN/06-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%8F%91%E7%94%9F%E7%9A%84%E6%9D%A1%E4%BB%B6/"><span class="card-category-list-name">06 格式化字符串漏洞发生的条件</span><span class="card-category-list-count">1</span></a></li></ul></li><li class="card-category-list-item parent"><a class="card-category-list-link" href="/categories/PYTHON/"><span class="card-category-list-name">PYTHON</span><span class="card-category-list-count">2</span><i class="fas fa-caret-left expand"></i></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/PYTHON/%E7%88%AC%E8%99%AB%E5%AE%9E%E6%88%98/"><span class="card-category-list-name">爬虫实战</span><span class="card-category-list-count">2</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/RUST/"><span class="card-category-list-name">RUST</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/SOCP/"><span class="card-category-list-name">SOCP</span><span class="card-category-list-count">14</span></a></li><li class="card-category-list-item parent"><a class="card-category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"><span class="card-category-list-name">博客搭建</span><span class="card-category-list-count">2</span><i class="fas fa-caret-left expand"></i></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/hello-world/"><span class="card-category-list-name">hello-world</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/"><span class="card-category-list-name">博客的搭建教程</span><span class="card-category-list-count">1</span></a></li></ul></li><li class="card-category-list-item parent"><a class="card-category-list-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/"><span class="card-category-list-name">密码学</span><span class="card-category-list-count">1</span><i class="fas fa-caret-left expand"></i></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/%E6%81%BA%E6%92%92%E5%AF%86%E7%A0%81/"><span class="card-category-list-name">恺撒密码</span><span class="card-category-list-count">1</span></a></li></ul></li><li class="card-category-list-item parent"><a class="card-category-list-link" href="/categories/%E6%8A%98%E8%85%BE/"><span class="card-category-list-name">折腾</span><span class="card-category-list-count">11</span><i class="fas fa-caret-left expand"></i></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%8A%98%E8%85%BE/PVE/"><span class="card-category-list-name">PVE</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%8A%98%E8%85%BE/wireguard/"><span class="card-category-list-name">wireguard</span><span class="card-category-list-count">2</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%91%98%E6%8A%84/"><span class="card-category-list-name">摘抄</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/"><span class="card-category-list-name">未分类</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%A0%B9%E7%9B%AE%E5%BD%95/"><span class="card-category-list-name">根目录</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item parent"><a class="card-category-list-link" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"><span class="card-category-list-name">毕业设计</span><span class="card-category-list-count">17</span><i class="fas fa-caret-left expand"></i></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/SHAP/"><span class="card-category-list-name">SHAP</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/"><span class="card-category-list-name">开源推送</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/"><span class="card-category-list-name">特征提取</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86/"><span class="card-category-list-name">阈值推理</span><span class="card-category-list-count">5</span></a></li></ul></li><li class="card-category-list-item parent"><a class="card-category-list-link" href="/categories/%E6%B8%97%E9%80%8F/"><span class="card-category-list-name">渗透</span><span class="card-category-list-count">49</span><i class="fas fa-caret-left expand"></i></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/"><span class="card-category-list-name">001信息收集篇</span><span class="card-category-list-count">22</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/"><span class="card-category-list-name">001实战流程</span><span class="card-category-list-count">13</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"><span class="card-category-list-name">002工具教程</span><span class="card-category-list-count">8</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/003%E6%BC%8F%E6%B4%9E/"><span class="card-category-list-name">003漏洞</span><span class="card-category-list-count">1</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/"><span class="card-category-list-name">002穷举篇</span><span class="card-category-list-count">8</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/"><span class="card-category-list-name">001实战流程</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"><span class="card-category-list-name">002工具教程</span><span class="card-category-list-count">5</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B8%97%E9%80%8F/OSCP%E9%9D%B6%E5%9C%BA%E8%AE%AD%E7%BB%83-hackmyvm/"><span class="card-category-list-name">OSCP靶场训练(hackmyvm)</span><span class="card-category-list-count">14</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B8%97%E9%80%8F/VulnHub%E9%9D%B6%E5%9C%BA/"><span class="card-category-list-name">VulnHub靶场</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B8%97%E9%80%8F/%E6%B8%97%E9%80%8F%E7%9A%84%E8%87%AA%E5%B7%B1%E5%AE%B9%E6%98%93%E5%BF%98%E8%AE%B0%E7%9A%84%E4%BD%86%E6%98%AF%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/"><span class="card-category-list-name">渗透的自己容易忘记的但是有用的小技巧</span><span class="card-category-list-count">4</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/"><span class="card-category-list-name">漏洞复现</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item parent"><a class="card-category-list-link" href="/categories/%E7%A8%8B%E5%BA%8F%E5%A3%B3/"><span class="card-category-list-name">程序壳</span><span class="card-category-list-count">1</span><i class="fas fa-caret-left expand"></i></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%A8%8B%E5%BA%8F%E5%A3%B3/%E7%A8%8B%E5%BA%8F%E8%84%B1%E5%A3%B3%E7%AF%87/"><span class="card-category-list-name">程序脱壳篇</span><span class="card-category-list-count">1</span></a></li></ul></li><li class="card-category-list-item parent"><a class="card-category-list-link" href="/categories/%E9%80%86%E5%90%91/"><span class="card-category-list-name">逆向</span><span class="card-category-list-count">69</span><i class="fas fa-caret-left expand"></i></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%80%86%E5%90%91/C/"><span class="card-category-list-name">C++</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%80%86%E5%90%91/C%E8%AF%AD%E8%A8%80/"><span class="card-category-list-name">C语言</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%80%86%E5%90%91/NEW-Carck-ME-NOTE/"><span class="card-category-list-name">NEW Carck ME NOTE</span><span class="card-category-list-count">17</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%80%86%E5%90%91/PE/"><span class="card-category-list-name">PE</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%80%86%E5%90%91/PWN/"><span class="card-category-list-name">PWN</span><span class="card-category-list-count">31</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%80%86%E5%90%91/Win32%E7%BC%96%E7%A8%8B/"><span class="card-category-list-name">Win32编程</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%80%86%E5%90%91/%E7%AE%97%E6%B3%95/"><span class="card-category-list-name">算法</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%80%86%E5%90%91/%E8%84%B1%E5%A3%B3%E7%AF%87/"><span class="card-category-list-name">脱壳篇</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%80%86%E5%90%91/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%85%BB%E6%88%90%E8%AE%A1%E5%88%92/"><span class="card-category-list-name">逆向工程师养成计划</span><span class="card-category-list-count">5</span></a></li></ul></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E9%81%87%E5%88%B0%E5%86%92%E5%8F%B7%E5%8A%A0%E7%A9%BA%E6%A0%BC%E6%89%8D%E5%8F%91%E9%80%81payload/" style="font-size: 1.1em; color: #999">遇到冒号加空格才发送payload</a> <a href="/tags/%E5%B0%86%E7%94%A8%E6%88%B7%E6%8F%90%E5%8D%87%E5%88%B0%E7%AE%A1%E7%90%86%E5%91%98%E6%9D%83%E9%99%90/" style="font-size: 1.37em; color: #99a4b2">将用户提升到管理员权限</a> <a href="/tags/%E5%AF%BC%E5%87%BA%E5%AF%86%E7%A0%81%E7%9A%84%E5%93%88%E5%B8%8C/" style="font-size: 1.37em; color: #99a4b2">导出密码的哈希</a> <a href="/tags/%E8%AE%BE%E7%BD%AE%E5%81%8F%E7%A7%BB%E9%87%8F/" style="font-size: 1.1em; color: #999">设置偏移量</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E8%BF%81%E7%A7%BB%E8%BF%9B%E7%A8%8B/" style="font-size: 1.37em; color: #99a4b2">自动迁移进程</a> <a href="/tags/ifndef/" style="font-size: 1.1em; color: #999">ifndef</a> <a href="/tags/%E6%96%B9%E6%B3%95%E4%B8%89/" style="font-size: 1.1em; color: #999">方法三</a> <a href="/tags/if/" style="font-size: 1.1em; color: #999">if</a> <a href="/tags/%E5%81%9C%E6%AD%A2%E9%94%AE%E7%9B%98%E8%AE%B0%E5%BD%95%E5%8A%9F%E8%83%BD/" style="font-size: 1.37em; color: #99a4b2">停止键盘记录功能</a> <a href="/tags/%E5%BC%80%E5%90%AF%E9%94%AE%E7%9B%98%E8%AE%B0%E5%BD%95%E5%8A%9F%E8%83%BD/" style="font-size: 1.37em; color: #99a4b2">开启键盘记录功能</a> <a href="/tags/04-%E8%BF%9C%E7%A8%8BPWN/" style="font-size: 1.1em; color: #999">04 远程PWN</a> <a href="/tags/%E7%8B%AC%E7%AB%8B%E5%9C%A8%E6%96%B0%E6%96%87%E4%BB%B6%E4%B8%AD%E8%BF%9B%E8%A1%8C%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE/" style="font-size: 1.1em; color: #999">独立在新文件中进行相关配置</a> <a href="/tags/%E7%94%A8pwntools%E8%87%AA%E5%B8%A6%E7%9A%84%E5%B7%A5%E5%85%B7%E6%9E%84%E5%BB%BA%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%BB%93%E6%9E%84rt-sigreturn/" style="font-size: 1.1em; color: #999">用pwntools自带的工具构建系统调用结构rt_sigreturn</a> <a href="/tags/pragma/" style="font-size: 1.5em; color: #99a9bf">pragma</a> <a href="/tags/cobaltstrike%E7%9B%91%E5%90%AC%E7%9A%84%E7%AB%AF%E5%8F%A3/" style="font-size: 1.37em; color: #99a4b2">cobaltstrike监听的端口</a> <a href="/tags/elif/" style="font-size: 1.1em; color: #999">elif</a> <a href="/tags/2484524302484524302/" style="font-size: 1.23em; color: #999ea6">2484524302484524302</a> <a href="/tags/%E8%BF%99%E9%87%8C%E6%98%AF%E8%8E%B7%E5%BE%97%E7%9A%84session%E7%9A%84id/" style="font-size: 1.37em; color: #99a4b2">这里是获得的session的id</a> <a href="/tags/01-PWN%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" style="font-size: 1.1em; color: #999">01 PWN基础知识</a> <a href="/tags/%E7%A8%8B%E5%BA%8F%E5%A3%B3/" style="font-size: 1.1em; color: #999">程序壳</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/05/">
+            <span class="card-archive-list-date">
+              五月 2026
+            </span>
+            <span class="card-archive-list-count">219</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/05/">
+            <span class="card-archive-list-date">
+              五月 2023
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/02/">
+            <span class="card-archive-list-date">
+              二月 2023
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2022/11/">
+            <span class="card-archive-list-date">
+              十一月 2022
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2022/10/">
+            <span class="card-archive-list-date">
+              十月 2022
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2022/02/">
+            <span class="card-archive-list-date">
+              二月 2022
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">226</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 乙太</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, {"typeSpeed":120,"backSpeed":40,"loop":false}))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js@3.0.0/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = ["道也者，至精也，不可为形，不可为名，强为之名，谓之乙太。"].slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  typedJSFn.processSubtitle(["道也者，至精也，不可为形，不可为名，强为之名，谓之乙太。"])
+}
+typedJSFn.run(subtitleType)</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.outerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+    setTimeout(() => URL.revokeObjectURL(url), 30000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        if (typeof svg === 'string') {
+          openSvgInNewTab({ source: svg, initViewBox })
+          return
+        }
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+
+    // Avoid binding multiple times on themeChange/pjax
+    if (wrap.__mermaidGestureBound) return
+    wrap.__mermaidGestureBound = true
+
+    // Helper: map client (viewport) coordinate -> viewBox coordinate
+    const clientToViewBox = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect()
+      const vb = wrap.__mermaidCurViewBox || getSvgViewBox(svg)
+      const x = vb[0] + (clientX - rect.left) * (vb[2] / rect.width)
+      const y = vb[1] + (clientY - rect.top) * (vb[3] / rect.height)
+      return { x, y, rect, vb }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      startCenter: null
+    }
+
+    const clampVb = vb => {
+      const init = wrap.__mermaidInitViewBox || vb
+      const minW = init[2] * 0.1
+      const maxW = init[2] * 10
+      const minH = init[3] * 0.1
+      const maxH = init[3] * 10
+      vb[2] = clamp(vb[2], minW, maxW)
+      vb[3] = clamp(vb[3], minH, maxH)
+      return vb
+    }
+
+    const setCurVb = vb => {
+      vb = clampVb(vb)
+      wrap.__mermaidCurViewBox = vb
+      setSvgViewBox(svg, vb)
+    }
+
+    const onPointerDown = e => {
+      // Allow only primary button for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      if (state.pointers.size === 1) {
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        state.startCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+      // Pan with 1 pointer
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = [...state.pointers.values()][0]
+        const prev = { x: e.clientX - e.movementX, y: e.clientY - e.movementY }
+        // movementX/Y unreliable on touch, compute from stored last position
+        const last = wrap.__mermaidLastSinglePointer || p
+        const dxClient = p.x - last.x
+        const dyClient = p.y - last.y
+        wrap.__mermaidLastSinglePointer = p
+
+        const { rect } = clientToViewBox(p.x, p.y)
+        const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+        const dx = dxClient * (vb[2] / rect.width)
+        const dy = dyClient * (vb[3] / rect.height)
+        setCurVb([vb[0] - dx, vb[1] - dy, vb[2], vb[3]])
+        return
+      }
+
+      // Pinch zoom with 2 pointers
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist // dist bigger => zoom in (viewBox smaller)
+
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const centerClient = { x: cx, y: cy }
+
+        const pxy = clientToViewBox(centerClient.x, centerClient.y)
+        const cpx = pxy.x
+        const cpy = pxy.y
+
+        const vb = zoomAtPoint(state.startVb, factor, cpx, cpy)
+        setCurVb(vb)
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+        state.startCenter = null
+        wrap.__mermaidLastSinglePointer = null
+      } else if (state.pointers.size === 1) {
+        // reset single pointer baseline to avoid jump
+        wrap.__mermaidLastSinglePointer = [...state.pointers.values()][0]
+      }
+    }
+
+    // Wheel zoom (mouse/trackpad)
+    const onWheel = e => {
+      // ctrlKey on mac trackpad pinch; we treat both as zoom
+      e.preventDefault()
+      const delta = e.deltaY
+      const zoomFactor = delta > 0 ? 1.1 : 0.9
+      const { x, y } = clientToViewBox(e.clientX, e.clientY)
+      const vb = (wrap.__mermaidCurViewBox || getSvgViewBox(svg)).slice()
+      setCurVb(zoomAtPoint(vb, zoomFactor, x, y))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (!init) return
+      wrap.__mermaidCurViewBox = init.slice()
+      setSvgViewBox(svg, init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown)
+    svg.addEventListener('pointermove', onPointerMove)
+    svg.addEventListener('pointerup', onPointerUpOrCancel)
+    svg.addEventListener('pointercancel', onPointerUpOrCancel)
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    svg.addEventListener('dblclick', onDblClick)
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+
+      // Clear old render (themeChange/pjax will rerun)
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      item.__mermaidGestureBound = false
+
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (false) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (false) attachMermaidViewerButton(item)
+      }
+
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><div id="page-load-curtain" aria-hidden="true"><div class="load-curtain-inner"><span class="load-curtain-logo">乙太</span><span class="load-curtain-bar"></span></div></div><script src="/js/hero-load.js"></script><script src="/js/github-chart.js"></script><script src="/live2d-widget/autoload.js"></script><script async data-pjax src="https://events.vercount.one/js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索知识库" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>

@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>乙太</title>
+  
+  <subtitle>乙太</subtitle>
+  <link href="https://blog.oisec.cn/atom.xml" rel="self"/>
+  
+  <link href="https://blog.oisec.cn/"/>
+  <updated>2026-05-27T17:42:48.898Z</updated>
+  <id>https://blog.oisec.cn/</id>
+  
+  <author>
+    <name>乙太</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>gigachad - suid</title>
+    <link href="https://blog.oisec.cn/%E6%B8%97%E9%80%8F/OSCP%E9%9D%B6%E5%9C%BA%E8%AE%AD%E7%BB%83(hackmyvm)/gigachad%20-%20suid/"/>
+    <id>https://blog.oisec.cn/%E6%B8%97%E9%80%8F/OSCP%E9%9D%B6%E5%9C%BA%E8%AE%AD%E7%BB%83(hackmyvm)/gigachad%20-%20suid/</id>
+    <published>2026-05-27T17:41:48.000Z</published>
+    <updated>2026-05-27T17:42:48.898Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;gigachad&lt;/td&gt;
+&lt;td&gt;easy&lt;/td&gt;
+&lt;td&gt;ftp利用、google反图搜索、</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://blog.oisec.cn/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="OSCP靶场训练(hackmyvm)" scheme="https://blog.oisec.cn/categories/%E6%B8%97%E9%80%8F/OSCP%E9%9D%B6%E5%9C%BA%E8%AE%AD%E7%BB%83-hackmyvm/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>特征提取维度原理</title>
+    <link href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96%E7%BB%B4%E5%BA%A6%E5%8E%9F%E7%90%86/"/>
+    <id>https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96%E7%BB%B4%E5%BA%A6%E5%8E%9F%E7%90%86/</id>
+    <published>2026-05-27T17:40:48.000Z</published>
+    <updated>2026-05-27T17:42:48.912Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;要把 &lt;a href=&quot;/%E9%80%86%E5%90%91/PE/PE/&quot;&gt;PE&lt;/a&gt;维向量，本质上是把一个层级嵌套的结构体（C 语言 Struct）拍平成一个一维数值数组。&lt;br&gt;PE</summary>
+        
+      
+    
+    
+    
+    <category term="毕业设计" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
+    
+    <category term="特征提取" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Day 1.LightGBM算法基本原理</title>
+    <link href="https://blog.oisec.cn/AI/LightBGM/Day%201.LightGBM%E7%AE%97%E6%B3%95%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/"/>
+    <id>https://blog.oisec.cn/AI/LightBGM/Day%201.LightGBM%E7%AE%97%E6%B3%95%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/</id>
+    <published>2026-05-27T17:39:48.000Z</published>
+    <updated>2026-05-27T17:42:48.921Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;课程说明：&quot;&gt;&lt;a href=&quot;#课程说明：&quot; class=&quot;headerlink&quot; title=&quot;课程说明：&quot;&gt;&lt;/a&gt;课程说明：&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;本期课主题：LightGBM原理与实践&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    <category term="AI" scheme="https://blog.oisec.cn/categories/AI/"/>
+    
+    <category term="LightBGM" scheme="https://blog.oisec.cn/categories/AI/LightBGM/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>01环境安装准备</title>
+    <link href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/01%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E5%87%86%E5%A4%87/"/>
+    <id>https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/01%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E5%87%86%E5%A4%87/</id>
+    <published>2026-05-27T17:38:48.000Z</published>
+    <updated>2026-05-27T17:42:48.957Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;python 3.11.0&lt;br&gt;&lt;a href=&quot;https://blog.csdn.net/yohnyang/article/details/126402833&quot;&gt;VS</summary>
+        
+      
+    
+    
+    
+    <category term="毕业设计" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>SHAP</title>
+    <link href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/SHAP/SHAP/"/>
+    <id>https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/SHAP/SHAP/</id>
+    <published>2026-05-27T17:37:48.000Z</published>
+    <updated>2026-05-27T17:42:48.958Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;引入 &lt;strong&gt;SHAP (SHapley Additive exPlanations)&lt;/strong&gt; 来解释 &lt;strong&gt;XSCAN&lt;/strong&gt; 的决策逻辑是非常专业的做法。它能告诉你：在 2381 维特征中，究竟是哪一维（比如第 111-160</summary>
+        
+      
+    
+    
+    
+    <category term="毕业设计" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
+    
+    <category term="SHAP" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/SHAP/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>阈值推理</title>
+    <link href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86/"/>
+    <id>https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86/</id>
+    <published>2026-05-27T17:36:48.000Z</published>
+    <updated>2026-05-27T17:42:48.959Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;一、-理论模型建立&quot;&gt;&lt;a href=&quot;#一、-理论模型建立&quot; class=&quot;headerlink&quot; title=&quot;一、 理论模型建立&quot;&gt;&lt;/a&gt;一、 理论模型建立&lt;/h3&gt;&lt;p&gt;假设机器学习模型输出的得分区间在 $[0, 1]$</summary>
+        
+      
+    
+    
+    
+    <category term="毕业设计" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
+    
+    <category term="阈值推理" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>阈值推理-mindmap</title>
+    <link href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86-mindmap/"/>
+    <id>https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86-mindmap/</id>
+    <published>2026-05-27T17:35:48.000Z</published>
+    <updated>2026-05-27T17:42:48.960Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;hr&gt;
+&lt;p&gt;mindmap-plugin: markdown&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;一、-理论模型建立&quot;&gt;&lt;a href=&quot;#一、-理论模型建立&quot; class=&quot;headerlink&quot; title=&quot;一、 理论模型建立&quot;&gt;&lt;/a&gt;一、</summary>
+        
+      
+    
+    
+    
+    <category term="毕业设计" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
+    
+    <category term="阈值推理" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ASCII</title>
+    <link href="https://blog.oisec.cn/%E9%80%86%E5%90%91/ASCII/"/>
+    <id>https://blog.oisec.cn/%E9%80%86%E5%90%91/ASCII/</id>
+    <published>2026-05-27T17:34:48.000Z</published>
+    <updated>2026-05-27T17:42:48.968Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/%E9%80%86%E5%90%91/ASCII/ASCII%E8%A1%A8_20260504_1.png&quot; alt=&quot;ASCII表_20260504_1&quot;&gt;&lt;/p&gt;
+&lt;h3 id=&quot;控制字符&quot;&gt;&lt;a href=&quot;#控制字符&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="逆向" scheme="https://blog.oisec.cn/categories/%E9%80%86%E5%90%91/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Drawing 2026-05-05 01.23.31.excalidraw</title>
+    <link href="https://blog.oisec.cn/Excalidraw/Drawing%202026-05-05%2001.23.31.excalidraw/"/>
+    <id>https://blog.oisec.cn/Excalidraw/Drawing%202026-05-05%2001.23.31.excalidraw/</id>
+    <published>2026-05-27T17:33:48.000Z</published>
+    <updated>2026-05-27T17:42:48.969Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;hr&gt;
+&lt;p&gt;excalidraw-plugin: parsed&lt;br&gt;tags: [excalidraw]&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&amp;#x3D;&amp;#x3D;⚠  Switch to EXCALIDRAW VIEW in the MORE OPTIONS menu of</summary>
+        
+      
+    
+    
+    
+    <category term="Excalidraw" scheme="https://blog.oisec.cn/categories/Excalidraw/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>PE</title>
+    <link href="https://blog.oisec.cn/%E9%80%86%E5%90%91/PE/PE/"/>
+    <id>https://blog.oisec.cn/%E9%80%86%E5%90%91/PE/PE/</id>
+    <published>2026-05-27T17:32:48.000Z</published>
+    <updated>2026-05-27T17:42:48.980Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;1-PE文件结构&quot;&gt;&lt;a href=&quot;#1-PE文件结构&quot; class=&quot;headerlink&quot; title=&quot;1. PE文件结构&quot;&gt;&lt;/a&gt;1. PE文件结构&lt;/h1&gt;&lt;p&gt;在 Windows 官方</summary>
+        
+      
+    
+    
+    
+    <category term="逆向" scheme="https://blog.oisec.cn/categories/%E9%80%86%E5%90%91/"/>
+    
+    <category term="PE" scheme="https://blog.oisec.cn/categories/%E9%80%86%E5%90%91/PE/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>为什么熵值是 0~8？</title>
+    <link href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/%E4%B8%BA%E4%BB%80%E4%B9%88%E7%86%B5%E5%80%BC%E6%98%AF%200~8%EF%BC%9F/"/>
+    <id>https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/%E4%B8%BA%E4%BB%80%E4%B9%88%E7%86%B5%E5%80%BC%E6%98%AF%200~8%EF%BC%9F/</id>
+    <published>2026-05-27T17:31:48.000Z</published>
+    <updated>2026-05-27T17:42:48.981Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;strong&gt;为什么熵值是 0~8？&lt;/strong&gt;（详细通俗解释 + 美化公式）&lt;/p&gt;
+&lt;p&gt;这是你问的 &lt;strong&gt;GeneralFileInfo&lt;/strong&gt; 和 &lt;strong&gt;ByteEntropyHistogram&lt;/strong&gt; 里出现的</summary>
+        
+      
+    
+    
+    
+    <category term="毕业设计" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
+    
+    <category term="特征提取" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Failed to connect to github.com</title>
+    <link href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/Failed%20to%20connect%20to%20github.com/"/>
+    <id>https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/Failed%20to%20connect%20to%20github.com/</id>
+    <published>2026-05-27T17:30:48.000Z</published>
+    <updated>2026-05-27T17:42:48.983Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span</summary>
+        
+      
+    
+    
+    
+    <category term="毕业设计" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
+    
+    <category term="开源推送" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>两边版本记录不一致解决</title>
+    <link href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/%E4%B8%A4%E8%BE%B9%E7%89%88%E6%9C%AC%E8%AE%B0%E5%BD%95%E4%B8%8D%E4%B8%80%E8%87%B4%E8%A7%A3%E5%86%B3/"/>
+    <id>https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/%E4%B8%A4%E8%BE%B9%E7%89%88%E6%9C%AC%E8%AE%B0%E5%BD%95%E4%B8%8D%E4%B8%80%E8%87%B4%E8%A7%A3%E5%86%B3/</id>
+    <published>2026-05-27T17:29:48.000Z</published>
+    <updated>2026-05-27T17:42:48.983Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;这个错误 &lt;code&gt;[rejected] main -&amp;gt; main (fetch first)&lt;/code&gt; 是因为你的 GitHub 远程仓库里已经存在一些文件（比如你创建仓库时勾选生成的 &lt;code&gt;README.md&lt;/code&gt; 或</summary>
+        
+      
+    
+    
+    
+    <category term="毕业设计" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
+    
+    <category term="开源推送" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>网站后台验证码识别穷举密码</title>
+    <link href="https://blog.oisec.cn/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/%E7%BD%91%E7%AB%99%E5%90%8E%E5%8F%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB%E7%A9%B7%E4%B8%BE%E5%AF%86%E7%A0%81/"/>
+    <id>https://blog.oisec.cn/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/%E7%BD%91%E7%AB%99%E5%90%8E%E5%8F%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB%E7%A9%B7%E4%B8%BE%E5%AF%86%E7%A0%81/</id>
+    <published>2026-05-27T17:28:48.000Z</published>
+    <updated>2026-05-27T17:42:48.986Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;验证码干扰像素太少很容易就会被一些工具识别出来。如图片提取文字工具。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;缺失图片：Pasted image 20231210163324.png&lt;br&gt;登录框存在验证码 这个验证码可被识别的情况下</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://blog.oisec.cn/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="002穷举篇" scheme="https://blog.oisec.cn/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/"/>
+    
+    <category term="002工具教程" scheme="https://blog.oisec.cn/categories/%E6%B8%97%E9%80%8F/002%E7%A9%B7%E4%B8%BE%E7%AF%87/002%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>毕设目录</title>
+    <link href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E6%AF%95%E8%AE%BE%E7%9B%AE%E5%BD%95/"/>
+    <id>https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E6%AF%95%E8%AE%BE%E7%9B%AE%E5%BD%95/</id>
+    <published>2026-05-27T17:27:48.000Z</published>
+    <updated>2026-05-27T17:42:48.987Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="毕业设计" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>域名注册信息whois查询</title>
+    <link href="https://blog.oisec.cn/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C%E4%BF%A1%E6%81%AFwhois%E6%9F%A5%E8%AF%A2/"/>
+    <id>https://blog.oisec.cn/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C%E4%BF%A1%E6%81%AFwhois%E6%9F%A5%E8%AF%A2/</id>
+    <published>2026-05-27T17:26:48.000Z</published>
+    <updated>2026-05-27T17:42:48.988Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/lalalaxiaoyuren/p/14464348.html&quot;&gt;域名系统-DNS - lalalaxiaoyuren -</summary>
+        
+      
+    
+    
+    
+    <category term="渗透" scheme="https://blog.oisec.cn/categories/%E6%B8%97%E9%80%8F/"/>
+    
+    <category term="001信息收集篇" scheme="https://blog.oisec.cn/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/"/>
+    
+    <category term="001实战流程" scheme="https://blog.oisec.cn/categories/%E6%B8%97%E9%80%8F/001%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%AF%87/001%E5%AE%9E%E6%88%98%E6%B5%81%E7%A8%8B/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>014-Splish 的 write up</title>
+    <link href="https://blog.oisec.cn/%E9%80%86%E5%90%91/NEW%20Carck%20ME%20NOTE/014-Splish%20%E7%9A%84%20write%20up/"/>
+    <id>https://blog.oisec.cn/%E9%80%86%E5%90%91/NEW%20Carck%20ME%20NOTE/014-Splish%20%E7%9A%84%20write%20up/</id>
+    <published>2026-05-27T17:25:48.000Z</published>
+    <updated>2026-05-27T17:42:48.993Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;014-Splish-的-write-up&quot;&gt;&lt;a href=&quot;#014-Splish-的-write-up&quot; class=&quot;headerlink&quot; title=&quot;014-Splish 的 write up&quot;&gt;&lt;/a&gt;014-Splish 的 write</summary>
+        
+      
+    
+    
+    
+    <category term="逆向" scheme="https://blog.oisec.cn/categories/%E9%80%86%E5%90%91/"/>
+    
+    <category term="NEW Carck ME NOTE" scheme="https://blog.oisec.cn/categories/%E9%80%86%E5%90%91/NEW-Carck-ME-NOTE/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>项目改名</title>
+    <link href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/%E9%A1%B9%E7%9B%AE%E6%94%B9%E5%90%8D/"/>
+    <id>https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/%E9%A1%B9%E7%9B%AE%E6%94%B9%E5%90%8D/</id>
+    <published>2026-05-27T17:24:48.000Z</published>
+    <updated>2026-05-27T17:42:48.994Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;改名分为两个部分：&lt;strong&gt;GitHub 远程仓库改名&lt;/strong&gt;和&lt;strong&gt;本地文件夹改名&lt;/strong&gt;。为了保证后续开发顺畅，建议按以下步骤操作：&lt;/p&gt;
+&lt;h3 id=&quot;第一步：在-GitHub-网页端改名&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="毕业设计" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
+    
+    <category term="开源推送" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>更新推送</title>
+    <link href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/%E6%9B%B4%E6%96%B0%E6%8E%A8%E9%80%81/"/>
+    <id>https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/%E6%9B%B4%E6%96%B0%E6%8E%A8%E9%80%81/</id>
+    <published>2026-05-27T17:23:48.000Z</published>
+    <updated>2026-05-27T17:42:48.995Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;修改代码或 README 这种“日常维护”是 Git 最核心的使用场景。你只需要遵循 &lt;strong&gt;“改、加、交、推”&lt;/strong&gt; 四步循环即可。&lt;/p&gt;
+&lt;p&gt;既然你是在本地发现 README 单词写错了，按以下步骤操作：&lt;/p&gt;
+&lt;h3</summary>
+        
+      
+    
+    
+    
+    <category term="毕业设计" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
+    
+    <category term="开源推送" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E5%BC%80%E6%BA%90%E6%8E%A8%E9%80%81/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>为什么要用高斯积分推导？</title>
+    <link href="https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E9%AB%98%E6%96%AF%E7%A7%AF%E5%88%86%E6%8E%A8%E5%AF%BC%EF%BC%9F/"/>
+    <id>https://blog.oisec.cn/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E9%AB%98%E6%96%AF%E7%A7%AF%E5%88%86%E6%8E%A8%E5%AF%BC%EF%BC%9F/</id>
+    <published>2026-05-27T17:22:48.000Z</published>
+    <updated>2026-05-27T17:42:48.996Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;这是一个非常核心的科研质疑，答案非常明确：&lt;strong&gt;在原始概率空间（0 到 1 之间）中，LightGBM</summary>
+        
+      
+    
+    
+    
+    <category term="毕业设计" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/"/>
+    
+    <category term="阈值推理" scheme="https://blog.oisec.cn/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/%E9%98%88%E5%80%BC%E6%8E%A8%E7%90%86/"/>
+    
+    
+  </entry>
+  
+</feed>
